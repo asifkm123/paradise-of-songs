@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PARADISE OF SONGS &bull; Ultimate Sonic Experience</title>
 
-  <!-- Typography: Plus Jakarta Sans (Spotify Circular alternative) -->
+  <!-- Google Fonts: Plus Jakarta Sans for Spotify-like circular typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -14,6 +14,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
 
+  <!-- Tailwind Configuration for Spotify theme -->
   <script>
     tailwind.config = {
       darkMode: 'class',
@@ -24,9 +25,9 @@
               green: '#1DB954',
               greenHover: '#1ed760',
               black: '#070708',
-              card: 'rgba(18, 18, 20, 0.76)',
-              surface: '#18181c',
-              subtext: '#a0a0a8',
+              card: 'rgba(18, 18, 22, 0.78)',
+              surface: '#121215',
+              subtext: '#9fa3af',
               accent: '#f59e0b'
             }
           },
@@ -39,6 +40,7 @@
   </script>
 
   <style>
+    /* Global scrollbar and glassmorphism styling */
     * {
       font-feature-settings: "cv02", "cv03", "cv04", "cv11";
       -webkit-font-smoothing: antialiased;
@@ -54,7 +56,7 @@
       height: 6px;
     }
     ::-webkit-scrollbar-track {
-      background: rgba(0,0,0,0.5);
+      background: rgba(0,0,0,0.6);
     }
     ::-webkit-scrollbar-thumb {
       background: rgba(255, 255, 255, 0.16);
@@ -64,16 +66,16 @@
       background: #1DB954;
     }
     .spotify-glass {
-      background: rgba(14, 14, 18, 0.78);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
+      background: rgba(14, 14, 18, 0.82);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
       border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.9);
+      box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.9);
     }
     .spotify-glass-subtle {
-      background: rgba(24, 24, 30, 0.62);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      background: rgba(24, 24, 30, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border: 1px solid rgba(255, 255, 255, 0.06);
     }
     @keyframes spinVinyl {
@@ -85,13 +87,6 @@
     }
     .vinyl-paused {
       animation-play-state: paused !important;
-    }
-    @keyframes pulseGlow {
-      0%, 100% { opacity: 0.35; transform: scale(1); }
-      50% { opacity: 0.7; transform: scale(1.04); }
-    }
-    .glow-aura {
-      animation: pulseGlow 4s ease-in-out infinite;
     }
   </style>
 </head>
@@ -131,7 +126,7 @@
         </div>
       </div>
 
-      <!-- Live Users Indicator (Fluctuates starting at 14,663) -->
+      <!-- Live Users Indicator (Starts from 14,663 and fluctuates every second) -->
       <div class="flex items-center space-x-3 spotify-glass-subtle px-3.5 py-1.5 rounded-full border border-white/10 shadow-inner">
         <span class="relative flex h-2.5 w-2.5">
           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-spotify-green opacity-75"></span>
@@ -148,7 +143,7 @@
       <div class="flex items-center space-x-2">
         
         <!-- Buy Me a Coffee Button -->
-        <button onclick="openDonationModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-extrabold text-xs shadow-md shadow-amber-500/20 transition-all hover:scale-105 active:scale-95">
+        <button onclick="openDonationModal()" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-extrabold text-xs shadow-md shadow-amber-500/20 transition-all hover:scale-105 active:scale-95">
           <i data-lucide="coffee" class="w-4 h-4 stroke-[2.5]"></i>
           <span>Buy Me a Coffee</span>
         </button>
@@ -166,7 +161,7 @@
 
         <!-- User Authentication & Account Menu -->
         <div id="authContainer">
-          <!-- Populated by JS: either 'Sign In' button or User Profile badge -->
+          <!-- Populated by JS: 'Sign In' button or User Profile badge -->
         </div>
 
       </div>
@@ -573,7 +568,7 @@
 
   </div>
 
-  <!-- MODAL: Buy Me a Coffee / Google Pay UPI Modal -->
+  <!-- MODAL: Buy Me a Coffee / Google Pay UPI Modal with your verified UPI ID -->
   <div id="donationModalWrapper" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4">
     <div class="spotify-glass rounded-3xl max-w-sm w-full p-6 relative border border-white/15 shadow-2xl text-center">
       
@@ -597,26 +592,28 @@
         <button onclick="selectCoffeeAmount(500)" class="coffee-amt-chip py-1.5 rounded-xl border border-white/10 bg-white/5 font-extrabold text-xs text-white hover:border-amber-400 transition active:scale-95">₹500</button>
       </div>
 
-      <!-- Google Pay QR Code Display -->
-      <div class="bg-white p-3.5 rounded-2xl mx-auto w-48 h-48 flex items-center justify-center shadow-lg relative group">
+      <!-- Google Pay QR Code Display Container -->
+      <div class="bg-white p-3 rounded-2xl mx-auto w-52 h-52 flex flex-col items-center justify-center shadow-2xl relative border-2 border-white/20">
         <img 
           id="gpayQrImage" 
-          src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=luiseclat@okhdfcbank%26pn=ParadiseOfSongs%26cu=INR%26am=100" 
-          alt="Google Pay UPI QR Code" 
-          class="w-full h-full object-contain"
+          src="gpay-qr.jpg" 
+          alt="Scan to pay with any UPI app" 
+          onerror="handleQrFallback(this)"
+          class="w-full h-full object-contain rounded-xl"
         />
-        <div class="absolute bottom-2 bg-black/80 px-2 py-0.5 rounded text-[9px] text-white font-mono font-bold tracking-wider opacity-90">
-          SCAN WITH GOOGLE PAY
-        </div>
       </div>
+      <p class="text-[11px] font-bold text-zinc-300 mt-2 flex items-center justify-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-spotify-green"></span>
+        <span>Scan to pay with any UPI app</span>
+      </p>
 
-      <!-- UPI ID Copy Field -->
-      <div class="mt-4 bg-white/5 p-2.5 rounded-xl border border-white/10 flex items-center justify-between text-xs">
+      <!-- UPI ID Copy Field (Updated with paradiseacademy.kl-5@oksbi) -->
+      <div class="mt-3.5 bg-white/5 p-2.5 rounded-xl border border-white/10 flex items-center justify-between text-xs">
         <div class="text-left truncate mr-2">
-          <p class="text-[9px] font-black uppercase text-amber-400">GPay UPI ID</p>
-          <p class="font-mono font-bold text-white text-[11px] truncate">luiseclat@okhdfcbank</p>
+          <p class="text-[9px] font-black uppercase text-amber-400 tracking-wider">UPI ID</p>
+          <p class="font-mono font-bold text-white text-[11px] truncate select-all">paradiseacademy.kl-5@oksbi</p>
         </div>
-        <button onclick="copyUpiId()" class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-[11px] flex items-center gap-1 transition">
+        <button onclick="copyUpiId()" class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-[11px] flex items-center gap-1 transition active:scale-95">
           <i data-lucide="copy" class="w-3.5 h-3.5"></i>
           <span id="upiCopyBtnText">Copy</span>
         </button>
@@ -824,12 +821,14 @@
   <!-- Hidden Native Audio Node with CORS support for Web Audio API -->
   <audio id="coreAudioElement" crossorigin="anonymous" preload="metadata"></audio>
 
-  <!-- APPLICATION LOGIC SCRIPT -->
   <script>
     document.getElementById('currentYear').textContent = new Date().getFullYear();
 
     // 5 Explicit Languages
     const LANGUAGES = ['MALAYALAM', 'TAMIL', 'HINDI', 'ENGLISH', 'SOOFI'];
+
+    // Updated UPI ID
+    const ACTIVE_UPI_ID = "paradiseacademy.kl-5@oksbi";
 
     // Curated Playable Catalog with royalty-free tracks
     const CATALOG = {
@@ -1006,7 +1005,7 @@
     let userPlaylists = [];
 
     // Social & Shared Listen State
-    let currentSyncSession = null; // e.g. { friendId: 'arjun', friendName: 'Arjun Nair' }
+    let currentSyncSession = null;
     let friends = [
       { id: 'arjun', name: 'Arjun Nair', status: 'online', currentSong: 'Malare (Acoustic Strings)' },
       { id: 'priya', name: 'Priya Mohan', status: 'online', currentSong: 'Tum Hi Ho (Soul Piano)' },
@@ -1030,7 +1029,6 @@
     let sourceNode = null;
     let stereoPanner = null;
     let bassFilter = null;
-    let dolbyConvolver = null;
 
     function initWebAudio() {
       if (audioCtx) return;
@@ -1104,7 +1102,7 @@
 
       if (audioCtx && bassFilter) {
         if (dolbyAtmosActive) {
-          bassFilter.gain.setValueAtTime(6.5, audioCtx.currentTime); // boost low end theater punch
+          bassFilter.gain.setValueAtTime(6.5, audioCtx.currentTime);
         } else {
           bassFilter.gain.setValueAtTime(0, audioCtx.currentTime);
         }
@@ -1212,7 +1210,6 @@
     function handleAuthSubmit(e) {
       e.preventDefault();
       const email = document.getElementById('authInputEmail').value.trim();
-      const password = document.getElementById('authInputPassword').value.trim();
       const name = document.getElementById('authInputName').value.trim() || email.split('@')[0];
 
       currentUser = {
@@ -1532,7 +1529,7 @@
       // Sync song
       const pool = CATALOG['MALAYALAM'];
       playSelectedTrack(pool[0]);
-      audioNode.currentTime = 12; // sync timestamp demo
+      audioNode.currentTime = 12;
 
       switchSocialTab('chat');
       sharedChatMessages.push({
@@ -1590,7 +1587,6 @@
       input.value = '';
       renderChatMessages();
 
-      // Simulated instant reply from friend
       if (currentSyncSession) {
         setTimeout(() => {
           sharedChatMessages.push({
@@ -1617,15 +1613,30 @@
       });
       event.target.className = "coffee-amt-chip py-1.5 rounded-xl border border-amber-500 bg-amber-500/20 font-extrabold text-xs text-amber-400 transition active:scale-95";
       
-      const upiUrl = `upi://pay?pa=luiseclat@okhdfcbank&pn=ParadiseOfSongs&cu=INR&am=${amt}`;
-      document.getElementById('gpayQrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(upiUrl)}`;
+      // Update dynamic UPI intent
+      const upiUrl = `upi://pay?pa=${ACTIVE_UPI_ID}&pn=Paradise%20Of%20Songs&cu=INR&am=${amt}`;
+      const img = document.getElementById('gpayQrImage');
+      // If image is already showing fallback QR, update the amount dynamically
+      if (img.dataset.isDynamicQr === 'true') {
+        img.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUrl)}`;
+      }
+    }
+
+    // Robust multi-tier fallback for your uploaded QR code
+    function handleQrFallback(imgElement) {
+      if (imgElement.src.indexOf('gpay-qr.jpg.jpeg') === -1 && imgElement.src.indexOf('api.qrserver') === -1) {
+        imgElement.src = 'gpay-qr.jpg.jpeg';
+      } else if (imgElement.src.indexOf('api.qrserver') === -1) {
+        imgElement.dataset.isDynamicQr = 'true';
+        const upiUrl = `upi://pay?pa=${ACTIVE_UPI_ID}&pn=Paradise%20Of%20Songs&cu=INR&am=100`;
+        imgElement.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUrl)}`;
+      }
     }
 
     function copyUpiId() {
-      const upi = "luiseclat@okhdfcbank";
       const dummy = document.createElement("textarea");
       document.body.appendChild(dummy);
-      dummy.value = upi;
+      dummy.value = ACTIVE_UPI_ID;
       dummy.select();
       document.execCommand('copy');
       document.body.removeChild(dummy);
@@ -1635,6 +1646,7 @@
       setTimeout(() => {
         btnText.textContent = "Copy";
       }, 2000);
+      showQuickNotification(`UPI ID "${ACTIVE_UPI_ID}" copied to clipboard!`);
     }
 
     function copyAdminEmail() {
@@ -1741,7 +1753,6 @@
         }`;
 
         item.onclick = (e) => {
-          // If clicked specifically on the plus button, trigger playlist modal
           if (e.target.closest('.add-to-pl-btn')) {
             currentTrack = track;
             handleAddToPlaylistClick();
@@ -1961,7 +1972,6 @@
       renderPlaylistTracks();
     }
 
-    // Modal Helpers
     function openAudioSettingsModal() {
       document.getElementById('audioSettingsModal').classList.remove('hidden');
     }
