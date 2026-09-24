@@ -88,7 +88,7 @@
 
 <body class="min-h-screen relative flex flex-col justify-between selection:bg-spotify-green selection:text-black text-sm">
 
-  <!-- Background Wallpaper with Fallback -->
+  <!-- Background Wallpaper with Kathakali Fallback -->
   <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden">
     <img 
       id="bgWallpaper" 
@@ -158,7 +158,7 @@
   <!-- Primary Content Area -->
   <main class="relative z-10 max-w-7xl mx-auto w-full px-4 md:px-8 py-5 flex-1 flex flex-col space-y-5">
 
-    <!-- Notice Board Advertisement Header Card -->
+    <!-- Notice Board Header Card -->
     <section class="spotify-glass rounded-3xl p-4 sm:p-5 relative overflow-hidden border border-white/10 hover:border-spotify-green/40 transition-all duration-300">
       <div class="absolute -right-10 -bottom-10 w-44 h-44 bg-spotify-green/10 rounded-full blur-3xl pointer-events-none"></div>
       <div class="flex flex-col md:flex-row items-center justify-between gap-4">
@@ -748,7 +748,7 @@
 
     const ACTIVE_UPI_ID = "paradiseacademy.kl-5@oksbi";
 
-    // 10 TRACKS UPLOADED TO GITHUB REPOSITORY 'songs/' FOLDER
+    // 18 TRACKS HOSTED IN GITHUB REPOSITORY 'songs/' DIRECTORY
     const SONGS_LIST = [
       {
         id: 's_1',
@@ -760,6 +760,22 @@
       },
       {
         id: 's_2',
+        title: 'Aathmavile Anandhame',
+        artist: 'Sajeer Koppam',
+        duration: '3:45',
+        cover: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400&q=80',
+        url: 'songs/' + encodeURIComponent('Aathmavile Anandhame - Sajeer Koppam.mp3')
+      },
+      {
+        id: 's_3',
+        title: 'Ada Bommale',
+        artist: 'Vaazha 2',
+        duration: '3:15',
+        cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&q=80',
+        url: 'songs/' + encodeURIComponent('Ada Bommale - Vaazha 2.mp3')
+      },
+      {
+        id: 's_4',
         title: 'Baby love',
         artist: 'Zuby Zuby Zuby',
         duration: '3:18',
@@ -767,7 +783,7 @@
         url: 'songs/' + encodeURIComponent('Baby love - Zuby Zuby Zuby.mp3')
       },
       {
-        id: 's_3',
+        id: 's_5',
         title: 'Chammak Challo',
         artist: 'Ra One (2011) HD',
         duration: '3:46',
@@ -775,7 +791,7 @@
         url: 'songs/' + encodeURIComponent('Chammak Challo - Ra One (2011) HD 720p.mp3')
       },
       {
-        id: 's_4',
+        id: 's_6',
         title: 'Chinnamma Adi',
         artist: 'Folk Fusion',
         duration: '3:30',
@@ -783,7 +799,7 @@
         url: 'songs/' + encodeURIComponent('Chinnamma Adi@6EI2NUkxwuZuGKfJ9BB7PJ (1).mp3')
       },
       {
-        id: 's_5',
+        id: 's_7',
         title: 'Chirapunji',
         artist: 'Nihal Sadiq Ft Hanan Shaah',
         duration: '3:25',
@@ -791,7 +807,7 @@
         url: 'songs/' + encodeURIComponent('Chirapunji - Nihal Sadiq Ft Hanan Shaah.mp3')
       },
       {
-        id: 's_6',
+        id: 's_8',
         title: 'Delulu Delulu',
         artist: 'Athi Bheekara Kaamukan',
         duration: '3:12',
@@ -799,7 +815,7 @@
         url: 'songs/' + encodeURIComponent('Delulu Delulu - Athi Bheekara Kaamukan.mp3')
       },
       {
-        id: 's_7',
+        id: 's_9',
         title: 'Habibi Drip',
         artist: 'Best Of Dabzee',
         duration: '3:15',
@@ -807,7 +823,7 @@
         url: 'songs/' + encodeURIComponent('Habibi Drip - Best Of Dabzee.mp3')
       },
       {
-        id: 's_8',
+        id: 's_10',
         title: 'Manavaalan Thug',
         artist: 'Best Of Dabzee',
         duration: '3:40',
@@ -815,7 +831,15 @@
         url: 'songs/' + encodeURIComponent('Manavaalan Thug - Best Of Dabzee.mp3')
       },
       {
-        id: 's_9',
+        id: 's_11',
+        title: 'Onnaam Kunninmel',
+        artist: 'Magic Mushrooms',
+        duration: '3:22',
+        cover: 'https://images.unsplash.com/photo-1465847899084-d164df4dedc6?w=400&q=80',
+        url: 'songs/' + encodeURIComponent('Onnaam Kunninmel - Magic Mushrooms.mp3')
+      },
+      {
+        id: 's_12',
         title: 'PL',
         artist: 'Official Track',
         duration: '2:55',
@@ -823,12 +847,52 @@
         url: 'songs/PL.mp3'
       },
       {
-        id: 's_10',
-        title: 'Vazhikatti [Kizhakku Suryan]',
-        artist: 'Fejo',
-        duration: '3:10',
-        cover: 'https://images.unsplash.com/photo-1465847899084-d164df4dedc6?w=400&q=80',
-        url: 'songs/' + encodeURIComponent('Vazhikatti [Kizhakku Suryan] - Fejo.mp3')
+        id: 's_13',
+        title: 'Pallathi Meena Pole',
+        artist: 'Pongala',
+        duration: '3:30',
+        cover: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&q=80',
+        url: 'songs/' + encodeURIComponent('Pallathi Meena Pole - Pongala.mp3')
+      },
+      {
+        id: 's_14',
+        title: 'Pathira',
+        artist: 'KoshalWorld',
+        duration: '3:38',
+        cover: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=400&q=80',
+        url: 'songs/' + encodeURIComponent('Pathira(KoshalWorld.Com).mp3')
+      },
+      {
+        id: 's_15',
+        title: 'Pattuma',
+        artist: 'Love Insurance Kompany',
+        duration: '3:50',
+        cover: 'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=400&q=80',
+        url: 'songs/' + encodeURIComponent('Pattuma - Love Insurance Kompany.mp3')
+      },
+      {
+        id: 's_16',
+        title: 'Pavazha Malli',
+        artist: 'Sai Abhyankkar, Shruti Haasan',
+        duration: '3:34',
+        cover: 'https://images.unsplash.com/photo-1506157786151-b8491531f063?w=400&q=80',
+        url: 'songs/' + encodeURIComponent('Pavazha Malli - Sai Abhyankkar, Shruti Haasan.mp3')
+      },
+      {
+        id: 's_17',
+        title: 'പ്രയം നമ്മിൽ മോഹം നൽകി (Prayam Nammil)',
+        artist: 'Evergreen Classic',
+        duration: '4:10',
+        cover: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&q=80',
+        url: 'songs/' + encodeURIComponent('പ്രായം നമ്മിൽ മോഹം നൽകി Prayam Nammil Moham Nira...mp3')
+      },
+      {
+        id: 's_18',
+        title: 'രാക്കുയിൽ പാടീ (Raakkuyil Paadi)',
+        artist: 'Kunchacko Boban Hits',
+        duration: '4:25',
+        cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&q=80',
+        url: 'songs/' + encodeURIComponent('രാക്കുയിൽ പാടീ HD Raakkuyil Paadi Video Song Kunchacko Bo...mp3')
       }
     ];
 
@@ -855,7 +919,7 @@
 
     let friends = [
       { id: 'arjun', name: 'Arjun Nair', status: 'online', currentSong: 'ARAYANA' },
-      { id: 'priya', name: 'Priya Mohan', status: 'online', currentSong: 'Habibi Drip' },
+      { id: 'priya', name: 'Priya Mohan', status: 'online', currentSong: 'Baby love' },
       { id: 'rahul', name: 'Rahul V', status: 'online', currentSong: 'Manavaalan Thug' }
     ];
     let pendingRequests = [
@@ -863,7 +927,7 @@
     ];
     let discoverUsers = [
       { id: 'zayd', name: 'Zayd Al-Hassan', langPref: 'Music Lover' },
-      { id: 'ananya', name: 'Ananya Ramachandran', langPref: 'Hip-Hop & Beats' }
+      { id: 'ananya', name: 'Ananya Ramachandran', langPref: 'Hip-Hop & Melodies' }
     ];
     let sharedChatMessages = [
       { sender: 'Arjun Nair', text: 'Lossless audio streaming sounds crisp! 🔥', time: '11:42 AM' }
