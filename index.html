@@ -117,7 +117,7 @@
             </h1>
             <span class="text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-spotify-green/20 text-spotify-green tracking-wider border border-spotify-green/30">PRO</span>
           </div>
-          <p class="text-[11px] font-semibold text-spotify-subtext tracking-wide uppercase">Nextcloud Cloud Stream &bull; Lossless</p>
+          <p class="text-[11px] font-semibold text-spotify-subtext tracking-wide uppercase">All Songs &bull; Lossless &bull; Social</p>
         </div>
       </div>
 
@@ -205,7 +205,7 @@
         <div class="flex items-center justify-between border-b border-white/5 pb-3">
           <div class="flex items-center space-x-2">
             <span class="w-2 h-2 rounded-full bg-spotify-green animate-ping"></span>
-            <span class="text-[11px] font-bold uppercase tracking-wider text-spotify-subtext">Direct Nextcloud Stream</span>
+            <span class="text-[11px] font-bold uppercase tracking-wider text-spotify-subtext">Direct Audio Stream</span>
           </div>
           <div class="flex items-center gap-1.5">
             <span id="badgeSpatialStatus" class="text-[10px] font-black uppercase px-2 py-0.5 rounded-md bg-white/5 text-zinc-400 border border-white/10">Spatial: Off</span>
@@ -246,7 +246,7 @@
         <!-- Track Title & Artist -->
         <div class="text-center space-y-1">
           <h3 id="playerTrackTitle" class="text-lg sm:text-xl font-black text-white tracking-tight truncate px-2">ARAYANA</h3>
-          <p id="playerTrackArtist" class="text-xs font-semibold text-spotify-subtext truncate">Paradise Master</p>
+          <p id="playerTrackArtist" class="text-xs font-semibold text-spotify-subtext truncate">Official Track</p>
         </div>
 
         <!-- Dynamic Frequency Visualizer -->
@@ -344,7 +344,7 @@
 
       </section>
 
-      <!-- RIGHT COLUMN: Nextcloud Songs Folder List -->
+      <!-- RIGHT COLUMN: Songs Library -->
       <section class="lg:col-span-7 spotify-glass rounded-3xl p-5 sm:p-6 flex flex-col space-y-4">
         
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/5 pb-3">
@@ -372,10 +372,10 @@
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <h2 class="text-base font-black text-white flex items-center gap-1.5 tracking-tight">
-                <i data-lucide="cloud" class="w-4 h-4 text-spotify-green"></i>
-                <span>PARADISE SONGS</span>
+                <i data-lucide="folder" class="w-4 h-4 text-spotify-green"></i>
+                <span>Songs Library</span>
               </h2>
-              <p class="text-[11px] text-spotify-subtext font-medium">Synced with your Nextcloud library</p>
+              <p class="text-[11px] text-spotify-subtext font-medium">All uploaded songs in your collection</p>
             </div>
 
             <!-- Instant Search Field -->
@@ -713,13 +713,13 @@
       <div class="flex items-center space-x-2">
         <span class="font-extrabold text-white">PARADISE OF SONGS</span>
         <span>&bull;</span>
-        <span>Nextcloud Cloud Player</span>
+        <span>Lossless Sonic Experience</span>
       </div>
       <p class="font-normal">&copy; <span id="currentYear"></span> PARADISE OF SONGS &bull; Admin: <a href="mailto:luiseclat@gmail.com" class="text-white hover:text-spotify-green underline">luiseclat@gmail.com</a></p>
     </div>
   </footer>
 
-  <!-- Hidden Native Audio Node -->
+  <!-- Hidden Native Audio Node (Clean, unblocked relative path playback) -->
   <audio id="coreAudioElement" preload="metadata"></audio>
 
   <!-- Fullscreen Screensaver Video Overlay (Plays automatically after 1 minute of song playback) -->
@@ -748,93 +748,47 @@
 
     const ACTIVE_UPI_ID = "paradiseacademy.kl-5@oksbi";
 
-    // NEXTCLOUD DIRECT STREAMING ENDPOINT GENERATOR
-    const NC_BASE = "http://173.249.21.108:8080/s/6HegKRmeWapdns9/download?path=%2F&files=";
-    function getNcStreamUrl(filename) {
-      return NC_BASE + encodeURIComponent(filename);
-    }
-
-    // ALL SONGS FROM YOUR NEXTCLOUD 'PARADISE SONGS' FOLDER
+    // RELATIVE REPOSITORY TRACKS (100% Free of Mixed Content & CORS blocks)
     const SONGS_LIST = [
       {
         id: 's_1',
         title: 'ARAYANA',
-        artist: 'Paradise Master',
+        artist: 'Official Track',
         duration: '3:20',
         cover: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400&q=80',
-        url: getNcStreamUrl('ARAYANA.mp3')
+        url: 'songs/ARAYANA.mp3'
       },
       {
         id: 's_2',
-        title: 'Ada Bommale - V',
-        artist: 'Popular Track',
+        title: 'Habibi Drip',
+        artist: 'Best Of Dabzee',
         duration: '3:15',
         cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&q=80',
-        url: getNcStreamUrl('Ada Bommale - V.mp3')
+        url: 'songs/' + encodeURIComponent('Habibi Drip - Best Of Dabzee.mp3')
       },
       {
         id: 's_3',
-        title: 'Anjanamani - Inn 1',
-        artist: 'Classic Folk',
+        title: 'Manavaalan Thug',
+        artist: 'Best Of Dabzee',
         duration: '3:40',
         cover: 'https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?w=400&q=80',
-        url: getNcStreamUrl('Anjanamani - Inn...mp3')
+        url: 'songs/' + encodeURIComponent('Manavaalan Thug - Best Of Dabzee.mp3')
       },
       {
         id: 's_4',
-        title: 'Anjanamani - Inn 2',
-        artist: 'Remix Edition',
-        duration: '3:30',
+        title: 'PL',
+        artist: 'Official Track',
+        duration: '2:55',
         cover: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&q=80',
-        url: getNcStreamUrl('Anjanamani - Inn...mp3')
+        url: 'songs/PL.mp3'
       },
       {
         id: 's_5',
-        title: 'Aaraane Aaraane',
-        artist: 'Soul Melodies',
+        title: 'Vazhikatti [Kizhakku Suryan]',
+        artist: 'Fejo',
         duration: '3:10',
         cover: 'https://images.unsplash.com/photo-1465847899084-d164df4dedc6?w=400&q=80',
-        url: getNcStreamUrl('Aaraane Aaraane...mp3')
-      },
-      {
-        id: 's_6',
-        title: 'Aathmavile Anandam',
-        artist: 'Spiritual Strings',
-        duration: '4:02',
-        cover: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400&q=80',
-        url: getNcStreamUrl('Aathmavile Anandam.mp3')
-      },
-      {
-        id: 's_7',
-        title: '01 Parayathe Van...',
-        artist: 'Kerala Acoustic',
-        duration: '3:45',
-        cover: 'https://images.unsplash.com/photo-1520523839898-507127054976?w=400&q=80',
-        url: getNcStreamUrl('01 Parayathe Van...mp3')
-      },
-      {
-        id: 's_8',
-        title: '01 Vannen.mp3',
-        artist: 'Vocal Track',
-        duration: '2:55',
-        cover: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&q=80',
-        url: getNcStreamUrl('01 Vannen.mp3')
-      },
-      {
-        id: 's_9',
-        title: '17 Kana 17',
-        artist: 'Beats & Bass',
-        duration: '3:05',
-        cover: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400&q=80',
-        url: getNcStreamUrl('17 Kana 17.mp3')
-      },
-      {
-        id: 's_10',
-        title: '28 Heenye Anj...',
-        artist: 'Acoustic Blend',
-        duration: '3:35',
-        cover: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=400&q=80',
-        url: getNcStreamUrl('28 Heenye Anj...mp3')
+        url: 'songs/' + encodeURIComponent('Vazhikatti [Kizhakku Suryan] - Fejo.mp3')
       }
     ];
 
@@ -861,8 +815,8 @@
 
     let friends = [
       { id: 'arjun', name: 'Arjun Nair', status: 'online', currentSong: 'ARAYANA' },
-      { id: 'priya', name: 'Priya Mohan', status: 'online', currentSong: 'Ada Bommale' },
-      { id: 'rahul', name: 'Rahul V', status: 'online', currentSong: 'Aaraane Aaraane' }
+      { id: 'priya', name: 'Priya Mohan', status: 'online', currentSong: 'Habibi Drip' },
+      { id: 'rahul', name: 'Rahul V', status: 'online', currentSong: 'Manavaalan Thug' }
     ];
     let pendingRequests = [
       { id: 'neha', name: 'Neha Sharma', note: 'Wants to listen together' }
@@ -872,7 +826,7 @@
       { id: 'ananya', name: 'Ananya Ramachandran', langPref: 'Hip-Hop & Beats' }
     ];
     let sharedChatMessages = [
-      { sender: 'Arjun Nair', text: 'Streaming works seamlessly now! 🔥', time: '11:42 AM' }
+      { sender: 'Arjun Nair', text: 'Lossless audio streaming sounds crisp! 🔥', time: '11:42 AM' }
     ];
 
     const audioNode = document.getElementById('coreAudioElement');
@@ -1236,7 +1190,7 @@
         t.artist.toLowerCase().includes(query.toLowerCase())
       );
 
-      document.getElementById('playlistStatsText').textContent = `Nextcloud &bull; ${filtered.length} Tracks Available`;
+      document.getElementById('playlistStatsText').textContent = `Songs &bull; ${filtered.length} Tracks Available`;
 
       if (filtered.length === 0) {
         container.innerHTML = `
