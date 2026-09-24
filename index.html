@@ -115,9 +115,9 @@
             <h1 class="text-xl md:text-2xl font-black tracking-tight text-white uppercase group-hover:text-spotify-green transition-colors">
               PARADISE OF SONGS
             </h1>
-            <span class="text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-spotify-green/20 text-spotify-green tracking-wider border border-spotify-green/30">CLOUD</span>
+            <span class="text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-spotify-green/20 text-spotify-green tracking-wider border border-spotify-green/30">PRO</span>
           </div>
-          <p class="text-[11px] font-semibold text-spotify-subtext tracking-wide uppercase">Direct Nextcloud Streaming &bull; Lossless</p>
+          <p class="text-[11px] font-semibold text-spotify-subtext tracking-wide uppercase">Nextcloud Cloud Stream &bull; Lossless</p>
         </div>
       </div>
 
@@ -205,7 +205,7 @@
         <div class="flex items-center justify-between border-b border-white/5 pb-3">
           <div class="flex items-center space-x-2">
             <span class="w-2 h-2 rounded-full bg-spotify-green animate-ping"></span>
-            <span class="text-[11px] font-bold uppercase tracking-wider text-spotify-subtext">Nextcloud Stream Active</span>
+            <span class="text-[11px] font-bold uppercase tracking-wider text-spotify-subtext">Direct Nextcloud Stream</span>
           </div>
           <div class="flex items-center gap-1.5">
             <span id="badgeSpatialStatus" class="text-[10px] font-black uppercase px-2 py-0.5 rounded-md bg-white/5 text-zinc-400 border border-white/10">Spatial: Off</span>
@@ -246,7 +246,7 @@
         <!-- Track Title & Artist -->
         <div class="text-center space-y-1">
           <h3 id="playerTrackTitle" class="text-lg sm:text-xl font-black text-white tracking-tight truncate px-2">ARAYANA</h3>
-          <p id="playerTrackArtist" class="text-xs font-semibold text-spotify-subtext truncate">Paradise Songs Collection</p>
+          <p id="playerTrackArtist" class="text-xs font-semibold text-spotify-subtext truncate">Paradise Master</p>
         </div>
 
         <!-- Dynamic Frequency Visualizer -->
@@ -722,6 +722,27 @@
   <!-- Hidden Native Audio Node -->
   <audio id="coreAudioElement" preload="metadata"></audio>
 
+  <!-- Fullscreen Screensaver Video Overlay (Plays automatically after 1 minute of song playback) -->
+  <div id="screensaverOverlay" class="fixed inset-0 z-50 bg-black opacity-0 pointer-events-none transition-opacity duration-1000 flex items-center justify-center overflow-hidden">
+    <video 
+      id="screensaverVideo" 
+      src="screensaver.mp4" 
+      loop 
+      muted 
+      playsinline 
+      class="w-full h-full object-cover">
+    </video>
+
+    <!-- Floating track tag on screensaver -->
+    <div class="absolute bottom-8 left-8 z-10 spotify-glass px-5 py-3 rounded-2xl border border-white/10 flex items-center space-x-3 pointer-events-auto">
+      <div class="w-3 h-3 rounded-full bg-spotify-green animate-ping"></div>
+      <div>
+        <p id="screensaverTrackTitle" class="text-sm font-black text-white">Now Playing</p>
+        <p class="text-[11px] text-spotify-subtext">Move mouse or tap anywhere to return to player</p>
+      </div>
+    </div>
+  </div>
+
   <script>
     document.getElementById('currentYear').textContent = new Date().getFullYear();
 
@@ -831,6 +852,12 @@
     let currentUser = null;
     let userPlaylists = [];
     let currentSyncSession = null;
+
+    // Screensaver State
+    let screensaverTimer = null;
+    const SCREENSAVER_TIMEOUT_MS = 60 * 1000; // 1 minute (60 seconds)
+    const screensaverOverlay = document.getElementById('screensaverOverlay');
+    const screensaverVideo = document.getElementById('screensaverVideo');
 
     let friends = [
       { id: 'arjun', name: 'Arjun Nair', status: 'online', currentSong: 'ARAYANA' },
@@ -1292,10 +1319,12 @@
       audioNode.play().then(() => {
         isPlaying = true;
         refreshPlayerUI();
+        resetScreensaverTimer();
       }).catch(e => {
         console.warn("Autoplay note:", e);
         isPlaying = true;
         refreshPlayerUI();
+        resetScreensaverTimer();
       });
 
       renderPlaylistTracks(document.getElementById('searchTrackQuery').value);
@@ -1317,9 +1346,12 @@
       if (isPlaying) {
         audioNode.pause();
         isPlaying = false;
+        if (screensaverTimer) clearTimeout(screensaverTimer);
+        hideScreensaver();
       } else {
         audioNode.play().catch(e => console.log('Playback resumed'));
         isPlaying = true;
+        resetScreensaverTimer();
       }
 
       refreshPlayerUI();
@@ -1807,6 +1839,56 @@
       }, 3500);
     }
 
+    // ==========================================
+    // SCREENSAVER CONTROLLER LOGIC
+    // ==========================================
+    function resetScreensaverTimer() {
+      hideScreensaver();
+      if (screensaverTimer) {
+        clearTimeout(screensaverTimer);
+      }
+      if (isPlaying) {
+        screensaverTimer = setTimeout(showScreensaver, SCREENSAVER_TIMEOUT_MS);
+      }
+    }
+
+    function showScreensaver() {
+      if (!isPlaying || !screensaverOverlay) return;
+
+      const currentTitle = currentTrack ? currentTrack.title : 'Paradise of Songs';
+      const trackEl = document.getElementById('screensaverTrackTitle');
+      if (trackEl) trackEl.textContent = currentTitle;
+
+      screensaverOverlay.classList.remove('opacity-0', 'pointer-events-none');
+      screensaverOverlay.classList.add('opacity-100');
+      
+      if (screensaverVideo) {
+        screensaverVideo.play().catch(e => console.log('Screensaver playback note:', e));
+      }
+    }
+
+    function hideScreensaver() {
+      if (screensaverOverlay && !screensaverOverlay.classList.contains('opacity-0')) {
+        screensaverOverlay.classList.add('opacity-0', 'pointer-events-none');
+        screensaverOverlay.classList.remove('opacity-100');
+        if (screensaverVideo) {
+          screensaverVideo.pause();
+        }
+      }
+    }
+
+    // Activity listeners to reset the 1-minute countdown
+    ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll'].forEach(evt => {
+      window.addEventListener(evt, resetScreensaverTimer, { passive: true });
+    });
+
+    audioNode.addEventListener('play', resetScreensaverTimer);
+    audioNode.addEventListener('pause', () => {
+      if (screensaverTimer) clearTimeout(screensaverTimer);
+      hideScreensaver();
+    });
+
+    // Page initialization
     window.addEventListener('DOMContentLoaded', () => {
       renderAuthUI();
       renderPlaylistTracks();
@@ -1814,31 +1896,11 @@
       startWaveformVisualizer();
       lucide.createIcons();
 
-      // Set first track ready to play
+      // Pre-arm first song
       currentTrack = SONGS_LIST[0];
       audioNode.src = currentTrack.url;
       audioNode.volume = 0.85;
     });
   </script>
-  <!-- Fullscreen Screensaver Video Overlay -->
-<div id="screensaverOverlay" class="fixed inset-0 z-50 bg-black opacity-0 pointer-events-none transition-opacity duration-1000 flex items-center justify-center overflow-hidden">
-  <video 
-    id="screensaverVideo" 
-    src="screensaver.mp4" 
-    loop 
-    muted 
-    playsinline 
-    class="w-full h-full object-cover">
-  </video>
-
-  <!-- Elegant floating track tag on screensaver -->
-  <div class="absolute bottom-10 left-10 z-10 spotify-glass px-5 py-3 rounded-2xl border border-white/10 flex items-center space-x-3 pointer-events-auto">
-    <div class="w-3 h-3 rounded-full bg-spotify-green animate-ping"></div>
-    <div>
-      <p id="screensaverTrackTitle" class="text-sm font-black text-white">Now Playing</p>
-      <p class="text-[11px] text-spotify-subtext">Move mouse or tap anywhere to exit screensaver</p>
-    </div>
-  </div>
-</div>
 </body>
 </html>
