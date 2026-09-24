@@ -2,52 +2,89 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Paradise of Songs - Web Player</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Paradise of Songs</title>
+
+  <!-- PWA Meta Tags -->
+  <meta name="theme-color" content="#0a0d14" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Paradise Songs" />
+  <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=192&h=192&fit=crop" />
+
+  <!-- Embedded Web App Manifest for Desktop/Mobile Installation -->
+  <link rel="manifest" href='data:application/manifest+json,{"name":"Paradise of Songs","short_name":"ParadiseMusic","start_url":".","display":"standalone","background_color":"#0a0d14","theme_color":"#1ed760","icons":[{"src":"https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=192&h=192&fit=crop","sizes":"192x192","type":"image/png"},{"src":"https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=512&h=512&fit=crop","sizes":"512x512","type":"image/png"}]}' />
+
+  <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
   <style>
     :root {
-      --primary: #06b6d4;
-      --primary-glow: rgba(6, 182, 212, 0.35);
-      --bg-dark: #0a0f1d;
-      --card-bg: rgba(16, 24, 40, 0.75);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --text-main: #f8fafc;
-      --text-sub: #94a3b8;
-      --accent: #38bdf8;
+      --spotify-green: #1ed760;
+      --spotify-green-hover: #1fdf64;
+      --spotify-green-glow: rgba(30, 215, 96, 0.35);
+      --bg-base: #06090f;
+      --surface-glass: rgba(18, 24, 38, 0.65);
+      --surface-border: rgba(255, 255, 255, 0.08);
+      --text-bright: #ffffff;
+      --text-dim: #94a3b8;
+      --accent-glow: rgba(30, 215, 96, 0.15);
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
-      background-color: var(--bg-dark);
-      background-image: 
-        radial-gradient(at 0% 0%, rgba(6, 182, 212, 0.15) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(56, 189, 248, 0.12) 0px, transparent 50%);
-      color: var(--text-main);
+      background-color: var(--bg-base);
+      color: var(--text-bright);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       overflow-x: hidden;
+      position: relative;
     }
 
+    /* Ambient Wallpaper Layer */
+    #ambientBg {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      transition: background-image 0.8s ease;
+      filter: blur(40px) brightness(0.35);
+      transform: scale(1.1);
+    }
+
+    #ambientOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background: radial-gradient(circle at 20% 20%, rgba(30, 215, 96, 0.08), transparent 45%),
+                  radial-gradient(circle at 80% 80%, rgba(14, 165, 233, 0.08), transparent 45%),
+                  rgba(6, 9, 15, 0.85);
+    }
+
+    /* Header */
     header {
-      padding: 24px 32px;
+      padding: 18px 32px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid var(--card-border);
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(10, 13, 20, 0.5);
+      border-bottom: 1px solid var(--surface-border);
       position: sticky;
       top: 0;
       z-index: 50;
@@ -57,671 +94,843 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      font-size: 1.3rem;
-      font-weight: 700;
+      font-size: 1.25rem;
+      font-weight: 800;
       letter-spacing: -0.5px;
-      color: #fff;
     }
 
     .brand i {
-      color: var(--primary);
-      text-shadow: 0 0 16px var(--primary-glow);
+      color: var(--spotify-green);
+      text-shadow: 0 0 16px var(--spotify-green-glow);
     }
 
-    .main-container {
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pill-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--surface-border);
+      color: var(--text-bright);
+      padding: 8px 14px;
+      border-radius: 9999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .pill-btn:hover {
+      background: rgba(255, 255, 255, 0.16);
+      transform: translateY(-1px);
+    }
+
+    .pill-btn.install-btn {
+      background: var(--spotify-green);
+      color: #041008;
+      border-color: var(--spotify-green);
+      display: none;
+    }
+
+    .pill-btn.install-btn:hover {
+      background: var(--spotify-green-hover);
+      box-shadow: 0 0 20px var(--spotify-green-glow);
+    }
+
+    /* Main Container */
+    .main-grid {
       flex: 1;
       display: grid;
       grid-template-columns: 1fr 380px;
-      gap: 32px;
-      padding: 32px;
-      max-width: 1400px;
+      gap: 28px;
+      padding: 28px 32px;
+      max-width: 1440px;
       margin: 0 auto;
       width: 100%;
     }
 
-    @media (max-width: 992px) {
-      .main-container {
+    @media (max-width: 960px) {
+      .main-grid {
         grid-template-columns: 1fr;
+        padding: 16px;
+        gap: 20px;
+      }
+      header {
+        padding: 14px 18px;
       }
     }
 
-    /* Active Player Screen */
-    .player-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 24px;
-      padding: 40px;
+    /* Player Box */
+    .player-deck {
+      background: var(--surface-glass);
+      border: 1px solid var(--surface-border);
+      border-radius: 28px;
+      padding: 40px 32px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
       position: relative;
-      overflow: hidden;
-      backdrop-filter: blur(20px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
     }
 
-    .cover-art-container {
-      width: 260px;
-      height: 260px;
-      border-radius: 20px;
+    .cover-shell {
+      width: 280px;
+      height: 280px;
+      border-radius: 24px;
       overflow: hidden;
-      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.5);
+      margin-bottom: 26px;
       position: relative;
-      margin-bottom: 24px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.12);
     }
 
-    .cover-art-container img {
+    @media (max-width: 480px) {
+      .cover-shell {
+        width: 220px;
+        height: 220px;
+      }
+      .player-deck {
+        padding: 24px 16px;
+      }
+    }
+
+    .cover-shell img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transition: transform 0.4s ease;
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .playing .cover-art-container img {
-      transform: scale(1.05);
+    .playing .cover-shell img {
+      transform: scale(1.06);
     }
 
-    .track-meta {
+    .track-info {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
       width: 100%;
     }
 
     .track-title {
-      font-size: 1.5rem;
-      font-weight: 700;
+      font-size: 1.6rem;
+      font-weight: 800;
       margin-bottom: 6px;
-      white-space: nowrap;
+      letter-spacing: -0.5px;
       overflow: hidden;
       text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .track-artist {
-      font-size: 1rem;
-      color: var(--text-sub);
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-dim);
     }
 
-    /* Audio Visualizer Canvas */
+    /* Visualizer Canvas */
     #visualizer {
       width: 100%;
-      height: 70px;
-      margin-bottom: 24px;
-      border-radius: 12px;
+      height: 60px;
+      margin-bottom: 20px;
     }
 
-    /* Progress Bar */
-    .progress-wrapper {
+    /* Scrubber */
+    .scrubber-zone {
       width: 100%;
-      margin-bottom: 28px;
+      max-width: 600px;
+      margin-bottom: 24px;
     }
 
-    .time-info {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.8rem;
-      color: var(--text-sub);
-      margin-top: 8px;
-    }
-
-    .progress-bar-container {
-      position: relative;
+    .progress-track {
       width: 100%;
       height: 6px;
       background: rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
+      border-radius: 9999px;
+      position: relative;
       cursor: pointer;
     }
 
-    .progress-bar {
+    .progress-fill {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, var(--primary), var(--accent));
-      border-radius: 10px;
-      position: relative;
+      background: var(--spotify-green);
+      border-radius: 9999px;
+      box-shadow: 0 0 12px var(--spotify-green-glow);
     }
 
-    /* Controls */
-    .controls {
+    .time-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      margin-top: 8px;
+    }
+
+    /* Transport Controls */
+    .controls-deck {
       display: flex;
       align-items: center;
       gap: 24px;
     }
 
-    .btn-action {
+    .icon-btn {
       background: none;
       border: none;
-      color: var(--text-sub);
-      font-size: 1.25rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
+      color: var(--text-dim);
+      font-size: 1.3rem;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.2s ease;
     }
 
-    .btn-action:hover {
+    .icon-btn:hover {
       color: #fff;
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.08);
+      transform: scale(1.08);
     }
 
-    .btn-play {
-      width: 64px;
-      height: 64px;
-      background: var(--primary);
-      color: #041017;
-      font-size: 1.5rem;
+    .btn-main-play {
+      width: 68px;
+      height: 68px;
+      background: var(--spotify-green);
+      color: #041008;
+      font-size: 1.6rem;
       border-radius: 50%;
-      box-shadow: 0 0 24px var(--primary-glow);
+      box-shadow: 0 8px 30px var(--spotify-green-glow);
     }
 
-    .btn-play:hover {
-      background: #22d3ee;
-      transform: scale(1.06);
-      color: #041017;
+    .btn-main-play:hover {
+      background: var(--spotify-green-hover);
+      transform: scale(1.08);
+      color: #041008;
     }
 
-    /* Playlist Section */
-    .playlist-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 24px;
+    /* Playlist Sidecar */
+    .sidecar-deck {
+      background: var(--surface-glass);
+      border: 1px solid var(--surface-border);
+      border-radius: 28px;
       padding: 24px;
       display: flex;
       flex-direction: column;
-      backdrop-filter: blur(20px);
-      max-height: 700px;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      max-height: 720px;
     }
 
-    .playlist-header {
+    .sidecar-title {
       font-size: 1.1rem;
       font-weight: 700;
       margin-bottom: 16px;
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
     }
 
-    .playlist-count {
-      font-size: 0.8rem;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 2px 10px;
-      border-radius: 12px;
-      color: var(--text-sub);
+    .sidecar-counter {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--spotify-green);
+      background: rgba(30, 215, 96, 0.12);
+      padding: 3px 10px;
+      border-radius: 9999px;
     }
 
-    .playlist-items {
+    .playlist-scroll {
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
       padding-right: 4px;
     }
 
-    .playlist-items::-webkit-scrollbar {
+    .playlist-scroll::-webkit-scrollbar {
       width: 5px;
     }
 
-    .playlist-items::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 4px;
+    .playlist-scroll::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 9999px;
     }
 
-    .track-item {
+    .song-cell {
       display: flex;
       align-items: center;
-      gap: 14px;
-      padding: 10px 14px;
-      border-radius: 14px;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 12px;
       cursor: pointer;
       transition: background 0.2s ease;
     }
 
-    .track-item:hover {
+    .song-cell:hover {
       background: rgba(255, 255, 255, 0.05);
     }
 
-    .track-item.active {
-      background: rgba(6, 182, 212, 0.12);
-      border: 1px solid rgba(6, 182, 212, 0.3);
+    .song-cell.active {
+      background: rgba(30, 215, 96, 0.15);
+      border: 1px solid rgba(30, 215, 96, 0.3);
     }
 
-    .track-item.active .item-title {
-      color: var(--primary);
+    .song-cell.active .cell-title {
+      color: var(--spotify-green);
     }
 
-    .item-cover {
+    .cell-thumb {
       width: 44px;
       height: 44px;
       border-radius: 8px;
       object-fit: cover;
     }
 
-    .item-details {
+    .cell-texts {
       flex: 1;
       overflow: hidden;
     }
 
-    .item-title {
-      font-size: 0.9rem;
+    .cell-title {
+      font-size: 0.88rem;
       font-weight: 600;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    .item-artist {
+    .cell-artist {
       font-size: 0.75rem;
-      color: var(--text-sub);
+      color: var(--text-dim);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+    }
+
+    /* Modal for Custom Background */
+    .bg-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 20px;
+    }
+
+    .bg-modal.open {
+      display: flex;
+    }
+
+    .modal-sheet {
+      background: #111624;
+      border: 1px solid var(--surface-border);
+      border-radius: 24px;
+      width: 100%;
+      max-width: 440px;
+      padding: 28px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
+    }
+
+    .modal-sheet h3 {
+      font-size: 1.25rem;
+      margin-bottom: 8px;
+    }
+
+    .modal-sheet p {
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      margin-bottom: 20px;
+    }
+
+    .preset-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .preset-dot {
+      height: 48px;
+      border-radius: 10px;
+      cursor: pointer;
+      background-size: cover;
+      background-position: center;
+      border: 2px solid transparent;
+      transition: all 0.2s ease;
+    }
+
+    .preset-dot:hover {
+      border-color: var(--spotify-green);
+      transform: scale(1.05);
+    }
+
+    .file-input-wrapper {
+      position: relative;
+      margin-bottom: 16px;
+    }
+
+    .file-input-wrapper input[type="file"] {
+      display: none;
+    }
+
+    .custom-upload-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px dashed rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      color: var(--text-bright);
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .custom-upload-btn:hover {
+      background: rgba(255, 255, 255, 0.14);
+      border-color: var(--spotify-green);
+    }
+
+    .modal-btn-row {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
 
+  <!-- Ambient Dynamic Wallpapers -->
+  <div id="ambientBg"></div>
+  <div id="ambientOverlay"></div>
+
+  <!-- Header -->
   <header>
     <div class="brand">
-      <i class="fa-solid fa-compact-disc fa-spin" style="--fa-animation-duration: 4s;"></i>
+      <i class="fa-solid fa-record-vinyl fa-spin" style="--fa-animation-duration: 5s;"></i>
       <span>Paradise of Songs</span>
     </div>
-    <div style="font-size: 0.85rem; color: var(--text-sub);">
-      <i class="fa-solid fa-bolt" style="color: var(--primary);"></i> Nextcloud Direct Stream
+    <div class="header-actions">
+      <button class="pill-btn install-btn" id="installPwaBtn">
+        <i class="fa-solid fa-download"></i> Install App
+      </button>
+      <button class="pill-btn" id="openBgModalBtn">
+        <i class="fa-solid fa-palette"></i> Wallpaper
+      </button>
     </div>
   </header>
 
-  <main class="main-container">
-    <!-- Active Player UI -->
-    <section class="player-card" id="playerContainer">
-      <div class="cover-art-container">
-        <img id="currentCover" src="" alt="Album Art" />
+  <!-- Main Grid -->
+  <main class="main-grid">
+    <!-- Active Player Unit -->
+    <section class="player-deck" id="playerDeck">
+      <div class="cover-shell">
+        <img id="mainCover" src="" alt="Album Artwork" />
       </div>
 
-      <div class="track-meta">
-        <div class="track-title" id="currentTitle">Select a track</div>
-        <div class="track-artist" id="currentArtist">-</div>
+      <div class="track-info">
+        <div class="track-title" id="mainTitle">Select a track</div>
+        <div class="track-artist" id="mainArtist">Paradise Records</div>
       </div>
 
-      <!-- Frequency Visualizer -->
       <canvas id="visualizer"></canvas>
 
-      <!-- Progress -->
-      <div class="progress-wrapper">
-        <div class="progress-bar-container" id="progressContainer">
-          <div class="progress-bar" id="progressBar"></div>
+      <div class="scrubber-zone">
+        <div class="progress-track" id="progressTrack">
+          <div class="progress-fill" id="progressFill"></div>
         </div>
-        <div class="time-info">
-          <span id="currentTime">0:00</span>
-          <span id="totalDuration">0:00</span>
+        <div class="time-labels">
+          <span id="elapsedTime">0:00</span>
+          <span id="totalTime">0:00</span>
         </div>
       </div>
 
-      <!-- Control Buttons -->
-      <div class="controls">
-        <button class="btn-action" id="prevBtn" title="Previous"><i class="fa-solid fa-backward-step"></i></button>
-        <button class="btn-action btn-play" id="playBtn" title="Play/Pause"><i class="fa-solid fa-play" id="playIcon"></i></button>
-        <button class="btn-action" id="nextBtn" title="Next"><i class="fa-solid fa-forward-step"></i></button>
+      <div class="controls-deck">
+        <button class="icon-btn" id="prevTrackBtn" title="Previous"><i class="fa-solid fa-backward-step"></i></button>
+        <button class="icon-btn btn-main-play" id="playToggleBtn" title="Play"><i class="fa-solid fa-play" id="playIcon"></i></button>
+        <button class="icon-btn" id="nextTrackBtn" title="Next"><i class="fa-solid fa-forward-step"></i></button>
       </div>
     </section>
 
-    <!-- Playlist Sidebar -->
-    <aside class="playlist-card">
-      <div class="playlist-header">
+    <!-- Side Playlist Deck -->
+    <aside class="sidecar-deck">
+      <div class="sidecar-title">
         <span>Library Tracks</span>
-        <span class="playlist-count" id="trackCount">0 tracks</span>
+        <span class="sidecar-counter" id="songCounter">18 Songs</span>
       </div>
-      <div class="playlist-items" id="playlistContainer"></div>
+      <div class="playlist-scroll" id="songRows"></div>
     </aside>
   </main>
 
-  <audio id="audioElement" crossorigin="anonymous" preload="metadata"></audio>
+  <!-- Background Customizer Modal -->
+  <div class="bg-modal" id="bgModal">
+    <div class="modal-sheet">
+      <h3>Personalize Theme</h3>
+      <p>Choose an ambient preset or upload your own wallpaper from your device.</p>
+
+      <div class="preset-row">
+        <div class="preset-dot" style="background-image: url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=300&q=80');" onclick="applyPreset('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1600&q=80')"></div>
+        <div class="preset-dot" style="background-image: url('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&q=80');" onclick="applyPreset('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1600&q=80')"></div>
+        <div class="preset-dot" style="background-image: url('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&q=80');" onclick="applyPreset('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1600&q=80')"></div>
+        <div class="preset-dot" style="background-image: url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=300&q=80');" onclick="applyPreset('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1600&q=80')"></div>
+      </div>
+
+      <div class="file-input-wrapper">
+        <label for="customImgUpload" class="custom-upload-btn">
+          <i class="fa-solid fa-cloud-arrow-up"></i> Upload From Device
+        </label>
+        <input type="file" id="customImgUpload" accept="image/*" />
+      </div>
+
+      <div class="modal-btn-row">
+        <button class="pill-btn" onclick="resetDefaultTheme()">Default Theme</button>
+        <button class="pill-btn" onclick="closeBgModal()">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Audio Element configured with Cross-Origin for Nextcloud proxy -->
+  <audio id="audioEngine" crossorigin="anonymous" preload="metadata"></audio>
 
   <script>
-    // BASE NEXTCLOUD SECURE ENDPOINT
+    // -------------------------------------------------------------------------
+    // 1. DATA SOURCE & STREAMING DEFINITIONS
+    // -------------------------------------------------------------------------
     const NC_BASE = "https://cloud.paradiseacademi.com/s/6HegKRmeWapdns9/download?path=%2F&files=";
 
-    function getNcUrl(filename) {
-      return NC_BASE + encodeURIComponent(filename);
+    function getNcUrl(file) {
+      return NC_BASE + encodeURIComponent(file);
     }
 
-    // ALL 18 TRACKS FROM YOUR NEXTCLOUD LIBRARY
-    const SONGS_LIST = [
-      {
-        id: 'nc_1',
-        title: 'ARAYANA',
-        artist: 'Paradise Master',
-        duration: '3:20',
-        cover: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400&q=80',
-        url: getNcUrl('ARAYANA.mp3')
-      },
-      {
-        id: 'nc_2',
-        title: 'Ada Bommale',
-        artist: 'Vaazha 2',
-        duration: '3:15',
-        cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&q=80',
-        url: getNcUrl('Ada Bommale - Vaazha 2.mp3')
-      },
-      {
-        id: 'nc_3',
-        title: 'Aathmavile Anandhame',
-        artist: 'Sajeer Koppam',
-        duration: '3:45',
-        cover: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400&q=80',
-        url: getNcUrl('Aathmavile Anandhame - Sajeer Koppam.mp3')
-      },
-      {
-        id: 'nc_4',
-        title: 'Baby love',
-        artist: 'Zuby Zuby Zuby',
-        duration: '3:18',
-        cover: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400&q=80',
-        url: getNcUrl('Baby love - Zuby Zuby Zuby.mp3')
-      },
-      {
-        id: 'nc_5',
-        title: 'Chammak Challo',
-        artist: 'Ra One (2011) HD',
-        duration: '3:46',
-        cover: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400&q=80',
-        url: getNcUrl('Chammak Challo - Ra One (2011) HD 720p.mp3')
-      },
-      {
-        id: 'nc_6',
-        title: 'Chinnamma Adi',
-        artist: 'Folk Fusion',
-        duration: '3:30',
-        cover: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&q=80',
-        url: getNcUrl('Chinnamma Adi@6EI2NUkxwuZuGKfJ9BB7PJ (1).mp3')
-      },
-      {
-        id: 'nc_7',
-        title: 'Chirapunji',
-        artist: 'Nihal Sadiq Ft Hanan Shaah',
-        duration: '3:25',
-        cover: 'https://images.unsplash.com/photo-1520523839898-507127054976?w=400&q=80',
-        url: getNcUrl('Chirapunji - Nihal Sadiq Ft Hanan Shaah.mp3')
-      },
-      {
-        id: 'nc_8',
-        title: 'Delulu Delulu',
-        artist: 'Athi Bheekara Kaamukan',
-        duration: '3:12',
-        cover: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&q=80',
-        url: getNcUrl('Delulu Delulu - Athi Bheekara Kaamukan.mp3')
-      },
-      {
-        id: 'nc_9',
-        title: 'Habibi Drip',
-        artist: 'Best Of Dabzee',
-        duration: '3:15',
-        cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&q=80',
-        url: getNcUrl('Habibi Drip - Best Of Dabzee.mp3')
-      },
-      {
-        id: 'nc_10',
-        title: 'Manavaalan Thug',
-        artist: 'Best Of Dabzee',
-        duration: '3:40',
-        cover: 'https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?w=400&q=80',
-        url: getNcUrl('Manavaalan Thug - Best Of Dabzee.mp3')
-      },
-      {
-        id: 'nc_11',
-        title: 'Onnaam Kunninmel',
-        artist: 'Magic Mushrooms',
-        duration: '3:22',
-        cover: 'https://images.unsplash.com/photo-1465847899084-d164df4dedc6?w=400&q=80',
-        url: getNcUrl('Onnaam Kunninmel - Magic Mushrooms.mp3')
-      },
-      {
-        id: 'nc_12',
-        title: 'PL',
-        artist: 'Master Track',
-        duration: '2:55',
-        cover: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=400&q=80',
-        url: getNcUrl('PL.mp3')
-      },
-      {
-        id: 'nc_13',
-        title: 'Pallathi Meena Pole',
-        artist: 'Pongala',
-        duration: '3:30',
-        cover: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&q=80',
-        url: getNcUrl('Pallathi Meena Pole - Pongala.mp3')
-      },
-      {
-        id: 'nc_14',
-        title: 'Pathira',
-        artist: 'KoshalWorld',
-        duration: '3:38',
-        cover: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=400&q=80',
-        url: getNcUrl('Pathira(KoshalWorld.Com).mp3')
-      },
-      {
-        id: 'nc_15',
-        title: 'Pattuma',
-        artist: 'Love Insurance Kompany',
-        duration: '3:50',
-        cover: 'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=400&q=80',
-        url: getNcUrl('Pattuma - Love Insurance Kompany.mp3')
-      },
-      {
-        id: 'nc_16',
-        title: 'Pavazha Malli',
-        artist: 'Sai Abhyankkar, Shruti Haasan',
-        duration: '3:34',
-        cover: 'https://images.unsplash.com/photo-1506157786151-b8491531f063?w=400&q=80',
-        url: getNcUrl('Pavazha Malli - Sai Abhyankkar, Shruti Haasan.mp3')
-      },
-      {
-        id: 'nc_17',
-        title: 'പ്രായം നമ്മിൽ മോഹം നൽകി (Prayam Nammil)',
-        artist: 'Evergreen Classic',
-        duration: '4:10',
-        cover: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&q=80',
-        url: getNcUrl('പ്രായം നമ്മിൽ മോഹം നൽകി Prayam Nammil Moham Nira...mp3')
-      },
-      {
-        id: 'nc_18',
-        title: 'രാക്കുയിൽ പാടീ (Raakkuyil Paadi)',
-        artist: 'Kunchacko Boban Hits',
-        duration: '4:25',
-        cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&q=80',
-        url: getNcUrl('രാക്കുയിൽ പാടീ HD Raakkuyil Paadi Video Song Kunchacko Bo...mp3')
-      }
+    const TRACKS = [
+      { id: 't1',  title: 'ARAYANA', artist: 'Paradise Audio', duration: '3:20', cover: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&q=80', url: getNcUrl('ARAYANA.mp3') },
+      { id: 't2',  title: 'Ada Bommale', artist: 'Vaazha 2', duration: '3:15', cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&q=80', url: getNcUrl('Ada Bommale - Vaazha 2.mp3') },
+      { id: 't3',  title: 'Aathmavile Anandhame', artist: 'Sajeer Koppam', duration: '3:45', cover: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&q=80', url: getNcUrl('Aathmavile Anandhame - Sajeer Koppam.mp3') },
+      { id: 't4',  title: 'Baby love', artist: 'Zuby Zuby Zuby', duration: '3:18', cover: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=500&q=80', url: getNcUrl('Baby love - Zuby Zuby Zuby.mp3') },
+      { id: 't5',  title: 'Chammak Challo', artist: 'Ra One (2011)', duration: '3:46', cover: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&q=80', url: getNcUrl('Chammak Challo - Ra One (2011) HD 720p.mp3') },
+      { id: 't6',  title: 'Chinnamma Adi', artist: 'Folk Fusion', duration: '3:30', cover: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=500&q=80', url: getNcUrl('Chinnamma Adi@6EI2NUkxwuZuGKfJ9BB7PJ (1).mp3') },
+      { id: 't7',  title: 'Chirapunji', artist: 'Nihal Sadiq Ft Hanan Shaah', duration: '3:25', cover: 'https://images.unsplash.com/photo-1520523839898-507127054976?w=500&q=80', url: getNcUrl('Chirapunji - Nihal Sadiq Ft Hanan Shaah.mp3') },
+      { id: 't8',  title: 'Delulu Delulu', artist: 'Athi Bheekara Kaamukan', duration: '3:12', cover: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=500&q=80', url: getNcUrl('Delulu Delulu - Athi Bheekara Kaamukan.mp3') },
+      { id: 't9',  title: 'Habibi Drip', artist: 'Best Of Dabzee', duration: '3:15', cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&q=80', url: getNcUrl('Habibi Drip - Best Of Dabzee.mp3') },
+      { id: 't10', title: 'Manavaalan Thug', artist: 'Best Of Dabzee', duration: '3:40', cover: 'https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?w=500&q=80', url: getNcUrl('Manavaalan Thug - Best Of Dabzee.mp3') },
+      { id: 't11', title: 'Onnaam Kunninmel', artist: 'Magic Mushrooms', duration: '3:22', cover: 'https://images.unsplash.com/photo-1465847899084-d164df4dedc6?w=500&q=80', url: getNcUrl('Onnaam Kunninmel - Magic Mushrooms.mp3') },
+      { id: 't12', title: 'PL', artist: 'Studio Track', duration: '2:55', cover: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=500&q=80', url: getNcUrl('PL.mp3') },
+      { id: 't13', title: 'Pallathi Meena Pole', artist: 'Pongala', duration: '3:30', cover: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=500&q=80', url: getNcUrl('Pallathi Meena Pole - Pongala.mp3') },
+      { id: 't14', title: 'Pathira', artist: 'KoshalWorld', duration: '3:38', cover: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=500&q=80', url: getNcUrl('Pathira(KoshalWorld.Com).mp3') },
+      { id: 't15', title: 'Pattuma', artist: 'Love Insurance Kompany', duration: '3:50', cover: 'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=500&q=80', url: getNcUrl('Pattuma - Love Insurance Kompany.mp3') },
+      { id: 't16', title: 'Pavazha Malli', artist: 'Sai Abhyankkar, Shruti Haasan', duration: '3:34', cover: 'https://images.unsplash.com/photo-1506157786151-b8491531f063?w=500&q=80', url: getNcUrl('Pavazha Malli - Sai Abhyankkar, Shruti Haasan.mp3') },
+      { id: 't17', title: 'പ്രായം നമ്മിൽ മോഹം നൽകി', artist: 'Evergreen Classic', duration: '4:10', cover: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=500&q=80', url: getNcUrl('പ്രായം നമ്മിൽ മോഹം നൽകി Prayam Nammil Moham Nira...mp3') },
+      { id: 't18', title: 'രാക്കുയിൽ പാടീ', artist: 'Kunchacko Boban Hits', duration: '4:25', cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&q=80', url: getNcUrl('രാക്കുയിൽ പാടീ HD Raakkuyil Paadi Video Song Kunchacko Bo...mp3') }
     ];
 
-    // DOM ELEMENTS
-    const audio = document.getElementById('audioElement');
-    const playBtn = document.getElementById('playBtn');
+    // -------------------------------------------------------------------------
+    // 2. STATE & ELEMENT BINDINGS
+    // -------------------------------------------------------------------------
+    let currentIdx = 0;
+    let isPlaying = false;
+    let audioCtx, analyser, sourceNode, freqData;
+    let isVisualizerReady = false;
+
+    const audio = document.getElementById('audioEngine');
+    const mainTitle = document.getElementById('mainTitle');
+    const mainArtist = document.getElementById('mainArtist');
+    const mainCover = document.getElementById('mainCover');
+    const playToggleBtn = document.getElementById('playToggleBtn');
     const playIcon = document.getElementById('playIcon');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const currentTitle = document.getElementById('currentTitle');
-    const currentArtist = document.getElementById('currentArtist');
-    const currentCover = document.getElementById('currentCover');
-    const progressContainer = document.getElementById('progressContainer');
-    const progressBar = document.getElementById('progressBar');
-    const currentTimeEl = document.getElementById('currentTime');
-    const totalDurationEl = document.getElementById('totalDuration');
-    const playlistContainer = document.getElementById('playlistContainer');
-    const trackCount = document.getElementById('trackCount');
-    const playerContainer = document.getElementById('playerContainer');
+    const prevTrackBtn = document.getElementById('prevTrackBtn');
+    const nextTrackBtn = document.getElementById('nextTrackBtn');
+    const progressTrack = document.getElementById('progressTrack');
+    const progressFill = document.getElementById('progressFill');
+    const elapsedTime = document.getElementById('elapsedTime');
+    const totalTime = document.getElementById('totalTime');
+    const songRows = document.getElementById('songRows');
+    const playerDeck = document.getElementById('playerDeck');
+    const ambientBg = document.getElementById('ambientBg');
     const canvas = document.getElementById('visualizer');
     const canvasCtx = canvas.getContext('2d');
 
-    let currentIndex = 0;
-    let isPlaying = false;
-    let audioCtx, analyser, source, dataArray;
-    let visualizerInitialized = false;
-
-    // RENDER PLAYLIST
-    function buildPlaylist() {
-      playlistContainer.innerHTML = '';
-      trackCount.textContent = `${SONGS_LIST.length} tracks`;
-
-      SONGS_LIST.forEach((song, index) => {
+    // -------------------------------------------------------------------------
+    // 3. PLAYLIST RENDERING
+    // -------------------------------------------------------------------------
+    function renderPlaylist() {
+      songRows.innerHTML = '';
+      TRACKS.forEach((track, idx) => {
         const item = document.createElement('div');
-        item.className = `track-item ${index === currentIndex ? 'active' : ''}`;
-        item.onclick = () => selectTrack(index);
+        item.className = `song-cell ${idx === currentIdx ? 'active' : ''}`;
+        item.onclick = () => {
+          loadTrack(idx);
+          startPlayback();
+        };
 
         item.innerHTML = `
-          <img class="item-cover" src="${song.cover}" alt="cover" />
-          <div class="item-details">
-            <div class="item-title">${song.title}</div>
-            <div class="item-artist">${song.artist}</div>
+          <img class="cell-thumb" src="${track.cover}" alt="Artwork" />
+          <div class="cell-texts">
+            <div class="cell-title">${track.title}</div>
+            <div class="cell-artist">${track.artist}</div>
           </div>
-          <div style="font-size: 0.75rem; color: var(--text-sub);">${song.duration}</div>
+          <span style="font-size: 0.72rem; color: var(--text-dim);">${track.duration}</span>
         `;
-        playlistContainer.appendChild(item);
+        songRows.appendChild(item);
       });
     }
 
-    // LOAD TRACK
+    // -------------------------------------------------------------------------
+    // 4. LOAD & SYNC TRACK + BACKGROUND PLAYBACK (MEDIA SESSION API)
+    // -------------------------------------------------------------------------
     function loadTrack(index) {
-      currentIndex = index;
-      const song = SONGS_LIST[currentIndex];
-      audio.src = song.url;
-      currentTitle.textContent = song.title;
-      currentArtist.textContent = song.artist;
-      currentCover.src = song.cover;
+      currentIdx = index;
+      const track = TRACKS[currentIdx];
+      audio.src = track.url;
+      mainTitle.textContent = track.title;
+      mainArtist.textContent = track.artist;
+      mainCover.src = track.cover;
 
-      document.querySelectorAll('.track-item').forEach((el, i) => {
-        el.classList.toggle('active', i === currentIndex);
+      // Update ambient glow if user didn't lock a custom wallpaper
+      if (!localStorage.getItem('customUserBg')) {
+        ambientBg.style.backgroundImage = `url('${track.cover}')`;
+      }
+
+      document.querySelectorAll('.song-cell').forEach((el, i) => {
+        el.classList.toggle('active', i === currentIdx);
       });
+
+      // Enable Mobile Lock-Screen Controls & Background Playback
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: track.title,
+          artist: track.artist,
+          album: 'Paradise of Songs',
+          artwork: [
+            { src: track.cover, sizes: '96x96', type: 'image/jpeg' },
+            { src: track.cover, sizes: '192x192', type: 'image/jpeg' },
+            { src: track.cover, sizes: '512x512', type: 'image/jpeg' }
+          ]
+        });
+
+        navigator.mediaSession.setActionHandler('play', () => startPlayback());
+        navigator.mediaSession.setActionHandler('pause', () => pausePlayback());
+        navigator.mediaSession.setActionHandler('previoustrack', () => prevTrackBtn.click());
+        navigator.mediaSession.setActionHandler('nexttrack', () => nextTrackBtn.click());
+        navigator.mediaSession.setActionHandler('seekto', (details) => {
+          if (details.seekTime && audio.duration) audio.currentTime = details.seekTime;
+        });
+      }
     }
 
-    function selectTrack(index) {
-      loadTrack(index);
-      playTrack();
-    }
-
-    function playTrack() {
-      initVisualizer();
+    function startPlayback() {
+      setupVisualizer();
       audio.play().then(() => {
         isPlaying = true;
         playIcon.className = 'fa-solid fa-pause';
-        playerContainer.classList.add('playing');
-      }).catch(err => {
-        console.error("Playback error:", err);
-      });
+        playerDeck.classList.add('playing');
+        if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
+      }).catch(e => console.warn('Autoplay restricted:', e));
     }
 
-    function pauseTrack() {
+    function pausePlayback() {
       audio.pause();
       isPlaying = false;
       playIcon.className = 'fa-solid fa-play';
-      playerContainer.classList.remove('playing');
+      playerDeck.classList.remove('playing');
+      if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
     }
 
-    playBtn.addEventListener('click', () => {
-      if (isPlaying) {
-        pauseTrack();
-      } else {
-        playTrack();
-      }
-    });
+    playToggleBtn.onclick = () => (isPlaying ? pausePlayback() : startPlayback());
 
-    prevBtn.addEventListener('click', () => {
-      currentIndex = (currentIndex - 1 + SONGS_LIST.length) % SONGS_LIST.length;
-      loadTrack(currentIndex);
-      playTrack();
-    });
+    prevTrackBtn.onclick = () => {
+      currentIdx = (currentIdx - 1 + TRACKS.length) % TRACKS.length;
+      loadTrack(currentIdx);
+      startPlayback();
+    };
 
-    nextBtn.addEventListener('click', () => {
-      currentIndex = (currentIndex + 1) % SONGS_LIST.length;
-      loadTrack(currentIndex);
-      playTrack();
-    });
+    nextTrackBtn.onclick = () => {
+      currentIdx = (currentIdx + 1) % TRACKS.length;
+      loadTrack(currentIdx);
+      startPlayback();
+    };
 
-    audio.addEventListener('ended', () => {
-      nextBtn.click();
-    });
+    audio.onended = () => nextTrackBtn.click();
 
-    // PROGRESS BAR UPDATES
-    audio.addEventListener('timeupdate', () => {
+    // -------------------------------------------------------------------------
+    // 5. PROGRESS & SCRUBBER
+    // -------------------------------------------------------------------------
+    audio.ontimeupdate = () => {
       if (audio.duration) {
         const pct = (audio.currentTime / audio.duration) * 100;
-        progressBar.style.width = `${pct}%`;
-        currentTimeEl.textContent = formatTime(audio.currentTime);
-        totalDurationEl.textContent = formatTime(audio.duration);
+        progressFill.style.width = `${pct}%`;
+        elapsedTime.textContent = formatDuration(audio.currentTime);
+        totalTime.textContent = formatDuration(audio.duration);
       }
-    });
+    };
 
-    progressContainer.addEventListener('click', (e) => {
-      const rect = progressContainer.getBoundingClientRect();
+    progressTrack.onclick = (e) => {
+      const rect = progressTrack.getBoundingClientRect();
       const clickX = e.clientX - rect.left;
-      const width = rect.width;
       if (audio.duration) {
-        audio.currentTime = (clickX / width) * audio.duration;
+        audio.currentTime = (clickX / rect.width) * audio.duration;
       }
-    });
+    };
 
-    function formatTime(sec) {
-      const mins = Math.floor(sec / 60);
-      const secs = Math.floor(sec % 60);
-      return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    function formatDuration(sec) {
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return `${m}:${s < 10 ? '0' : ''}${s}`;
     }
 
-    // AUDIO VISUALIZER
-    function initVisualizer() {
-      if (visualizerInitialized) return;
+    // -------------------------------------------------------------------------
+    // 6. CANVAS AUDIO VISUALIZER
+    // -------------------------------------------------------------------------
+    function setupVisualizer() {
+      if (isVisualizerReady) return;
       try {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         analyser = audioCtx.createAnalyser();
-        source = audioCtx.createMediaElementSource(audio);
-        source.connect(analyser);
+        sourceNode = audioCtx.createMediaElementSource(audio);
+        sourceNode.connect(analyser);
         analyser.connect(audioCtx.destination);
         analyser.fftSize = 64;
-        const bufferLength = analyser.frequencyBinCount;
-        dataArray = new Uint8Array(bufferLength);
-        visualizerInitialized = true;
-        renderVisualizer();
-      } catch (e) {
-        console.warn("Visualizer Web Audio API context initialization skipped:", e);
+        freqData = new Uint8Array(analyser.frequencyBinCount);
+        isVisualizerReady = true;
+        paintVisualizer();
+      } catch (err) {
+        console.warn('Web Audio node initialized with restrictions:', err);
       }
     }
 
-    function renderVisualizer() {
-      requestAnimationFrame(renderVisualizer);
-      if (!visualizerInitialized) return;
+    function paintVisualizer() {
+      requestAnimationFrame(paintVisualizer);
+      if (!isVisualizerReady) return;
 
-      analyser.getByteFrequencyData(dataArray);
+      analyser.getByteFrequencyData(freqData);
       canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
 
-      const barWidth = (canvas.width / dataArray.length) * 1.5;
+      const barWidth = (canvas.width / freqData.length) * 1.6;
       let x = 0;
 
-      for (let i = 0; i < dataArray.length; i++) {
-        const barHeight = (dataArray[i] / 255) * canvas.height;
+      for (let i = 0; i < freqData.length; i++) {
+        const barHeight = (freqData[i] / 255) * canvas.height;
         const grad = canvasCtx.createLinearGradient(0, canvas.height, 0, 0);
-        grad.addColorStop(0, '#06b6d4');
-        grad.addColorStop(1, '#38bdf8');
+        grad.addColorStop(0, '#1ed760');
+        grad.addColorStop(1, '#0ea5e9');
 
         canvasCtx.fillStyle = grad;
-        canvasCtx.fillRect(x, canvas.height - barHeight, barWidth - 2, barHeight);
+        canvasCtx.fillRect(x, canvas.height - barHeight, barWidth - 3, barHeight);
         x += barWidth;
       }
     }
 
-    // RESIZE CANVAS DYNAMICALLY
-    function resizeCanvas() {
-      canvas.width = canvas.parentElement.clientWidth - 80;
-      canvas.height = 70;
+    function adjustCanvasBounds() {
+      canvas.width = canvas.parentElement.clientWidth - 64;
+      canvas.height = 60;
     }
-    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('resize', adjustCanvasBounds);
 
-    // INITIALIZATION
+    // -------------------------------------------------------------------------
+    // 7. USER CUSTOM WALLPAPER (LOCAL STORAGE PERSISTENCE)
+    // -------------------------------------------------------------------------
+    const bgModal = document.getElementById('bgModal');
+    const openBgModalBtn = document.getElementById('openBgModalBtn');
+    const customImgUpload = document.getElementById('customImgUpload');
+
+    openBgModalBtn.onclick = () => bgModal.classList.add('open');
+    function closeBgModal() { bgModal.classList.remove('open'); }
+
+    function applyPreset(url) {
+      ambientBg.style.backgroundImage = `url('${url}')`;
+      localStorage.setItem('customUserBg', url);
+    }
+
+    function resetDefaultTheme() {
+      localStorage.removeItem('customUserBg');
+      ambientBg.style.backgroundImage = `url('${TRACKS[currentIdx].cover}')`;
+      closeBgModal();
+    }
+
+    customImgUpload.onchange = function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          const dataUrl = evt.target.result;
+          ambientBg.style.backgroundImage = `url('${dataUrl}')`;
+          try {
+            localStorage.setItem('customUserBg', dataUrl);
+          } catch(err) {
+            console.warn('Image exceeds local storage quote limit:', err);
+          }
+          closeBgModal();
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+
+    // Restore saved custom background if present
+    const savedBg = localStorage.getItem('customUserBg');
+    if (savedBg) {
+      ambientBg.style.backgroundImage = `url('${savedBg}')`;
+    }
+
+    // -------------------------------------------------------------------------
+    // 8. PWA INSTALLATION BANNER (LAPTOP / DESKTOP / MOBILE)
+    // -------------------------------------------------------------------------
+    let deferredPrompt;
+    const installBtn = document.getElementById('installPwaBtn');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.style.display = 'inline-flex';
+    });
+
+    installBtn.addEventListener('click', async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+          installBtn.style.display = 'none';
+        }
+        deferredPrompt = null;
+      }
+    });
+
+    // Register Inline Service Worker for Full Offline PWA compliance
+    if ('serviceWorker' in navigator) {
+      const swCode = `
+        self.addEventListener('install', (e) => self.skipWaiting());
+        self.addEventListener('activate', (e) => self.clients.claim());
+        self.addEventListener('fetch', (e) => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))));
+      `;
+      const blob = new Blob([swCode], { type: 'application/javascript' });
+      navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
+    }
+
+    // -------------------------------------------------------------------------
+    // 9. STARTUP SEQUENCE
+    // -------------------------------------------------------------------------
     window.addEventListener('DOMContentLoaded', () => {
-      buildPlaylist();
+      renderPlaylist();
       loadTrack(0);
-      resizeCanvas();
+      adjustCanvasBounds();
     });
   </script>
 </body>
