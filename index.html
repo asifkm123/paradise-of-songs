@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PARADISE OF SONGS &bull; Ultimate Sonic Experience</title>
+  <title>PARADISE OF SONGS &bull; Stream Music</title>
 
   <!-- Google Fonts: Plus Jakarta Sans for Spotify Circular Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,7 +14,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <!-- Tailwind Theme Configuration -->
   <script>
     tailwind.config = {
       darkMode: 'class',
@@ -25,10 +24,7 @@
               green: '#1DB954',
               greenHover: '#1ed760',
               black: '#050505',
-              card: 'rgba(18, 18, 22, 0.82)',
-              surface: '#121215',
-              subtext: '#9fa3af',
-              accent: '#f59e0b'
+              subtext: '#9fa3af'
             }
           },
           fontFamily: {
@@ -40,7 +36,6 @@
   </script>
 
   <style>
-    /* Global scrollbar & typography rendering */
     * {
       font-feature-settings: "cv02", "cv03", "cv04", "cv11";
       -webkit-font-smoothing: antialiased;
@@ -66,7 +61,7 @@
       background: #1DB954;
     }
     .spotify-glass {
-      background: rgba(14, 14, 18, 0.82);
+      background: rgba(14, 14, 18, 0.85);
       backdrop-filter: blur(28px);
       -webkit-backdrop-filter: blur(28px);
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -93,12 +88,12 @@
 
 <body class="min-h-screen relative flex flex-col justify-between selection:bg-spotify-green selection:text-black text-sm">
 
-  <!-- Kathakali Wallpaper Backdrop -->
+  <!-- Background Wallpaper with Kathakali Fallback -->
   <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden">
     <img 
       id="bgWallpaper" 
       src="background.jpg" 
-      alt="Kathakali Visual Backdrop" 
+      alt="Backdrop" 
       onerror="if (this.src.indexOf('bg.jpg') === -1 && this.src.indexOf('unsplash') === -1) { this.src='bg.jpg'; } else { this.src='https://images.unsplash.com/photo-1544717305-2782549b5136?w=1920&q=80'; }" 
       class="w-full h-full object-cover object-top scale-105 filter brightness-50 contrast-110 transition-transform duration-1000"
     />
@@ -111,7 +106,7 @@
     <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
       
       <!-- Brand Logo & Title -->
-      <div class="flex items-center space-x-3 group cursor-pointer" onclick="filterByLanguage('MALAYALAM')">
+      <div class="flex items-center space-x-3 group cursor-pointer" onclick="location.reload()">
         <div class="w-11 h-11 rounded-2xl bg-spotify-green flex items-center justify-center text-black shadow-lg shadow-spotify-green/20 group-hover:scale-105 transition-transform duration-200">
           <i data-lucide="music-4" class="w-6 h-6 stroke-[2.5]"></i>
         </div>
@@ -122,11 +117,11 @@
             </h1>
             <span class="text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-spotify-green/20 text-spotify-green tracking-wider border border-spotify-green/30">PRO</span>
           </div>
-          <p class="text-[11px] font-semibold text-spotify-subtext tracking-wide uppercase">Spatial &bull; Lossless &bull; Social Sync</p>
+          <p class="text-[11px] font-semibold text-spotify-subtext tracking-wide uppercase">All Songs &bull; Lossless &bull; Social</p>
         </div>
       </div>
 
-      <!-- Live Users Counter Display (Starts at 14,663 and fluctuates every second) -->
+      <!-- Live Users Counter Display (Starts at 14,663 and changes every second) -->
       <div class="flex items-center space-x-3 spotify-glass-subtle px-3.5 py-1.5 rounded-full border border-white/10 shadow-inner">
         <span class="relative flex h-2.5 w-2.5">
           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-spotify-green opacity-75"></span>
@@ -141,29 +136,20 @@
 
       <!-- Quick Action Buttons -->
       <div class="flex items-center space-x-2">
-        
-        <!-- Buy Me a Coffee Action -->
         <button onclick="openDonationModal()" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-extrabold text-xs shadow-md shadow-amber-500/20 transition-all hover:scale-105 active:scale-95">
           <i data-lucide="coffee" class="w-4 h-4 stroke-[2.5]"></i>
           <span>Buy Me a Coffee</span>
         </button>
 
-        <!-- Audio Engineering Modal Trigger -->
         <button onclick="openAudioSettingsModal()" class="p-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-spotify-subtext hover:text-white transition" title="Dolby & Clarity Settings">
           <i data-lucide="sliders-horizontal" class="w-4 h-4"></i>
         </button>
 
-        <!-- Social Listen & Chat Drawer Trigger -->
-        <button onclick="toggleSocialDrawer()" class="relative p-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-spotify-subtext hover:text-white transition" title="Friends & Social Listening">
+        <button onclick="toggleSocialDrawer()" class="p-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-spotify-subtext hover:text-white transition" title="Friends & Social Listening">
           <i data-lucide="users" class="w-4 h-4"></i>
-          <span id="socialNotificationDot" class="hidden absolute top-1 right-1 w-2 h-2 rounded-full bg-spotify-green animate-ping"></span>
         </button>
 
-        <!-- User Authentication & Account Menu -->
-        <div id="authContainer">
-          <!-- Populated by JS -->
-        </div>
-
+        <div id="authContainer"></div>
       </div>
 
     </div>
@@ -184,18 +170,16 @@
           <div>
             <div class="flex items-center gap-2 justify-center md:justify-start">
               <span class="text-[10px] font-black uppercase tracking-widest text-spotify-green bg-spotify-green/10 border border-spotify-green/30 px-2 py-0.5 rounded-full">Notice Board</span>
-              <span class="text-[11px] text-spotify-subtext font-medium">Sponsor & Advertising Network</span>
+              <span class="text-[11px] text-spotify-subtext font-medium">Sponsor Network</span>
             </div>
-            <!-- EXACT REQUIRED NOTICE TEXT -->
             <h2 class="text-base sm:text-xl font-black tracking-tight text-white mt-0.5">
               ADVERTISE HERE CONTACT ADMIN
             </h2>
-            <p class="text-xs text-spotify-subtext font-normal">Showcase your brand, releases, or products to over 14,000 active live listeners.</p>
+            <p class="text-xs text-spotify-subtext font-normal">Showcase your brand or releases to over 14,000 active live listeners.</p>
           </div>
         </div>
 
         <div class="flex items-center gap-2.5 flex-shrink-0">
-          <!-- Direct Admin Mail Link -->
           <a 
             href="mailto:luiseclat@gmail.com?subject=Advertisement%20Inquiry%20-%20Paradise%20of%20Songs&body=Hello%20Admin,%20I%20would%20like%20to%20advertise%20on%20Paradise%20of%20Songs." 
             class="px-5 py-2.5 bg-white text-black hover:bg-neutral-200 font-extrabold text-xs uppercase tracking-wider rounded-full transition-all duration-200 shadow flex items-center gap-2"
@@ -218,13 +202,11 @@
       <!-- LEFT COLUMN: Advanced Player, Vinyl disc, & Audio Controls (5 Cols) -->
       <section class="lg:col-span-5 spotify-glass rounded-3xl p-5 sm:p-6 flex flex-col justify-between space-y-5">
         
-        <!-- Live Audio Enhancement Badges -->
         <div class="flex items-center justify-between border-b border-white/5 pb-3">
           <div class="flex items-center space-x-2">
             <span class="w-2 h-2 rounded-full bg-spotify-green animate-ping"></span>
             <span class="text-[11px] font-bold uppercase tracking-wider text-spotify-subtext">Direct Audio Stream</span>
           </div>
-          
           <div class="flex items-center gap-1.5">
             <span id="badgeSpatialStatus" class="text-[10px] font-black uppercase px-2 py-0.5 rounded-md bg-white/5 text-zinc-400 border border-white/10">Spatial: Off</span>
             <span id="badgeDolbyStatus" class="text-[10px] font-black uppercase px-2 py-0.5 rounded-md bg-white/5 text-zinc-400 border border-white/10">Dolby: Off</span>
@@ -237,13 +219,13 @@
           <div class="relative w-56 h-56 sm:w-60 sm:h-60 flex items-center justify-center">
             
             <div id="vinylDisc" class="absolute w-52 h-52 sm:w-56 sm:h-56 rounded-full bg-gradient-to-tr from-black via-zinc-900 to-black border-4 border-zinc-800 shadow-2xl flex items-center justify-center vinyl-spinning vinyl-paused transition-all duration-500">
-              <div class="w-18 h-18 rounded-full border-2 border-zinc-700 bg-spotify-black flex items-center justify-center">
+              <div class="w-18 h-18 rounded-full border-2 border-zinc-700 bg-black flex items-center justify-center">
                 <div class="w-6 h-6 rounded-full bg-spotify-green"></div>
               </div>
             </div>
 
             <div class="relative w-48 h-48 rounded-2xl overflow-hidden shadow-2xl border border-white/10 group">
-              <img id="playerCoverImg" src="https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?w=400&q=80" alt="Album Cover" class="w-full h-full object-cover">
+              <img id="playerCoverImg" src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400&q=80" alt="Album Cover" class="w-full h-full object-cover">
               <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
               
               <button onclick="handleAddToPlaylistClick()" title="Save to Playlist" class="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-black/60 hover:bg-spotify-green hover:text-black backdrop-blur-md text-white flex items-center justify-center border border-white/10 transition-transform active:scale-90">
@@ -263,8 +245,8 @@
 
         <!-- Track Title & Artist -->
         <div class="text-center space-y-1">
-          <h3 id="playerTrackTitle" class="text-lg sm:text-xl font-black text-white tracking-tight truncate px-2">Malare (Acoustic Strings)</h3>
-          <p id="playerTrackArtist" class="text-xs font-semibold text-spotify-subtext truncate">Kerala Unplugged Sessions</p>
+          <h3 id="playerTrackTitle" class="text-lg sm:text-xl font-black text-white tracking-tight truncate px-2">ARAYANA</h3>
+          <p id="playerTrackArtist" class="text-xs font-semibold text-spotify-subtext truncate">Official Track</p>
         </div>
 
         <!-- Dynamic Frequency Visualizer -->
@@ -287,12 +269,17 @@
           </div>
           <div class="flex justify-between text-[11px] font-mono font-medium text-spotify-subtext">
             <span id="currentTimeDisplay">0:00</span>
-            <span id="totalTimeDisplay">3:15</span>
+            <span id="totalTimeDisplay">--:--</span>
           </div>
         </div>
 
         <!-- Primary Playback Controls -->
-        <div class="flex items-center justify-center space-x-6">
+        <div class="flex items-center justify-center space-x-4 sm:space-x-5">
+          <!-- Shuffle Button -->
+          <button id="shuffleBtn" onclick="toggleShuffle()" class="p-2 rounded-full hover:bg-white/10 text-spotify-subtext hover:text-spotify-green transition duration-200" title="Random Play">
+            <i data-lucide="shuffle" class="w-4 h-4"></i>
+          </button>
+
           <button onclick="playPrevTrack()" class="p-2.5 rounded-full hover:bg-white/10 text-spotify-subtext hover:text-white transition duration-200" title="Previous Track">
             <i data-lucide="skip-back" class="w-5 h-5 stroke-[2]"></i>
           </button>
@@ -305,14 +292,13 @@
             <i data-lucide="skip-forward" class="w-5 h-5 stroke-[2]"></i>
           </button>
 
-          <button id="loopTrackBtn" onclick="toggleLoopPlayback()" class="p-2.5 rounded-full hover:bg-white/10 text-spotify-subtext hover:text-spotify-green transition duration-200" title="Repeat Track">
+          <button id="loopTrackBtn" onclick="toggleLoopPlayback()" class="p-2 rounded-full hover:bg-white/10 text-spotify-subtext hover:text-spotify-green transition duration-200" title="Repeat Track">
             <i data-lucide="repeat" class="w-4 h-4"></i>
           </button>
         </div>
 
-        <!-- Audio Engineering Quick Switch Bar -->
+        <!-- Clarity & Audio Quick Controls -->
         <div class="bg-white/5 rounded-2xl p-3 border border-white/5 flex flex-wrap items-center justify-between gap-2 text-xs">
-          <!-- Clarity Selector Dropdown -->
           <div class="flex items-center space-x-1.5">
             <span class="text-[10px] font-bold text-spotify-subtext uppercase">Clarity:</span>
             <select id="claritySelect" onchange="updateAudioClarity(this.value)" class="bg-black/50 border border-white/10 text-white text-[11px] rounded-lg px-2 py-1 font-bold focus:outline-none focus:border-spotify-green">
@@ -322,7 +308,6 @@
             </select>
           </div>
 
-          <!-- Quick Spatial & Dolby Toggles -->
           <div class="flex items-center space-x-1.5">
             <button id="quickSpatialBtn" onclick="toggleSpatialAudio()" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 font-bold text-[10px] text-zinc-300 transition">
               Spatial
@@ -353,22 +338,22 @@
 
           <label class="cursor-pointer font-bold text-spotify-subtext hover:text-spotify-green flex items-center gap-1.5 transition text-[11px]">
             <i data-lucide="folder-plus" class="w-3.5 h-3.5"></i>
-            <span>Import MP3</span>
+            <span>Upload MP3</span>
             <input type="file" id="localAudioFile" accept="audio/*" class="hidden" onchange="uploadLocalMusic(event)">
           </label>
         </div>
 
       </section>
 
-      <!-- RIGHT COLUMN: Language Selection, Song Catalog & User Playlists (7 Cols) -->
+      <!-- RIGHT COLUMN: Single Unified "Songs" Folder List (7 Cols) -->
       <section class="lg:col-span-7 spotify-glass rounded-3xl p-5 sm:p-6 flex flex-col space-y-4">
         
         <!-- Navigation View Bar -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/5 pb-3">
-          
           <div class="flex items-center space-x-2">
-            <button id="viewTabExplore" onclick="switchRightTab('explore')" class="px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-spotify-green text-black shadow transition">
-              Explore Songs
+            <button id="viewTabExplore" onclick="switchRightTab('explore')" class="px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-spotify-green text-black shadow transition flex items-center gap-1.5">
+              <i data-lucide="music" class="w-3.5 h-3.5"></i>
+              <span>All Songs</span>
             </button>
             <button id="viewTabPlaylists" onclick="switchRightTab('playlists')" class="px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-white/5 hover:bg-white/10 text-spotify-subtext hover:text-white border border-white/5 transition flex items-center gap-1.5">
               <i data-lucide="list-music" class="w-3.5 h-3.5"></i>
@@ -377,53 +362,46 @@
             </button>
           </div>
 
-          <!-- Create Playlist Action Button -->
           <button onclick="handleCreatePlaylistClick()" class="px-3.5 py-1.5 rounded-full bg-white/5 hover:bg-spotify-green hover:text-black border border-white/10 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition">
             <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
             <span>Create Playlist</span>
           </button>
-
         </div>
 
-        <!-- VIEW 1: Explore & 5 Language Filter Section -->
+        <!-- VIEW 1: All Songs Collection -->
         <div id="exploreViewWrapper" class="space-y-4">
           
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <h2 class="text-base font-black text-white flex items-center gap-1.5 tracking-tight">
-                <i data-lucide="disc" class="w-4 h-4 text-spotify-green"></i>
-                <span>Choose Language</span>
+                <i data-lucide="folder" class="w-4 h-4 text-spotify-green"></i>
+                <span>Songs</span>
               </h2>
-              <p class="text-[11px] text-spotify-subtext font-medium">Click any language to reveal songs</p>
+              <p class="text-[11px] text-spotify-subtext font-medium">All uploaded songs in your collection</p>
             </div>
 
             <!-- Instant Search Field -->
-            <div class="relative w-full sm:w-52">
+            <div class="relative w-full sm:w-64">
               <i data-lucide="search" class="w-3.5 h-3.5 text-spotify-subtext absolute left-3 top-1/2 -translate-y-1/2"></i>
               <input 
                 id="searchTrackQuery" 
                 type="text" 
-                placeholder="Search tracks or artists..." 
+                placeholder="Search songs or artists..." 
                 oninput="renderFilteredTracks()"
                 class="w-full bg-white/5 border border-white/10 text-xs rounded-full pl-8 pr-3 py-1.5 text-white placeholder-spotify-subtext focus:border-spotify-green focus:outline-none transition"
               />
             </div>
           </div>
 
-          <!-- 5 Requested Language Buttons -->
-          <div class="grid grid-cols-2 sm:grid-cols-5 gap-2" id="languageTabCluster">
-            <!-- Populated by JS -->
-          </div>
-
           <!-- Songs Table Container -->
           <div class="pt-2">
             <div class="flex items-center justify-between pb-2 text-[11px] font-bold text-spotify-subtext uppercase tracking-wider px-2">
-              <span id="playlistStatsText">Displaying Tracks</span>
+              <span id="playlistStatsText">Displaying Songs</span>
               <span>Action / Duration</span>
             </div>
 
             <div class="overflow-y-auto max-h-[440px] space-y-2 pr-1" id="songsContainer">
-              <!-- Songs Rendered by JS -->
+              <!-- Rendered dynamically -->
             </div>
           </div>
 
@@ -437,7 +415,7 @@
                 <i data-lucide="library" class="w-4 h-4 text-spotify-green"></i>
                 <span>Your Saved Playlists</span>
               </h2>
-              <p class="text-[11px] text-spotify-subtext">Manage, listen, and organize your favorite songs</p>
+              <p class="text-[11px] text-spotify-subtext">Manage and listen to your custom playlists</p>
             </div>
             <button onclick="handleCreatePlaylistClick()" class="px-3 py-1.5 rounded-full bg-spotify-green text-black font-extrabold text-xs shadow flex items-center gap-1">
               <i data-lucide="folder-plus" class="w-3.5 h-3.5"></i>
@@ -445,9 +423,7 @@
             </button>
           </div>
 
-          <div id="userPlaylistsContainer" class="space-y-3 overflow-y-auto max-h-[460px] pr-1">
-            <!-- Playlists rendered dynamically -->
-          </div>
+          <div id="userPlaylistsContainer" class="space-y-3 overflow-y-auto max-h-[460px] pr-1"></div>
         </div>
 
       </section>
@@ -457,8 +433,6 @@
 
   <!-- Friends, Social Listening & Live Chat Drawer -->
   <div id="socialDrawer" class="fixed right-0 top-0 bottom-0 w-full sm:w-96 z-50 spotify-glass border-l border-white/10 transform translate-x-full transition-transform duration-300 flex flex-col justify-between shadow-2xl">
-    
-    <!-- Drawer Header -->
     <div class="p-4 border-b border-white/10 flex items-center justify-between">
       <div class="flex items-center space-x-2">
         <div class="w-8 h-8 rounded-full bg-spotify-green/20 text-spotify-green flex items-center justify-center font-bold">
@@ -474,7 +448,7 @@
       </button>
     </div>
 
-    <!-- Active Sync Session Notification Banner -->
+    <!-- Active Sync Session Banner -->
     <div id="syncSessionBanner" class="hidden bg-spotify-green/10 border-y border-spotify-green/20 p-3 flex items-center justify-between text-xs">
       <div class="flex items-center space-x-2 truncate">
         <span class="w-2.5 h-2.5 rounded-full bg-spotify-green animate-ping"></span>
@@ -495,18 +469,14 @@
       </button>
       <button id="tabBtnChat" onclick="switchSocialTab('chat')" class="flex-1 py-2.5 font-bold text-spotify-subtext hover:text-white text-center flex items-center justify-center gap-1.5">
         <span>Shared Chat</span>
-        <span id="chatBadgeDot" class="w-1.5 h-1.5 rounded-full bg-spotify-green hidden"></span>
       </button>
     </div>
 
     <!-- Friends View -->
     <div id="socialFriendsView" class="p-4 flex-1 overflow-y-auto space-y-4 text-xs">
-      
       <div id="pendingRequestsContainer" class="space-y-2">
         <p class="text-[10px] font-black uppercase text-spotify-subtext tracking-wider">Pending Requests</p>
-        <div id="requestsList" class="space-y-1.5">
-          <!-- Populated by JS -->
-        </div>
+        <div id="requestsList" class="space-y-1.5"></div>
       </div>
 
       <div class="space-y-2">
@@ -514,23 +484,17 @@
           <p class="text-[10px] font-black uppercase text-spotify-subtext tracking-wider">My Friends</p>
           <span class="text-[10px] text-spotify-green font-bold" id="onlineFriendsCount">3 Online</span>
         </div>
-        <div id="friendsList" class="space-y-2">
-          <!-- Populated by JS -->
-        </div>
+        <div id="friendsList" class="space-y-2"></div>
       </div>
 
       <div class="space-y-2 pt-2 border-t border-white/10">
         <p class="text-[10px] font-black uppercase text-spotify-subtext tracking-wider">Discover Music Listeners</p>
-        <div id="discoverUsersList" class="space-y-2">
-          <!-- Populated by JS -->
-        </div>
+        <div id="discoverUsersList" class="space-y-2"></div>
       </div>
-
     </div>
 
-    <!-- Live Synced Chat View -->
+    <!-- Synced Chat View -->
     <div id="socialChatView" class="hidden flex-1 flex flex-col justify-between p-3 overflow-hidden">
-      
       <div id="chatMessagesBox" class="flex-1 overflow-y-auto space-y-2.5 pr-1 text-xs">
         <div class="text-center py-2 text-[10px] text-spotify-subtext">
           <span>Both of you can chat live while the music streams in sync!</span>
@@ -541,31 +505,27 @@
         <input 
           id="chatInputMessage" 
           type="text" 
-          placeholder="Type a message or react to song..." 
+          placeholder="Type a message..." 
           class="flex-1 bg-white/5 border border-white/10 rounded-full px-3.5 py-2 text-xs text-white placeholder-spotify-subtext focus:border-spotify-green focus:outline-none"
         />
         <button type="submit" class="w-8 h-8 rounded-full bg-spotify-green hover:bg-spotify-greenHover text-black flex items-center justify-center transition shadow">
           <i data-lucide="send" class="w-4 h-4"></i>
         </button>
       </form>
-
     </div>
 
     <div class="p-3 border-t border-white/10 text-[10px] text-center text-spotify-subtext bg-black/40">
-      Accept friend requests to unlock synchronized audio and live song reactions.
+      Accept friend requests to unlock synchronized audio and live reactions.
     </div>
-
   </div>
 
   <!-- MODAL: Buy Me a Coffee / Google Pay UPI Modal with your verified UPI ID -->
   <div id="donationModalWrapper" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4">
     <div class="spotify-glass rounded-3xl max-w-sm w-full p-6 relative border border-white/15 shadow-2xl text-center">
-      
       <button onclick="closeDonationModal()" class="absolute right-4 top-4 text-spotify-subtext hover:text-white p-1 rounded-full hover:bg-white/10 transition">
         <i data-lucide="x" class="w-5 h-5"></i>
       </button>
 
-      <!-- Coffee Header Icon -->
       <div class="w-14 h-14 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center mx-auto mb-3 border border-amber-500/30">
         <i data-lucide="coffee" class="w-7 h-7 stroke-[2.5]"></i>
       </div>
@@ -573,7 +533,6 @@
       <h3 class="text-xl font-black text-white">Buy Me a Coffee</h3>
       <p class="text-xs text-spotify-subtext mt-1">Support server costs and hi-fi audio streaming on Paradise of Songs.</p>
 
-      <!-- Preset Donation Amount Buttons -->
       <div class="grid grid-cols-4 gap-2 my-4">
         <button onclick="selectCoffeeAmount(50)" class="coffee-amt-chip py-1.5 rounded-xl border border-white/10 bg-white/5 font-extrabold text-xs text-white hover:border-amber-400 transition active:scale-95">₹50</button>
         <button onclick="selectCoffeeAmount(100)" class="coffee-amt-chip py-1.5 rounded-xl border border-amber-500 bg-amber-500/20 font-extrabold text-xs text-amber-400 transition active:scale-95">₹100</button>
@@ -581,7 +540,6 @@
         <button onclick="selectCoffeeAmount(500)" class="coffee-amt-chip py-1.5 rounded-xl border border-white/10 bg-white/5 font-extrabold text-xs text-white hover:border-amber-400 transition active:scale-95">₹500</button>
       </div>
 
-      <!-- Google Pay QR Image Card (Reads gpay-qr.jpg or dynamically generates UPI QR) -->
       <div class="bg-white p-3 rounded-2xl mx-auto w-52 h-52 flex flex-col items-center justify-center shadow-2xl relative border-2 border-white/20">
         <img 
           id="gpayQrImage" 
@@ -596,7 +554,6 @@
         <span>Scan to pay with any UPI app</span>
       </p>
 
-      <!-- Official Verified UPI ID Copy Strip -->
       <div class="mt-3.5 bg-white/5 p-2.5 rounded-xl border border-white/10 flex items-center justify-between text-xs">
         <div class="text-left truncate mr-2">
           <p class="text-[9px] font-black uppercase text-amber-400 tracking-wider">UPI ID</p>
@@ -607,14 +564,12 @@
           <span id="upiCopyBtnText">Copy</span>
         </button>
       </div>
-
     </div>
   </div>
 
-  <!-- MODAL: Audio Engineering (Spatial Audio, Dolby Atmos, Clarity) -->
+  <!-- MODAL: Audio Engineering -->
   <div id="audioSettingsModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4">
     <div class="spotify-glass rounded-3xl max-w-md w-full p-6 relative border border-white/15 shadow-2xl">
-      
       <button onclick="closeAudioSettingsModal()" class="absolute right-5 top-5 text-spotify-subtext hover:text-white p-1 rounded-full hover:bg-white/10 transition">
         <i data-lucide="x" class="w-5 h-5"></i>
       </button>
@@ -630,22 +585,19 @@
       </div>
 
       <div class="space-y-4 text-xs">
-        
-        <!-- Spatial 3D Audio -->
         <div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between">
           <div>
             <div class="flex items-center gap-2">
               <span class="font-bold text-white text-sm">Spatial Audio 3D</span>
               <span class="text-[9px] uppercase px-1.5 py-0.2 rounded bg-spotify-green/20 text-spotify-green font-bold">Studio</span>
             </div>
-            <p class="text-spotify-subtext text-[11px] mt-0.5">Expands stereo separation and dynamic binaural sound staging.</p>
+            <p class="text-spotify-subtext text-[11px] mt-0.5">Expands stereo separation and dynamic sound staging.</p>
           </div>
           <button id="spatialAudioModalToggle" onclick="toggleSpatialAudio()" class="w-12 h-6 rounded-full bg-zinc-800 transition-colors p-0.5 flex items-center">
             <div id="spatialKnob" class="w-5 h-5 rounded-full bg-white transition-transform"></div>
           </button>
         </div>
 
-        <!-- Dolby Surround Sound -->
         <div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between">
           <div>
             <div class="flex items-center gap-2">
@@ -658,30 +610,6 @@
             <div id="dolbyKnob" class="w-5 h-5 rounded-full bg-white transition-transform"></div>
           </button>
         </div>
-
-        <!-- Clarity Selector Details -->
-        <div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 space-y-2">
-          <div class="flex justify-between items-center">
-            <span class="font-bold text-white">Stream Clarity Profile</span>
-            <span id="modalCurrentClarityLabel" class="text-spotify-green font-mono font-bold">320 KBPS</span>
-          </div>
-          <p class="text-spotify-subtext text-[11px]">Lossless profile unlocks 24-bit dynamic range audio uncompressed directly from sound sources.</p>
-          <div class="grid grid-cols-3 gap-2 pt-1">
-            <button onclick="updateAudioClarity('128')" class="clarity-chip p-2 rounded-xl border border-white/10 bg-black/40 text-center hover:border-spotify-green text-zinc-300">
-              <p class="font-bold">Standard</p>
-              <p class="text-[10px] text-spotify-subtext">128 kbps</p>
-            </button>
-            <button onclick="updateAudioClarity('320')" class="clarity-chip p-2 rounded-xl border border-spotify-green bg-spotify-green/10 text-center text-white">
-              <p class="font-bold">High Def</p>
-              <p class="text-[10px] text-spotify-green">320 kbps</p>
-            </button>
-            <button onclick="updateAudioClarity('960')" class="clarity-chip p-2 rounded-xl border border-white/10 bg-black/40 text-center hover:border-spotify-green text-zinc-300">
-              <p class="font-bold">Lossless</p>
-              <p class="text-[10px] text-amber-400">FLAC 24b</p>
-            </button>
-          </div>
-        </div>
-
       </div>
 
       <button onclick="closeAudioSettingsModal()" class="w-full mt-5 py-2.5 bg-spotify-green hover:bg-spotify-greenHover text-black font-extrabold rounded-full transition shadow">
@@ -690,10 +618,9 @@
     </div>
   </div>
 
-  <!-- MODAL: User Authentication (Sign In & Sign Up) -->
+  <!-- MODAL: User Authentication -->
   <div id="authModalWrapper" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4">
     <div class="spotify-glass rounded-3xl max-w-sm w-full p-6 relative border border-white/15 shadow-2xl">
-      
       <button onclick="closeAuthModal()" class="absolute right-4 top-4 text-spotify-subtext hover:text-white p-1 rounded-full hover:bg-white/10 transition">
         <i data-lucide="x" class="w-5 h-5"></i>
       </button>
@@ -703,10 +630,9 @@
           <i data-lucide="user-check" class="w-6 h-6"></i>
         </div>
         <h3 id="authModalHeading" class="text-lg font-black text-white">Sign In to Paradise</h3>
-        <p class="text-xs text-spotify-subtext mt-0.5">Unlock playlists, synchronized listening, and custom music sets.</p>
+        <p class="text-xs text-spotify-subtext mt-0.5">Unlock personal playlists and friends sync.</p>
       </div>
 
-      <!-- Auth Tabs: Login vs Register -->
       <div class="flex border-b border-white/10 mb-4 text-xs">
         <button id="authTabLogin" onclick="setAuthMode('login')" class="flex-1 py-2 font-black text-spotify-green border-b-2 border-spotify-green text-center">
           Sign In
@@ -719,7 +645,7 @@
       <form onsubmit="handleAuthSubmit(event)" class="space-y-3 text-xs">
         <div id="registerFieldGroup" class="space-y-1 hidden">
           <label class="font-bold text-spotify-subtext text-[11px]">Display Name</label>
-          <input id="authInputName" type="text" placeholder="e.g. Asif KM" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white placeholder-spotify-subtext focus:border-spotify-green focus:outline-none">
+          <input id="authInputName" type="text" placeholder="Your name" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white placeholder-spotify-subtext focus:border-spotify-green focus:outline-none">
         </div>
 
         <div class="space-y-1">
@@ -736,18 +662,12 @@
           Sign In
         </button>
       </form>
-
-      <div class="mt-4 pt-3 border-t border-white/10 text-center">
-        <p class="text-[11px] text-spotify-subtext">Free guest access allows listening. Account required for personal playlists.</p>
-      </div>
-
     </div>
   </div>
 
   <!-- MODAL: Playlist Creator -->
   <div id="playlistModalWrapper" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4">
     <div class="spotify-glass rounded-3xl max-w-sm w-full p-6 relative border border-white/15 shadow-2xl">
-      
       <button onclick="closePlaylistModal()" class="absolute right-4 top-4 text-spotify-subtext hover:text-white p-1 rounded-full hover:bg-white/10 transition">
         <i data-lucide="x" class="w-5 h-5"></i>
       </button>
@@ -757,25 +677,23 @@
           <i data-lucide="list-plus" class="w-6 h-6"></i>
         </div>
         <h3 class="text-lg font-black text-white">Create New Playlist</h3>
-        <p class="text-xs text-spotify-subtext mt-0.5">Give your custom playlist a name</p>
       </div>
 
       <form onsubmit="handleCreatePlaylistSubmit(event)" class="space-y-3.5 text-xs">
         <div>
           <label class="font-bold text-spotify-subtext text-[11px]">Playlist Title</label>
-          <input id="playlistNameInput" type="text" required placeholder="e.g. Kerala Monsoon Vibes" class="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2 text-white placeholder-spotify-subtext focus:border-spotify-green focus:outline-none mt-1">
+          <input id="playlistNameInput" type="text" required placeholder="e.g. My Favorites" class="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2 text-white placeholder-spotify-subtext focus:border-spotify-green focus:outline-none mt-1">
         </div>
 
         <div>
           <label class="font-bold text-spotify-subtext text-[11px]">Description (Optional)</label>
-          <input id="playlistDescInput" type="text" placeholder="Acoustic strings & chill beats" class="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2 text-white placeholder-spotify-subtext focus:border-spotify-green focus:outline-none mt-1">
+          <input id="playlistDescInput" type="text" placeholder="Chill beats & acoustic" class="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2 text-white placeholder-spotify-subtext focus:border-spotify-green focus:outline-none mt-1">
         </div>
 
         <button type="submit" class="w-full py-2.5 bg-spotify-green hover:bg-spotify-greenHover text-black font-extrabold rounded-full transition shadow">
           Create & Save
         </button>
       </form>
-
     </div>
   </div>
 
@@ -789,9 +707,7 @@
       <h3 class="text-base font-black text-white mb-1">Add to Playlist</h3>
       <p class="text-xs text-spotify-subtext mb-3" id="targetSongTitleLabel">Choose a destination playlist:</p>
 
-      <div id="userPlaylistsPickerList" class="space-y-2 max-h-56 overflow-y-auto pr-1 text-xs">
-        <!-- Populated by JS -->
-      </div>
+      <div id="userPlaylistsPickerList" class="space-y-2 max-h-56 overflow-y-auto pr-1 text-xs"></div>
     </div>
   </div>
 
@@ -801,7 +717,7 @@
       <div class="flex items-center space-x-2">
         <span class="font-extrabold text-white">PARADISE OF SONGS</span>
         <span>&bull;</span>
-        <span>Spatial Engine Active</span>
+        <span>All-in-One Sonic Library</span>
       </div>
       <p class="font-normal">&copy; <span id="currentYear"></span> PARADISE OF SONGS &bull; Admin: <a href="mailto:luiseclat@gmail.com" class="text-white hover:text-spotify-green underline">luiseclat@gmail.com</a></p>
     </div>
@@ -813,230 +729,84 @@
   <script>
     document.getElementById('currentYear').textContent = new Date().getFullYear();
 
-    // 5 Explicit Languages
-    const LANGUAGES = ['MALAYALAM', 'TAMIL', 'HINDI', 'ENGLISH', 'SOOFI'];
-
-    // Official Verified UPI ID
     const ACTIVE_UPI_ID = "paradiseacademy.kl-5@oksbi";
 
-    // Playable Catalog - Connected cleanly to your local songs/ folder with cloud audio fallback
-    const CATALOG = {
-      MALAYALAM: [
-        {
-          id: 'ml_1',
-          title: 'Malare (Acoustic Strings)',
-          artist: 'Kerala Unplugged Sessions',
-          duration: '3:15',
-          durationSec: 195,
-          cover: 'https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?w=400&q=80',
-          url: 'songs/malayalam1.mp3',
-          fallbackUrl: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=melody-of-nature-110486.mp3'
-        },
-        {
-          id: 'ml_2',
-          title: 'Aalolam Kaatte (Backwater Melody)',
-          artist: 'Malabar Traditional Ensemble',
-          duration: '2:48',
-          durationSec: 168,
-          cover: 'https://images.unsplash.com/photo-1465847899084-d164df4dedc6?w=400&q=80',
-          url: 'songs/malayalam2.mp3',
-          fallbackUrl: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=ambient-piano-amp-strings-10711.mp3'
-        },
-        {
-          id: 'ml_3',
-          title: 'Cochin Rain Lofi',
-          artist: 'Ernakulam Beats',
-          duration: '3:05',
-          durationSec: 185,
-          cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&q=80',
-          url: 'songs/malayalam3.mp3',
-          fallbackUrl: 'https://cdn.pixabay.com/download/audio/2022/11/06/audio_c937107f97.mp3?filename=lofi-study-112191.mp3'
-        },
-        {
-          id: 'ml_4',
-          title: 'Wayanad Morning Breeze',
-          artist: 'Bamboo Flute Trio',
-          duration: '3:30',
-          durationSec: 210,
-          cover: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&q=80',
-          url: 'songs/malayalam4.mp3',
-          fallbackUrl: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3?filename=relaxed-vlog-131746.mp3'
-        }
-      ],
-      TAMIL: [
-        {
-          id: 'ta_1',
-          title: 'Anbe Vaa (Violin Raga)',
-          artist: 'Madras String Ensemble',
-          duration: '3:22',
-          durationSec: 202,
-          cover: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=400&q=80',
-          url: 'songs/tamil1.mp3',
-          fallbackUrl: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=melody-of-nature-110486.mp3'
-        },
-        {
-          id: 'ta_2',
-          title: 'Kaatru Veliyidai Harmony',
-          artist: 'Chennai Night Melodies',
-          duration: '3:05',
-          durationSec: 185,
-          cover: 'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=400&q=80',
-          url: 'songs/tamil2.mp3',
-          fallbackUrl: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=ambient-piano-amp-strings-10711.mp3'
-        },
-        {
-          id: 'ta_3',
-          title: 'Marghazhi Morning Fusion',
-          artist: 'Karnatic Wave Project',
-          duration: '3:18',
-          durationSec: 198,
-          cover: 'https://images.unsplash.com/photo-1520523839898-507127054976?w=400&q=80',
-          url: 'songs/tamil3.mp3',
-          fallbackUrl: 'https://cdn.pixabay.com/download/audio/2022/11/06/audio_c937107f97.mp3?filename=lofi-study-112191.mp3'
-        }
-      ],
-      HINDI: [
-        {
-          id: 'hi_1',
-          title: 'Tum Hi Ho (Soul Piano)',
-          artist: 'Mumbai Acoustic Lab',
-          duration: '3:12',
-          durationSec: 192,
-          cover: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&q=80',
-          url: 'songs/hindi1.mp3',
-          fallbackUrl: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=soft-ambient-111000.mp3'
-        },
-        {
-          id: 'hi_2',
-          title: 'Raag Yaman Late Night',
-          artist: 'Delhi Lounge Project',
-          duration: '3:45',
-          durationSec: 225,
-          cover: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400&q=80',
-          url: 'songs/hindi2.mp3',
-          fallbackUrl: 'https://cdn.pixabay.com/download/audio/2022/10/14/audio_9939f792cb.mp3?filename=tuesday-glitch-122413.mp3'
-        },
-        {
-          id: 'hi_3',
-          title: 'Himalayan Serenity',
-          artist: 'Pahari Flute Collective',
-          duration: '3:00',
-          durationSec: 180,
-          cover: 'https://images.unsplash.com/photo-1506157786151-b8491531f063?w=400&q=80',
-          url: 'songs/hindi3.mp3',
-          fallbackUrl: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3?filename=relaxed-vlog-131746.mp3'
-        }
-      ],
-      ENGLISH: [
-        {
-          id: 'en_1',
-          title: 'Midnight Serenade',
-          artist: 'The Velvet Horizon',
-          duration: '2:55',
-          durationSec: 175,
-          cover: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&q=80',
-          url: 'songs/english1.mp3',
-          fallbackUrl: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=soft-ambient-111000.mp3'
-        },
-        {
-          id: 'en_2',
-          title: 'Golden Sunset Boulevard',
-          artist: 'Aura Collective',
-          duration: '3:10',
-          durationSec: 190,
-          cover: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400&q=80',
-          url: 'songs/english2.mp3',
-          fallbackUrl: 'https://cdn.pixabay.com/download/audio/2022/10/14/audio_9939f792cb.mp3?filename=tuesday-glitch-122413.mp3'
-        },
-        {
-          id: 'en_3',
-          title: 'Neon Skyline Echo',
-          artist: 'Cyber Noir Beats',
-          duration: '3:40',
-          durationSec: 220,
-          cover: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=400&q=80',
-          url: 'songs/english3.mp3',
-          fallbackUrl: 'https://cdn.pixabay.com/download/audio/2022/01/26/audio_d0c6ff1101.mp3?filename=electronic-future-beats-117997.mp3'
-        }
-      ],
-      SOOFI: [
-        {
-          id: 'sf_1',
-          title: 'Dervish Ecstasy (Ney & Dholak)',
-          artist: 'Mystic Konya Circle',
-          duration: '4:15',
-          durationSec: 255,
-          cover: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400&q=80',
-          url: 'songs/soofi1.mp3',
-          fallbackUrl: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=ambient-piano-amp-strings-10711.mp3'
-        },
-        {
-          id: 'sf_2',
-          title: 'Noor-E-Elahi Spiritual Journey',
-          artist: 'Sufiana Ensemble',
-          duration: '3:50',
-          durationSec: 230,
-          cover: 'https://images.unsplash.com/photo-1544717305-2782549b5136?w=400&q=80',
-          url: 'songs/soofi2.mp3',
-          fallbackUrl: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=melody-of-nature-110486.mp3'
-        },
-        {
-          id: 'sf_3',
-          title: 'Rumi’s Garden Meditation',
-          artist: 'Sufi Whispers',
-          duration: '3:35',
-          durationSec: 215,
-          cover: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=400&q=80',
-          url: 'songs/soofi3.mp3',
-          fallbackUrl: 'https://cdn.pixabay.com/download/audio/2022/11/06/audio_c937107f97.mp3?filename=lofi-study-112191.mp3'
-        }
-      ]
-    };
+    // SINGLE ALL-IN-ONE SONGS LIST (Directly wiring your 5 uploaded songs)
+    const SONGS_LIST = [
+      {
+        id: 's_1',
+        title: 'ARAYANA',
+        artist: 'Official Track',
+        duration: '3:20',
+        cover: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400&q=80',
+        url: 'songs/ARAYANA.mp3'
+      },
+      {
+        id: 's_2',
+        title: 'Habibi Drip',
+        artist: 'Best Of Dabzee',
+        duration: '3:15',
+        cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&q=80',
+        url: 'songs/' + encodeURIComponent('Habibi Drip - Best Of Dabzee.mp3')
+      },
+      {
+        id: 's_3',
+        title: 'Manavaalan Thug',
+        artist: 'Best Of Dabzee',
+        duration: '3:40',
+        cover: 'https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?w=400&q=80',
+        url: 'songs/' + encodeURIComponent('Manavaalan Thug - Best Of Dabzee.mp3')
+      },
+      {
+        id: 's_4',
+        title: 'PL',
+        artist: 'Official Track',
+        duration: '2:55',
+        cover: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&q=80',
+        url: 'songs/PL.mp3'
+      },
+      {
+        id: 's_5',
+        title: 'Vazhikatti [Kizhakku Suryan]',
+        artist: 'Fejo',
+        duration: '3:10',
+        cover: 'https://images.unsplash.com/photo-1465847899084-d164df4dedc6?w=400&q=80',
+        url: 'songs/' + encodeURIComponent('Vazhikatti [Kizhakku Suryan] - Fejo.mp3')
+      }
+    ];
 
     // State Variables
-    let currentLanguage = 'MALAYALAM';
     let currentTrack = null;
     let isPlaying = false;
     let isLooping = false;
-    let liveCounter = 14663; // Exact starting number
+    let isShuffle = false;
+    let liveCounter = 14663;
 
-    // Audio Engineering State
     let spatialAudioActive = false;
     let dolbyAtmosActive = false;
     let currentBitrate = '320';
 
-    // User State & Playlists
     let currentUser = null;
     let userPlaylists = [];
-
-    // Social & Shared Listening State
     let currentSyncSession = null;
+
     let friends = [
-      { id: 'arjun', name: 'Arjun Nair', status: 'online', currentSong: 'Malare (Acoustic Strings)' },
-      { id: 'priya', name: 'Priya Mohan', status: 'online', currentSong: 'Tum Hi Ho (Soul Piano)' },
-      { id: 'rahul', name: 'Rahul V', status: 'online', currentSong: 'Dervish Ecstasy' }
+      { id: 'arjun', name: 'Arjun Nair', status: 'online', currentSong: 'ARAYANA' },
+      { id: 'priya', name: 'Priya Mohan', status: 'online', currentSong: 'Habibi Drip' },
+      { id: 'rahul', name: 'Rahul V', status: 'online', currentSong: 'Manavaalan Thug' }
     ];
     let pendingRequests = [
       { id: 'neha', name: 'Neha Sharma', note: 'Wants to listen together' }
     ];
     let discoverUsers = [
-      { id: 'zayd', name: 'Zayd Al-Hassan', langPref: 'Soofi / Hindi' },
-      { id: 'ananya', name: 'Ananya Ramachandran', langPref: 'Tamil / Malayalam' }
+      { id: 'zayd', name: 'Zayd Al-Hassan', langPref: 'Music Lover' },
+      { id: 'ananya', name: 'Ananya Ramachandran', langPref: 'Hip-Hop & Beats' }
     ];
     let sharedChatMessages = [
-      { sender: 'Arjun Nair', text: 'Hey! Put on that Malayalam track, sounds incredible in Spatial Audio!', time: '11:42 AM' }
+      { sender: 'Arjun Nair', text: 'Turn on Dolby Surround, the bass hits different! 🔥', time: '11:42 AM' }
     ];
 
     const audioNode = document.getElementById('coreAudioElement');
-
-    // Automatic Fallback if local song file is not yet uploaded
-    audioNode.onerror = function() {
-      if (currentTrack && currentTrack.fallbackUrl && audioNode.src !== currentTrack.fallbackUrl) {
-        console.log(`Local file ${audioNode.src} not yet found. Falling back to high-quality audio stream.`);
-        audioNode.src = currentTrack.fallbackUrl;
-        audioNode.play().catch(e => console.log('Playback ready'));
-      }
-    };
 
     let audioCtx = null;
     let sourceNode = null;
@@ -1069,7 +839,7 @@
           bassFilter.connect(audioCtx.destination);
         }
       } catch (e) {
-        console.warn('Web Audio initialization note:', e);
+        console.warn('Web Audio init note:', e);
       }
     }
 
@@ -1134,20 +904,16 @@
       document.getElementById('claritySelect').value = bitrate;
 
       const badge = document.getElementById('badgeClarityStatus');
-      const label = document.getElementById('modalCurrentClarityLabel');
       const coverTag = document.getElementById('playerBitrateTag');
 
       if (bitrate === '128') {
         badge.textContent = "128 KBPS";
-        label.textContent = "128 KBPS (Standard)";
         coverTag.textContent = "STANDARD 128K";
       } else if (bitrate === '320') {
         badge.textContent = "320 KBPS";
-        label.textContent = "320 KBPS (High Def)";
         coverTag.textContent = "LOSSLESS 320K";
       } else {
         badge.textContent = "LOSSLESS FLAC";
-        label.textContent = "FLAC 24-bit / 96kHz";
         coverTag.textContent = "MASTER HI-RES 24-BIT";
       }
     }
@@ -1211,11 +977,7 @@
       const email = document.getElementById('authInputEmail').value.trim();
       const name = document.getElementById('authInputName').value.trim() || email.split('@')[0];
 
-      currentUser = {
-        name: name,
-        email: email,
-        id: 'usr_' + Date.now()
-      };
+      currentUser = { name, email, id: 'usr_' + Date.now() };
 
       closeAuthModal();
       renderAuthUI();
@@ -1239,19 +1001,19 @@
       const playlistsView = document.getElementById('playlistsViewWrapper');
 
       if (tab === 'explore') {
-        exploreBtn.className = "px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-spotify-green text-black shadow transition";
+        exploreBtn.className = "px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-spotify-green text-black shadow transition flex items-center gap-1.5";
         playlistsBtn.className = "px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-white/5 hover:bg-white/10 text-spotify-subtext hover:text-white border border-white/5 transition flex items-center gap-1.5";
         exploreView.classList.remove('hidden');
         playlistsView.classList.add('hidden');
       } else {
         if (!currentUser) {
           openAuthModal('login');
-          showQuickNotification("Please sign in or create an account to view and manage playlists.");
+          showQuickNotification("Sign in required to view and manage your playlists.");
           return;
         }
 
-        playlistsBtn.className = "px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-spotify-green text-black shadow transition flex items-center gap-1.5";
-        exploreBtn.className = "px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-white/5 hover:bg-white/10 text-spotify-subtext hover:text-white border border-white/5 transition";
+        playlistsBtn.className = "px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-spotify-green text-black shadow transition flex items-center gap-1.5";
+        exploreBtn.className = "px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-white/5 hover:bg-white/10 text-spotify-subtext hover:text-white border border-white/5 transition flex items-center gap-1.5";
         exploreView.classList.add('hidden');
         playlistsView.classList.remove('hidden');
         renderUserPlaylists();
@@ -1261,7 +1023,7 @@
     function handleCreatePlaylistClick() {
       if (!currentUser) {
         openAuthModal('login');
-        showQuickNotification("Sign in required: Create personal playlists and sync across sessions.");
+        showQuickNotification("Sign in required: Create personal playlists.");
         return;
       }
       document.getElementById('playlistModalWrapper').classList.remove('hidden');
@@ -1274,7 +1036,7 @@
     function handleCreatePlaylistSubmit(e) {
       e.preventDefault();
       const title = document.getElementById('playlistNameInput').value.trim();
-      const desc = document.getElementById('playlistDescInput').value.trim() || 'Custom curated music set';
+      const desc = document.getElementById('playlistDescInput').value.trim() || 'Custom playlist';
 
       if (!title) return;
 
@@ -1305,7 +1067,7 @@
           <div class="py-14 text-center text-spotify-subtext border border-dashed border-white/10 rounded-2xl p-6">
             <i data-lucide="music" class="w-10 h-10 mx-auto mb-2 opacity-30 text-spotify-green"></i>
             <p class="font-bold text-white text-sm">No playlists created yet</p>
-            <p class="text-xs text-spotify-subtext mt-0.5">Click 'Create Playlist' above or add songs to organize your tracks.</p>
+            <p class="text-xs text-spotify-subtext mt-0.5">Click 'New Playlist' above to start organizing your songs.</p>
           </div>
         `;
         lucide.createIcons();
@@ -1327,11 +1089,9 @@
                 <p class="text-[11px] text-spotify-subtext">${pl.tracks.length} Songs &bull; ${pl.description}</p>
               </div>
             </div>
-            <div class="flex items-center space-x-2">
-              <button onclick="playEntirePlaylist('${pl.id}')" class="p-2 rounded-full bg-spotify-green hover:bg-spotify-greenHover text-black transition" title="Play Playlist">
-                <i data-lucide="play" class="w-4 h-4 fill-black ml-0.5"></i>
-              </button>
-            </div>
+            <button onclick="playEntirePlaylist('${pl.id}')" class="p-2 rounded-full bg-spotify-green hover:bg-spotify-greenHover text-black transition" title="Play Playlist">
+              <i data-lucide="play" class="w-4 h-4 fill-black ml-0.5"></i>
+            </button>
           </div>
         `;
         container.appendChild(card);
@@ -1343,7 +1103,7 @@
     function handleAddToPlaylistClick() {
       if (!currentUser) {
         openAuthModal('login');
-        showQuickNotification("Sign in required to add songs to your personal playlists.");
+        showQuickNotification("Sign in required to add songs to playlists.");
         return;
       }
 
@@ -1391,6 +1151,287 @@
       } else {
         showQuickNotification("This playlist has no songs yet. Click '+' on any track to add it!");
       }
+    }
+
+    function renderFilteredTracks() {
+      const query = document.getElementById('searchTrackQuery').value;
+      renderPlaylistTracks(query);
+    }
+
+    function renderPlaylistTracks(query = '') {
+      const container = document.getElementById('songsContainer');
+      container.innerHTML = '';
+
+      const filtered = SONGS_LIST.filter(t => 
+        t.title.toLowerCase().includes(query.toLowerCase()) || 
+        t.artist.toLowerCase().includes(query.toLowerCase())
+      );
+
+      document.getElementById('playlistStatsText').textContent = `Songs &bull; ${filtered.length} Tracks Available`;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="py-12 text-center text-spotify-subtext">
+            <i data-lucide="music-2" class="w-8 h-8 mx-auto mb-2 opacity-30"></i>
+            <p class="text-xs">No songs found matching your search.</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      filtered.forEach((track, idx) => {
+        const isSelected = currentTrack && currentTrack.id === track.id;
+        const item = document.createElement('div');
+        item.className = `flex items-center justify-between p-2.5 sm:p-3 rounded-2xl cursor-pointer transition-all border ${
+          isSelected 
+            ? 'bg-white/10 border-spotify-green/60 text-white shadow-lg' 
+            : 'bg-white/5 border-white/5 hover:border-white/15 hover:bg-white/10 text-zinc-300'
+        }`;
+
+        item.onclick = (e) => {
+          if (e.target.closest('.add-to-pl-btn')) {
+            currentTrack = track;
+            handleAddToPlaylistClick();
+            return;
+          }
+          playSelectedTrack(track);
+        };
+
+        item.innerHTML = `
+          <div class="flex items-center space-x-3 truncate">
+            <span class="text-xs font-mono font-bold text-spotify-subtext w-4 text-right">${idx + 1}</span>
+            <div class="w-10 h-10 rounded-xl overflow-hidden bg-zinc-900 flex-shrink-0 border border-white/10 relative">
+              <img src="${track.cover}" alt="artwork" class="w-full h-full object-cover">
+              ${isSelected && isPlaying ? `
+                <div class="absolute inset-0 bg-black/70 flex items-center justify-center gap-0.5">
+                  <span class="w-0.5 h-3 bg-spotify-green animate-pulse"></span>
+                  <span class="w-0.5 h-4 bg-spotify-green animate-bounce"></span>
+                  <span class="w-0.5 h-2 bg-spotify-green animate-pulse"></span>
+                </div>
+              ` : ''}
+            </div>
+            <div class="truncate">
+              <p class="text-xs sm:text-sm font-extrabold truncate ${isSelected ? 'text-spotify-green' : 'text-white'}">${track.title}</p>
+              <p class="text-[11px] text-spotify-subtext font-medium truncate">${track.artist}</p>
+            </div>
+          </div>
+
+          <div class="flex items-center space-x-2 text-xs font-mono font-bold text-spotify-subtext flex-shrink-0">
+            <button title="Add to playlist" class="add-to-pl-btn p-1.5 rounded-full hover:bg-white/10 text-spotify-subtext hover:text-spotify-green transition">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+            </button>
+            <span class="text-[11px]">${track.duration}</span>
+            <div class="w-7 h-7 rounded-full ${isSelected && isPlaying ? 'bg-spotify-green text-black' : 'bg-white/5 border border-white/10 text-white'} flex items-center justify-center hover:scale-105 transition">
+              <i data-lucide="${isSelected && isPlaying ? 'pause' : 'play'}" class="w-3.5 h-3.5 fill-current"></i>
+            </div>
+          </div>
+        `;
+
+        container.appendChild(item);
+      });
+
+      lucide.createIcons();
+    }
+
+    function playSelectedTrack(track) {
+      currentTrack = track;
+      document.getElementById('playerTrackTitle').textContent = track.title;
+      document.getElementById('playerTrackArtist').textContent = track.artist;
+      document.getElementById('playerCoverImg').src = track.cover;
+
+      audioNode.src = track.url;
+      initWebAudio();
+
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+
+      audioNode.play().then(() => {
+        isPlaying = true;
+        refreshPlayerUI();
+      }).catch(e => {
+        console.warn("Autoplay note:", e);
+        isPlaying = true;
+        refreshPlayerUI();
+      });
+
+      renderPlaylistTracks(document.getElementById('searchTrackQuery').value);
+    }
+
+    function togglePlayState() {
+      if (!currentTrack) {
+        if (SONGS_LIST.length > 0) {
+          playSelectedTrack(SONGS_LIST[0]);
+          return;
+        }
+      }
+
+      initWebAudio();
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+
+      if (isPlaying) {
+        audioNode.pause();
+        isPlaying = false;
+      } else {
+        audioNode.play().catch(e => console.log('Playback resumed'));
+        isPlaying = true;
+      }
+
+      refreshPlayerUI();
+      renderPlaylistTracks(document.getElementById('searchTrackQuery').value);
+    }
+
+    function refreshPlayerUI() {
+      const icon = document.getElementById('masterPlayIcon');
+      const vinyl = document.getElementById('vinylDisc');
+
+      if (isPlaying) {
+        icon.setAttribute('data-lucide', 'pause');
+        vinyl.classList.remove('vinyl-paused');
+      } else {
+        icon.setAttribute('data-lucide', 'play');
+        vinyl.classList.add('vinyl-paused');
+      }
+      lucide.createIcons();
+    }
+
+    function toggleShuffle() {
+      isShuffle = !isShuffle;
+      const btn = document.getElementById('shuffleBtn');
+      if (isShuffle) {
+        btn.classList.add('text-spotify-green');
+        btn.classList.remove('text-spotify-subtext');
+        showQuickNotification("Shuffle / Random play turned ON");
+      } else {
+        btn.classList.remove('text-spotify-green');
+        btn.classList.add('text-spotify-subtext');
+        showQuickNotification("Shuffle / Random play turned OFF");
+      }
+    }
+
+    function playNextTrack() {
+      if (SONGS_LIST.length === 0) return;
+      if (!currentTrack) {
+        playSelectedTrack(SONGS_LIST[0]);
+        return;
+      }
+
+      if (isShuffle) {
+        const randomIdx = Math.floor(Math.random() * SONGS_LIST.length);
+        playSelectedTrack(SONGS_LIST[randomIdx]);
+      } else {
+        const curIdx = SONGS_LIST.findIndex(t => t.id === currentTrack.id);
+        const nextIdx = (curIdx + 1) % SONGS_LIST.length;
+        playSelectedTrack(SONGS_LIST[nextIdx]);
+      }
+    }
+
+    function playPrevTrack() {
+      if (SONGS_LIST.length === 0) return;
+      if (!currentTrack) {
+        playSelectedTrack(SONGS_LIST[0]);
+        return;
+      }
+      const curIdx = SONGS_LIST.findIndex(t => t.id === currentTrack.id);
+      const prevIdx = (curIdx - 1 + SONGS_LIST.length) % SONGS_LIST.length;
+      playSelectedTrack(SONGS_LIST[prevIdx]);
+    }
+
+    function toggleLoopPlayback() {
+      isLooping = !isLooping;
+      audioNode.loop = isLooping;
+      const btn = document.getElementById('loopTrackBtn');
+      if (isLooping) {
+        btn.classList.add('text-spotify-green');
+        btn.classList.remove('text-spotify-subtext');
+      } else {
+        btn.classList.remove('text-spotify-green');
+        btn.classList.add('text-spotify-subtext');
+      }
+    }
+
+    function formatSeconds(sec) {
+      if (isNaN(sec)) return '0:00';
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return `${m}:${s < 10 ? '0' : ''}${s}`;
+    }
+
+    audioNode.ontimeupdate = () => {
+      const cur = audioNode.currentTime;
+      const dur = audioNode.duration;
+      document.getElementById('currentTimeDisplay').textContent = formatSeconds(cur);
+      if (!isNaN(dur) && dur > 0) {
+        document.getElementById('totalTimeDisplay').textContent = formatSeconds(dur);
+        document.getElementById('playbackProgress').value = (cur / dur) * 100;
+      }
+    };
+
+    audioNode.onended = () => {
+      if (!isLooping) {
+        playNextTrack();
+      }
+    };
+
+    function seekTrack(value) {
+      const dur = audioNode.duration;
+      if (dur > 0) {
+        audioNode.currentTime = (value / 100) * dur;
+      }
+    }
+
+    function changeVolume(val) {
+      audioNode.volume = parseFloat(val);
+      const icon = document.getElementById('volumeGlyph');
+      if (val == 0) {
+        icon.setAttribute('data-lucide', 'volume-x');
+      } else if (val < 0.5) {
+        icon.setAttribute('data-lucide', 'volume-1');
+      } else {
+        icon.setAttribute('data-lucide', 'volume-2');
+      }
+      lucide.createIcons();
+    }
+
+    function toggleVolumeMute() {
+      const slider = document.getElementById('volumeScroller');
+      if (audioNode.volume > 0) {
+        audioNode.volume = 0;
+        slider.value = 0;
+      } else {
+        audioNode.volume = 0.85;
+        slider.value = 0.85;
+      }
+      changeVolume(slider.value);
+    }
+
+    function uploadLocalMusic(evt) {
+      const file = evt.target.files[0];
+      if (!file) return;
+
+      const userSong = {
+        id: 'local_' + Date.now(),
+        title: file.name.replace(/\.[^/.]+$/, ""),
+        artist: 'Local Track',
+        duration: 'Custom',
+        cover: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&q=80',
+        url: URL.createObjectURL(file)
+      };
+
+      SONGS_LIST.unshift(userSong);
+      playSelectedTrack(userSong);
+      renderPlaylistTracks();
+      showQuickNotification(`Imported "${userSong.title}"`);
+    }
+
+    function openAudioSettingsModal() {
+      document.getElementById('audioSettingsModal').classList.remove('hidden');
+    }
+    function closeAudioSettingsModal() {
+      document.getElementById('audioSettingsModal').classList.add('hidden');
     }
 
     function toggleSocialDrawer() {
@@ -1498,7 +1539,7 @@
           id: user.id,
           name: user.name,
           status: 'online',
-          currentSong: 'Malare (Acoustic Strings)'
+          currentSong: 'ARAYANA'
         });
         renderSocialLists();
         showQuickNotification(`You and ${user.name} are now friends!`);
@@ -1521,9 +1562,9 @@
       document.getElementById('syncFriendName').textContent = friendName;
       document.getElementById('syncSessionBanner').classList.remove('hidden');
 
-      const pool = CATALOG['MALAYALAM'];
-      playSelectedTrack(pool[0]);
-      audioNode.currentTime = 12;
+      if (SONGS_LIST.length > 0) {
+        playSelectedTrack(SONGS_LIST[0]);
+      }
 
       switchSocialTab('chat');
       sharedChatMessages.push({
@@ -1580,17 +1621,6 @@
       });
       input.value = '';
       renderChatMessages();
-
-      if (currentSyncSession) {
-        setTimeout(() => {
-          sharedChatMessages.push({
-            sender: currentSyncSession.friendName,
-            text: "This part of the song gives pure goosebumps! 🔥",
-            time: 'Just now'
-          });
-          renderChatMessages();
-        }, 1400);
-      }
     }
 
     function openDonationModal() {
@@ -1637,7 +1667,7 @@
       setTimeout(() => {
         btnText.textContent = "Copy";
       }, 2000);
-      showQuickNotification(`UPI ID "${ACTIVE_UPI_ID}" copied to clipboard!`);
+      showQuickNotification(`UPI ID copied to clipboard!`);
     }
 
     function copyAdminEmail() {
@@ -1650,7 +1680,7 @@
       document.body.removeChild(dummy);
 
       const feedback = document.getElementById('adminCopyFeedback');
-      feedback.textContent = "Copied to clipboard!";
+      feedback.textContent = "Copied!";
       setTimeout(() => {
         feedback.textContent = "luiseclat@gmail.com";
       }, 2200);
@@ -1679,295 +1709,6 @@
           badgeEl.className = "text-[10px] font-bold text-rose-400 px-1.5 py-0.2 rounded bg-rose-500/10 border border-rose-500/20";
         }
       }, 1000);
-    }
-
-    function renderLanguageButtons() {
-      const container = document.getElementById('languageTabCluster');
-      container.innerHTML = '';
-
-      LANGUAGES.forEach(lang => {
-        const isCurrent = (lang === currentLanguage);
-        const btn = document.createElement('button');
-        btn.onclick = () => filterByLanguage(lang);
-        btn.className = `py-2 px-2.5 rounded-full font-bold text-xs uppercase tracking-wider transition-all duration-200 text-center ${
-          isCurrent 
-            ? 'bg-spotify-green text-black font-black shadow-lg shadow-spotify-green/20 scale-105' 
-            : 'bg-white/5 text-spotify-subtext hover:text-white hover:bg-white/10 border border-white/5'
-        }`;
-        btn.textContent = lang;
-        container.appendChild(btn);
-      });
-    }
-
-    function filterByLanguage(lang) {
-      currentLanguage = lang;
-      renderLanguageButtons();
-      document.getElementById('searchTrackQuery').value = '';
-      renderPlaylistTracks();
-    }
-
-    function renderFilteredTracks() {
-      const query = document.getElementById('searchTrackQuery').value;
-      renderPlaylistTracks(query);
-    }
-
-    function renderPlaylistTracks(query = '') {
-      const container = document.getElementById('songsContainer');
-      container.innerHTML = '';
-
-      const trackList = CATALOG[currentLanguage] || [];
-      const filtered = trackList.filter(t => 
-        t.title.toLowerCase().includes(query.toLowerCase()) || 
-        t.artist.toLowerCase().includes(query.toLowerCase())
-      );
-
-      document.getElementById('playlistStatsText').textContent = `${currentLanguage} &bull; ${filtered.length} Tracks Available`;
-
-      if (filtered.length === 0) {
-        container.innerHTML = `
-          <div class="py-12 text-center text-spotify-subtext">
-            <i data-lucide="music-2" class="w-8 h-8 mx-auto mb-2 opacity-30"></i>
-            <p class="text-xs">No tracks found matching your query.</p>
-          </div>
-        `;
-        lucide.createIcons();
-        return;
-      }
-
-      filtered.forEach((track, idx) => {
-        const isSelected = currentTrack && currentTrack.id === track.id;
-        const item = document.createElement('div');
-        item.className = `flex items-center justify-between p-2.5 sm:p-3 rounded-2xl cursor-pointer transition-all border ${
-          isSelected 
-            ? 'bg-white/10 border-spotify-green/60 text-white shadow-lg' 
-            : 'bg-white/5 border-white/5 hover:border-white/15 hover:bg-white/10 text-zinc-300'
-        }`;
-
-        item.onclick = (e) => {
-          if (e.target.closest('.add-to-pl-btn')) {
-            currentTrack = track;
-            handleAddToPlaylistClick();
-            return;
-          }
-          playSelectedTrack(track);
-        };
-
-        item.innerHTML = `
-          <div class="flex items-center space-x-3 truncate">
-            <span class="text-xs font-mono font-bold text-spotify-subtext w-4 text-right">${idx + 1}</span>
-            <div class="w-10 h-10 rounded-xl overflow-hidden bg-zinc-900 flex-shrink-0 border border-white/10 relative">
-              <img src="${track.cover}" alt="track artwork" class="w-full h-full object-cover">
-              ${isSelected && isPlaying ? `
-                <div class="absolute inset-0 bg-black/70 flex items-center justify-center gap-0.5">
-                  <span class="w-0.5 h-3 bg-spotify-green animate-pulse"></span>
-                  <span class="w-0.5 h-4 bg-spotify-green animate-bounce"></span>
-                  <span class="w-0.5 h-2 bg-spotify-green animate-pulse"></span>
-                </div>
-              ` : ''}
-            </div>
-            <div class="truncate">
-              <p class="text-xs sm:text-sm font-extrabold truncate ${isSelected ? 'text-spotify-green' : 'text-white'}">${track.title}</p>
-              <p class="text-[11px] text-spotify-subtext font-medium truncate">${track.artist}</p>
-            </div>
-          </div>
-
-          <div class="flex items-center space-x-2 text-xs font-mono font-bold text-spotify-subtext flex-shrink-0">
-            <button title="Add to playlist" class="add-to-pl-btn p-1.5 rounded-full hover:bg-white/10 text-spotify-subtext hover:text-spotify-green transition">
-              <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-            </button>
-            <span class="text-[11px]">${track.duration}</span>
-            <div class="w-7 h-7 rounded-full ${isSelected && isPlaying ? 'bg-spotify-green text-black' : 'bg-white/5 border border-white/10 text-white'} flex items-center justify-center hover:scale-105 transition">
-              <i data-lucide="${isSelected && isPlaying ? 'pause' : 'play'}" class="w-3.5 h-3.5 fill-current"></i>
-            </div>
-          </div>
-        `;
-
-        container.appendChild(item);
-      });
-
-      lucide.createIcons();
-    }
-
-    function playSelectedTrack(track) {
-      currentTrack = track;
-      document.getElementById('playerTrackTitle').textContent = track.title;
-      document.getElementById('playerTrackArtist').textContent = track.artist;
-      document.getElementById('playerCoverImg').src = track.cover;
-
-      audioNode.src = track.url;
-      initWebAudio();
-
-      if (audioCtx && audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-
-      audioNode.play().then(() => {
-        isPlaying = true;
-        refreshPlayerUI();
-      }).catch(e => {
-        console.warn("Autoplay note:", e);
-        isPlaying = true;
-        refreshPlayerUI();
-      });
-
-      renderPlaylistTracks();
-    }
-
-    function togglePlayState() {
-      if (!currentTrack) {
-        const pool = CATALOG[currentLanguage];
-        if (pool && pool.length > 0) {
-          playSelectedTrack(pool[0]);
-          return;
-        }
-      }
-
-      initWebAudio();
-      if (audioCtx && audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-
-      if (isPlaying) {
-        audioNode.pause();
-        isPlaying = false;
-      } else {
-        audioNode.play().catch(e => console.log('Playback resumed'));
-        isPlaying = true;
-      }
-
-      refreshPlayerUI();
-      renderPlaylistTracks();
-    }
-
-    function refreshPlayerUI() {
-      const icon = document.getElementById('masterPlayIcon');
-      const vinyl = document.getElementById('vinylDisc');
-
-      if (isPlaying) {
-        icon.setAttribute('data-lucide', 'pause');
-        vinyl.classList.remove('vinyl-paused');
-      } else {
-        icon.setAttribute('data-lucide', 'play');
-        vinyl.classList.add('vinyl-paused');
-      }
-      lucide.createIcons();
-    }
-
-    function playNextTrack() {
-      const list = CATALOG[currentLanguage];
-      if (!list || list.length === 0) return;
-      if (!currentTrack) {
-        playSelectedTrack(list[0]);
-        return;
-      }
-      const curIdx = list.findIndex(t => t.id === currentTrack.id);
-      const nextIdx = (curIdx + 1) % list.length;
-      playSelectedTrack(list[nextIdx]);
-    }
-
-    function playPrevTrack() {
-      const list = CATALOG[currentLanguage];
-      if (!list || list.length === 0) return;
-      if (!currentTrack) {
-        playSelectedTrack(list[0]);
-        return;
-      }
-      const curIdx = list.findIndex(t => t.id === currentTrack.id);
-      const prevIdx = (curIdx - 1 + list.length) % list.length;
-      playSelectedTrack(list[prevIdx]);
-    }
-
-    function toggleLoopPlayback() {
-      isLooping = !isLooping;
-      audioNode.loop = isLooping;
-      const btn = document.getElementById('loopTrackBtn');
-      if (isLooping) {
-        btn.classList.add('text-spotify-green');
-        btn.classList.remove('text-spotify-subtext');
-      } else {
-        btn.classList.remove('text-spotify-green');
-        btn.classList.add('text-spotify-subtext');
-      }
-    }
-
-    function formatSeconds(sec) {
-      if (isNaN(sec)) return '0:00';
-      const m = Math.floor(sec / 60);
-      const s = Math.floor(sec % 60);
-      return `${m}:${s < 10 ? '0' : ''}${s}`;
-    }
-
-    audioNode.ontimeupdate = () => {
-      const cur = audioNode.currentTime;
-      const dur = audioNode.duration || (currentTrack ? currentTrack.durationSec : 195);
-      document.getElementById('currentTimeDisplay').textContent = formatSeconds(cur);
-      document.getElementById('totalTimeDisplay').textContent = formatSeconds(dur);
-
-      if (dur > 0) {
-        document.getElementById('playbackProgress').value = (cur / dur) * 100;
-      }
-    };
-
-    audioNode.onended = () => {
-      if (!isLooping) {
-        playNextTrack();
-      }
-    };
-
-    function seekTrack(value) {
-      const dur = audioNode.duration || (currentTrack ? currentTrack.durationSec : 195);
-      audioNode.currentTime = (value / 100) * dur;
-    }
-
-    function changeVolume(val) {
-      audioNode.volume = parseFloat(val);
-      const icon = document.getElementById('volumeGlyph');
-      if (val == 0) {
-        icon.setAttribute('data-lucide', 'volume-x');
-      } else if (val < 0.5) {
-        icon.setAttribute('data-lucide', 'volume-1');
-      } else {
-        icon.setAttribute('data-lucide', 'volume-2');
-      }
-      lucide.createIcons();
-    }
-
-    function toggleVolumeMute() {
-      const slider = document.getElementById('volumeScroller');
-      if (audioNode.volume > 0) {
-        audioNode.volume = 0;
-        slider.value = 0;
-      } else {
-        audioNode.volume = 0.85;
-        slider.value = 0.85;
-      }
-      changeVolume(slider.value);
-    }
-
-    function uploadLocalMusic(evt) {
-      const file = evt.target.files[0];
-      if (!file) return;
-
-      const userSong = {
-        id: 'local_' + Date.now(),
-        title: file.name.replace(/\.[^/.]+$/, ""),
-        artist: 'Master Track &bull; Lossless Import',
-        duration: 'Custom',
-        durationSec: 180,
-        cover: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&q=80',
-        url: URL.createObjectURL(file)
-      };
-
-      CATALOG[currentLanguage].unshift(userSong);
-      playSelectedTrack(userSong);
-      renderPlaylistTracks();
-    }
-
-    function openAudioSettingsModal() {
-      document.getElementById('audioSettingsModal').classList.remove('hidden');
-    }
-    function closeAudioSettingsModal() {
-      document.getElementById('audioSettingsModal').classList.add('hidden');
     }
 
     function startWaveformVisualizer() {
@@ -2024,17 +1765,16 @@
       }, 3500);
     }
 
-    // Initialization
     window.addEventListener('DOMContentLoaded', () => {
       renderAuthUI();
-      renderLanguageButtons();
       renderPlaylistTracks();
       setupLiveCounter();
       startWaveformVisualizer();
       lucide.createIcons();
 
-      // Pre-arm first Malayalam song
-      currentTrack = CATALOG['MALAYALAM'][0];
+      // Pre-arm first song
+      currentTrack = SONGS_LIST[0];
+      audioNode.src = currentTrack.url;
       audioNode.volume = 0.85;
     });
   </script>
