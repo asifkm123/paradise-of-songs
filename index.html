@@ -88,7 +88,7 @@
 
 <body class="min-h-screen relative flex flex-col justify-between selection:bg-spotify-green selection:text-black text-sm">
 
-  <!-- Background Wallpaper with Kathakali Fallback -->
+  <!-- Background Wallpaper with Fallback -->
   <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden">
     <img 
       id="bgWallpaper" 
@@ -719,10 +719,10 @@
     </div>
   </footer>
 
-  <!-- Hidden Native Audio Node (Clean, unblocked relative path playback) -->
+  <!-- Hidden Native Audio Node -->
   <audio id="coreAudioElement" preload="metadata"></audio>
 
-  <!-- Fullscreen Screensaver Video Overlay (Plays automatically after 1 minute of song playback) -->
+  <!-- Fullscreen Screensaver Video Overlay (1-minute playback trigger) -->
   <div id="screensaverOverlay" class="fixed inset-0 z-50 bg-black opacity-0 pointer-events-none transition-opacity duration-1000 flex items-center justify-center overflow-hidden">
     <video 
       id="screensaverVideo" 
@@ -748,7 +748,7 @@
 
     const ACTIVE_UPI_ID = "paradiseacademy.kl-5@oksbi";
 
-    // RELATIVE REPOSITORY TRACKS (100% Free of Mixed Content & CORS blocks)
+    // 10 TRACKS UPLOADED TO GITHUB REPOSITORY 'songs/' FOLDER
     const SONGS_LIST = [
       {
         id: 's_1',
@@ -760,6 +760,46 @@
       },
       {
         id: 's_2',
+        title: 'Baby love',
+        artist: 'Zuby Zuby Zuby',
+        duration: '3:18',
+        cover: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400&q=80',
+        url: 'songs/' + encodeURIComponent('Baby love - Zuby Zuby Zuby.mp3')
+      },
+      {
+        id: 's_3',
+        title: 'Chammak Challo',
+        artist: 'Ra One (2011) HD',
+        duration: '3:46',
+        cover: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400&q=80',
+        url: 'songs/' + encodeURIComponent('Chammak Challo - Ra One (2011) HD 720p.mp3')
+      },
+      {
+        id: 's_4',
+        title: 'Chinnamma Adi',
+        artist: 'Folk Fusion',
+        duration: '3:30',
+        cover: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&q=80',
+        url: 'songs/' + encodeURIComponent('Chinnamma Adi@6EI2NUkxwuZuGKfJ9BB7PJ (1).mp3')
+      },
+      {
+        id: 's_5',
+        title: 'Chirapunji',
+        artist: 'Nihal Sadiq Ft Hanan Shaah',
+        duration: '3:25',
+        cover: 'https://images.unsplash.com/photo-1520523839898-507127054976?w=400&q=80',
+        url: 'songs/' + encodeURIComponent('Chirapunji - Nihal Sadiq Ft Hanan Shaah.mp3')
+      },
+      {
+        id: 's_6',
+        title: 'Delulu Delulu',
+        artist: 'Athi Bheekara Kaamukan',
+        duration: '3:12',
+        cover: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&q=80',
+        url: 'songs/' + encodeURIComponent('Delulu Delulu - Athi Bheekara Kaamukan.mp3')
+      },
+      {
+        id: 's_7',
         title: 'Habibi Drip',
         artist: 'Best Of Dabzee',
         duration: '3:15',
@@ -767,7 +807,7 @@
         url: 'songs/' + encodeURIComponent('Habibi Drip - Best Of Dabzee.mp3')
       },
       {
-        id: 's_3',
+        id: 's_8',
         title: 'Manavaalan Thug',
         artist: 'Best Of Dabzee',
         duration: '3:40',
@@ -775,15 +815,15 @@
         url: 'songs/' + encodeURIComponent('Manavaalan Thug - Best Of Dabzee.mp3')
       },
       {
-        id: 's_4',
+        id: 's_9',
         title: 'PL',
         artist: 'Official Track',
         duration: '2:55',
-        cover: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&q=80',
+        cover: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=400&q=80',
         url: 'songs/PL.mp3'
       },
       {
-        id: 's_5',
+        id: 's_10',
         title: 'Vazhikatti [Kizhakku Suryan]',
         artist: 'Fejo',
         duration: '3:10',
