@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PARADISE OF SONGS</title>
+  <!-- Google Fonts & Tailwind CDN -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Cinzel:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              gold: '#E5B842',
+              goldLight: '#F5DEB3',
+              dark: '#000000',
+              pitch: '#050505',
+              surface: '#0d0d0e',
+              card: '#111113',
+              border: '#1f1f23'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            serif: ['Cinzel', 'serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Absolute pitch black styling */
+    body {
+      background-color: #000000;
+      color: #f4f4f5;
+    }
+    
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #000000;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #27272a;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #E5B842;
+    }
+
+    /* Vinyl Record Spin Effect */
+    @keyframes spinRecord {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .spinning-vinyl {
+      animation: spinRecord 12s linear infinite;
+    }
+    .paused-vinyl {
+      animation-play-state: paused !important;
+    }
+
+    /* Ambient Gold Halo Glow */
+    .glow-gold {
+      box-shadow: 0 0 35px -5px rgba(229, 184, 66, 0.28);
+    }
+    .glow-gold-sm {
+      box-shadow: 0 0 15px -3px rgba(229, 184, 66, 0.2);
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col justify-between selection:bg-brand-gold selection:text-black antialiased">
+
+  <!-- Top Navigation Header -->
+  <header class="sticky top-0 z-40 bg-black/90 backdrop-blur-md border-b border-zinc-900 px-4 lg:px-8 py-3.5">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+      
+      <!-- Brand Logo / Custom Logo Area -->
+      <div class="flex items-center space-x-3.5 cursor-pointer" onclick="filterByLanguage('MALAYALAM')">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-600 via-brand-gold to-yellow-200 p-[1.5px] shadow-lg shadow-amber-950/40">
+          <div class="w-full h-full bg-black rounded-[14px] flex items-center justify-center">
+            <i data-lucide="disc-3" class="w-6 h-6 text-brand-gold"></i>
+          </div>
+        </div>
+        <div>
+          <h1 class="text-xl md:text-2xl font-serif font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-amber-100 via-brand-gold to-amber-500">
+            PARADISE OF SONGS
+          </h1>
+          <p class="text-[10px] text-zinc-500 tracking-widest uppercase font-semibold">Sonic Sanctuary &bull; High Fidelity</p>
+        </div>
+      </div>
+
+      <!-- Live Users Indicator (Starts at 14663 and fluctuates every second) -->
+      <div class="flex items-center space-x-3 bg-zinc-950 border border-zinc-800/90 rounded-2xl px-4 py-2 shadow-inner">
+        <span class="relative flex h-2.5 w-2.5">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+        </span>
+        <div class="flex flex-col">
+          <span class="text-[9px] uppercase tracking-wider font-bold text-zinc-400">Current Listeners</span>
+          <div class="flex items-baseline space-x-1.5">
+            <span id="liveCounterDisplay" class="font-mono text-sm md:text-base font-extrabold text-white tracking-tight">14,663</span>
+            <span id="counterTrendBadge" class="text-[10px] font-semibold text-emerald-400">+2</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto w-full px-4 lg:px-8 py-5 flex-1 flex flex-col space-y-5">
+    
+    <!-- NOTICE BOARD / ADVERTISEMENT SPACE -->
+    <section class="w-full bg-gradient-to-r from-zinc-950 via-[#0e0e12] to-zinc-950 border border-dashed border-amber-500/40 rounded-2xl p-4 lg:p-5 relative overflow-hidden group hover:border-amber-400 transition-colors">
+      <div class="absolute -right-8 -top-8 w-32 h-32 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center space-x-3 text-center sm:text-left">
+          <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-brand-gold/30 flex items-center justify-center text-brand-gold flex-shrink-0">
+            <i data-lucide="megaphone" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2 justify-center sm:justify-start">
+              <span class="text-[10px] font-bold uppercase tracking-widest text-brand-gold bg-amber-500/10 border border-brand-gold/20 px-2 py-0.5 rounded-md">Notice Board</span>
+              <span class="text-[10px] text-zinc-500">Available Space</span>
+            </div>
+            <!-- EXACT REQUIRED TEXT -->
+            <h2 class="text-base sm:text-lg font-black tracking-wide text-zinc-100 mt-0.5">
+              ADVERTISE HERE CONTACT ADMIN
+            </h2>
+            <p class="text-xs text-zinc-400">Reach thousands of active music listeners directly.</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2.5 flex-shrink-0">
+          <button onclick="openContactModal()" class="px-4 py-2 bg-gradient-to-r from-brand-gold to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-bold text-xs uppercase tracking-wider rounded-xl transition duration-200 shadow-md shadow-amber-950/40 flex items-center gap-1.5">
+            <i data-lucide="mail" class="w-3.5 h-3.5"></i>
+            <span>Contact Admin</span>
+          </button>
+          <button onclick="copyAdminEmail()" class="px-3 py-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 text-xs rounded-xl transition flex items-center gap-1.5">
+            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+            <span id="copyNoticeBtnText">Copy Email</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Two Column Layout: Player (Left) & Language/Playlist (Right) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1 items-start">
+
+      <!-- LEFT: High-Tech Music Player (5 Cols) -->
+      <section class="lg:col-span-5 bg-zinc-950 border border-zinc-900 rounded-3xl p-6 shadow-2xl flex flex-col justify-between space-y-6">
+        
+        <!-- Player Header Tag -->
+        <div class="flex items-center justify-between border-b border-zinc-900 pb-3">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="radio" class="w-4 h-4 text-brand-gold animate-pulse"></i>
+            <span class="text-xs uppercase tracking-wider font-bold text-zinc-400">Now Streaming</span>
+          </div>
+          <span id="nowPlayingLanguageTag" class="text-[10px] font-bold text-brand-gold bg-amber-500/10 border border-brand-gold/30 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+            MALAYALAM
+          </span>
+        </div>
+
+        <!-- Album Vinyl Record & Artwork -->
+        <div class="flex justify-center items-center py-2">
+          <div class="relative w-56 h-56 sm:w-64 sm:h-64 flex items-center justify-center">
+            
+            <!-- Vinyl Record Behind Jacket -->
+            <div id="vinylDisk" class="absolute w-52 h-52 sm:w-60 sm:h-60 rounded-full bg-gradient-to-tr from-zinc-900 via-black to-zinc-900 border-4 border-zinc-800 shadow-2xl flex items-center justify-center paused-vinyl spinning-vinyl">
+              <div class="w-20 h-20 rounded-full border border-zinc-700 bg-amber-500/10 flex items-center justify-center">
+                <div class="w-6 h-6 rounded-full bg-black border-2 border-brand-gold"></div>
+              </div>
+            </div>
+
+            <!-- Front Album Cover Artwork -->
+            <div class="relative w-48 h-48 sm:w-52 sm:h-52 rounded-2xl overflow-hidden shadow-2xl border-2 border-zinc-800 group glow-gold-sm">
+              <img id="coverArtwork" src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=350&auto=format&fit=crop&q=80" alt="Album Cover" class="w-full h-full object-cover">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+              <div class="absolute bottom-2.5 left-2.5 right-2.5 text-center">
+                <span id="playerBadgeText" class="text-[10px] font-mono text-zinc-300 bg-black/60 backdrop-blur-md px-2 py-0.5 rounded-md border border-zinc-700">320 KBPS HI-FI</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Track Info -->
+        <div class="text-center space-y-1">
+          <h3 id="currentSongTitle" class="text-lg md:text-xl font-extrabold text-white truncate px-2">Malare (Acoustic Strings)</h3>
+          <p id="currentSongArtist" class="text-xs text-zinc-400 font-medium truncate">Kerala Unplugged Sessions</p>
+        </div>
+
+        <!-- Frequency Wave Visualizer Canvas -->
+        <div class="bg-black/60 border border-zinc-900 rounded-xl p-2.5 flex items-center justify-center">
+          <canvas id="visualizerCanvas" width="320" height="42" class="w-full"></canvas>
+        </div>
+
+        <!-- Progress & Time Indicators -->
+        <div class="space-y-1.5">
+          <div class="relative">
+            <input 
+              id="seekBar" 
+              type="range" 
+              min="0" 
+              max="100" 
+              value="0" 
+              oninput="handleSeek(this.value)"
+              class="w-full h-1.5 bg-zinc-900 rounded-lg appearance-none cursor-pointer accent-brand-gold hover:h-2 transition-all"
+            />
+          </div>
+          <div class="flex justify-between text-[11px] font-mono text-zinc-500">
+            <span id="currentTimeDisplay">0:00</span>
+            <span id="durationDisplay">0:00</span>
+          </div>
+        </div>
+
+        <!-- Playback Controls -->
+        <div class="flex items-center justify-center space-x-6">
+          <button onclick="playPrev()" class="p-2.5 rounded-full hover:bg-zinc-900 text-zinc-400 hover:text-white transition" title="Previous Track">
+            <i data-lucide="skip-back" class="w-5 h-5"></i>
+          </button>
+
+          <button id="mainPlayPauseBtn" onclick="togglePlayPause()" class="w-14 h-14 rounded-full bg-brand-gold hover:bg-amber-400 text-black flex items-center justify-center shadow-lg shadow-amber-950/60 transform active:scale-95 transition">
+            <i data-lucide="play" id="mainPlayIcon" class="w-7 h-7 ml-0.5"></i>
+          </button>
+
+          <button onclick="playNext()" class="p-2.5 rounded-full hover:bg-zinc-900 text-zinc-400 hover:text-white transition" title="Next Track">
+            <i data-lucide="skip-forward" class="w-5 h-5"></i>
+          </button>
+
+          <button id="loopToggleBtn" onclick="toggleLoop()" class="p-2.5 rounded-full hover:bg-zinc-900 text-zinc-500 hover:text-brand-gold transition" title="Repeat Track">
+            <i data-lucide="repeat" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <!-- Volume Slider & Custom Upload Bar -->
+        <div class="pt-2 border-t border-zinc-900/80 flex items-center justify-between text-xs text-zinc-400">
+          <!-- Volume -->
+          <div class="flex items-center space-x-2">
+            <button onclick="toggleMute()" class="text-zinc-400 hover:text-white">
+              <i data-lucide="volume-2" id="volumeIcon" class="w-4 h-4"></i>
+            </button>
+            <input 
+              id="volumeSlider" 
+              type="range" 
+              min="0" 
+              max="1" 
+              step="0.02" 
+              value="0.85" 
+              oninput="handleVolume(this.value)"
+              class="w-20 sm:w-24 h-1 bg-zinc-900 rounded appearance-none cursor-pointer accent-brand-gold"
+            />
+          </div>
+
+          <!-- Add Custom Audio Track Trigger -->
+          <label class="cursor-pointer text-[11px] font-semibold text-zinc-400 hover:text-brand-gold flex items-center gap-1.5 transition">
+            <i data-lucide="folder-plus" class="w-3.5 h-3.5"></i>
+            <span>Load MP3</span>
+            <input type="file" id="localAudioInput" accept="audio/*" class="hidden" onchange="handleCustomAudioUpload(event)">
+          </label>
+        </div>
+
+      </section>
+
+      <!-- RIGHT: Language Filter and Playlist (7 Cols) -->
+      <section class="lg:col-span-7 bg-zinc-950 border border-zinc-900 rounded-3xl p-6 shadow-2xl flex flex-col space-y-5">
+        
+        <!-- Header & Language Tabs -->
+        <div>
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+            <div>
+              <h2 class="text-base font-bold text-white flex items-center gap-2">
+                <i data-lucide="layers" class="w-4 h-4 text-brand-gold"></i>
+                Select Category
+              </h2>
+              <p class="text-xs text-zinc-500">Pick a language to explore curated soundscapes</p>
+            </div>
+
+            <!-- Instant Search Field -->
+            <div class="relative w-full sm:w-56">
+              <i data-lucide="search" class="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
+              <input 
+                id="searchTrackInput" 
+                type="text" 
+                placeholder="Search songs..." 
+                oninput="handleSearchTrack()"
+                class="w-full bg-zinc-900/90 border border-zinc-800 text-xs rounded-xl pl-8 pr-3 py-1.5 text-zinc-200 placeholder-zinc-500 focus:border-brand-gold focus:outline-none transition"
+              />
+            </div>
+          </div>
+
+          <!-- The 5 Explicit Language Buttons -->
+          <div class="grid grid-cols-2 sm:grid-cols-5 gap-2" id="languageBtnGroup">
+            <!-- Buttons dynamically populated -->
+          </div>
+        </div>
+
+        <!-- Songs Listing Table -->
+        <div class="border-t border-zinc-900 pt-3 flex-1 flex flex-col">
+          <div class="flex items-center justify-between pb-2 text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">
+            <span id="playlistHeaderSummary">Showing tracks</span>
+            <span>Duration</span>
+          </div>
+
+          <div class="overflow-y-auto max-h-[460px] space-y-2 pr-1" id="playlistTracksList">
+            <!-- Songs injected via JavaScript -->
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-zinc-900 bg-black/90 px-4 py-4 text-center text-xs text-zinc-500">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+      <p>&copy; <span id="currentYear"></span> PARADISE OF SONGS &bull; All Rights Reserved.</p>
+      <p class="text-zinc-600">Built for speed, zero cost hosting, and pure audio immersion.</p>
+    </div>
+  </footer>
+
+  <!-- Admin Contact / Advertise Modal -->
+  <div id="contactModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-zinc-950 border border-brand-gold/40 rounded-3xl max-w-md w-full p-6 relative shadow-2xl">
+      <button onclick="closeContactModal()" class="absolute right-4 top-4 text-zinc-500 hover:text-white p-1">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="text-center mb-5">
+        <div class="w-12 h-12 rounded-2xl bg-amber-500/10 text-brand-gold flex items-center justify-center mx-auto mb-2 border border-brand-gold/20">
+          <i data-lucide="sparkles" class="w-6 h-6"></i>
+        </div>
+        <h3 class="text-lg font-bold text-white">Advertise on PARADISE OF SONGS</h3>
+        <p class="text-xs text-zinc-400">Reach 14,000+ streaming users across English, Malayalam, Tamil, Hindi, and Soofi audiences.</p>
+      </div>
+
+      <div class="space-y-3 text-xs mb-5">
+        <div class="bg-zinc-900/80 p-3 rounded-2xl border border-zinc-800 flex justify-between items-center">
+          <div>
+            <p class="text-zinc-500 text-[10px] uppercase font-bold tracking-wider">Official Admin Email</p>
+            <p class="font-mono text-brand-gold font-bold text-sm">admin@paradiseofsongs.com</p>
+          </div>
+          <button onclick="copyAdminEmail()" class="p-2 hover:bg-zinc-800 rounded-xl text-zinc-300">
+            <i data-lucide="copy" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <div class="bg-zinc-900/80 p-3 rounded-2xl border border-zinc-800 flex justify-between items-center">
+          <div>
+            <p class="text-zinc-500 text-[10px] uppercase font-bold tracking-wider">Direct WhatsApp Inquiry</p>
+            <p class="font-mono text-zinc-200 font-semibold text-sm">+1 (800) 727-2347</p>
+          </div>
+          <span class="text-[10px] bg-emerald-500/20 text-emerald-400 font-bold px-2 py-0.5 rounded-full">Available</span>
+        </div>
+      </div>
+
+      <button onclick="closeContactModal()" class="w-full py-2.5 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 font-bold rounded-xl text-xs transition">
+        Close Window
+      </button>
+    </div>
+  </div>
+
+  <!-- Hidden HTML5 Audio Element -->
+  <audio id="audioElement" preload="metadata"></audio>
+
+  <script>
+    // Set Year
+    document.getElementById('currentYear').innerText = new Date().getFullYear();
+
+    // 5 Categories Required by User
+    const LANGUAGES = ['ENGLISH', 'MALAYALAM', 'TAMIL', 'HINDI', 'SOOFI'];
+
+    // Curated Playable Royalty-Free Music Library
+    const CATALOG = {
+      MALAYALAM: [
+        {
+          id: 'ml_1',
+          title: 'Malare (Acoustic Strings)',
+          artist: 'Kerala Unplugged Sessions',
+          duration: '3:15',
+          durationSec: 195,
+          cover: 'https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?w=400&auto=format&fit=crop&q=80',
+          url: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=melody-of-nature-110486.mp3'
+        },
+        {
+          id: 'ml_2',
+          title: 'Aalolam Kaatte (Breeze of Backwaters)',
+          artist: 'Malabar Traditional Ensemble',
+          duration: '2:48',
+          durationSec: 168,
+          cover: 'https://images.unsplash.com/photo-1465847899084-d164df4dedc6?w=400&auto=format&fit=crop&q=80',
+          url: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=ambient-piano-amp-strings-10711.mp3'
+        },
+        {
+          id: 'ml_3',
+          title: 'Neeyum Njanum (Cochin Lofi)',
+          artist: 'Ernakulam Soundworks',
+          duration: '3:05',
+          durationSec: 185,
+          cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&auto=format&fit=crop&q=80',
+          url: 'https://cdn.pixabay.com/download/audio/2022/11/06/audio_c937107f97.mp3?filename=lofi-study-112191.mp3'
+        },
+        {
+          id: 'ml_4',
+          title: 'Wayanad Woods Flute',
+          artist: 'Ghatam & Bamboo Duo',
+          duration: '3:30',
+          durationSec: 210,
+          cover: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&auto=format&fit=crop&q=80',
+          url: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3?filename=relaxed-vlog-131746.mp3'
+        }
+      ],
+      ENGLISH: [
+        {
+          id: 'en_1',
+          title: 'Midnight Serenade',
+          artist: 'The Velvet Horizon',
+          duration: '2:55',
+          durationSec: 175,
+          cover: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&auto=format&fit=crop&q=80',
+          url: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=soft-ambient-111000.mp3'
+        },
+        {
+          id: 'en_2',
+          title: 'Golden Sunset Boulevard',
+          artist: 'Aura Collective',
+          duration: '3:10',
+          durationSec: 190,
+          cover: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400&auto=format&fit=crop&q=80',
+          url: 'https://cdn.pixabay.com/download/audio/2022/10/14/audio_9939f792cb.mp3?filename=tuesday-glitch-122413.mp3'
+        },
+        {
+          id: 'en_3',
+          title: 'Neon Skyline Echo',
+          artist: 'Cyber Noir Beats',
+          duration: '3:40',
+          durationSec: 220,
+          cover: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=400&auto=format&fit=crop&q=80',
+          url: 'https://cdn.pixabay.com/download/audio/2022/01/26/audio_d0c6ff1101.mp3?filename=electronic-future-beats-117997.mp3'
+        }
+      ],
+      TAMIL: [
+        {
+          id: 'ta_1',
+          title: 'Anbe Vaa (Violin Raga)',
+          artist: 'Madras String Ensemble',
+          duration: '3:22',
+          durationSec: 202,
+          cover: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=400&auto=format&fit=crop&q=80',
+          url: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=melody-of-nature-110486.mp3'
+        },
+        {
+          id: 'ta_2',
+          title: 'Kaatru Veliyidai Breeze',
+          artist: 'Chennai Night Melodies',
+          duration: '3:05',
+          durationSec: 185,
+          cover: 'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=400&auto=format&fit=crop&q=80',
+          url: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=ambient-piano-amp-strings-10711.mp3'
+        },
+        {
+          id: 'ta_3',
+          title: 'Marghazhi Morning Fusion',
+          artist: 'Karnatic Wave',
+          duration: '3:18',
+          durationSec: 198,
+          cover: 'https://images.unsplash.com/photo-1520523839898-507127054976?w=400&auto=format&fit=crop&q=80',
+          url: 'https://cdn.pixabay.com/download/audio/2022/11/06/audio_c937107f97.mp3?filename=lofi-study-112191.mp3'
+        }
+      ],
+      HINDI: [
+        {
+          id: 'hi_1',
+          title: 'Tum Hi Ho (Soul Piano)',
+          artist: 'Mumbai Acoustic Lab',
+          duration: '3:12',
+          durationSec: 192,
+          cover: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&auto=format&fit=crop&q=80',
+          url: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=soft-ambient-111000.mp3'
+        },
+        {
+          id: 'hi_2',
+          title: 'Raag Yaman Late Night',
+          artist: 'Delhi Lounge Project',
+          duration: '3:45',
+          durationSec: 225,
+          cover: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400&auto=format&fit=crop&q=80',
+          url: 'https://cdn.pixabay.com/download/audio/2022/10/14/audio_9939f792cb.mp3?filename=tuesday-glitch-122413.mp3'
+        },
+        {
+          id: 'hi_3',
+          title: 'Himalayan Serenity',
+          artist: 'Pahari Flute Collective',
+          duration: '3:00',
+          durationSec: 180,
+          cover: 'https://images.unsplash.com/photo-1506157786151-b8491531f063?w=400&auto=format&fit=crop&q=80',
+          url: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3?filename=relaxed-vlog-131746.mp3'
+        }
+      ],
+      SOOFI: [
+        {
+          id: 'sf_1',
+          title: 'Dervish Ecstasy (Ney & Dholak)',
+          artist: 'Mystic Konya Circle',
+          duration: '4:15',
+          durationSec: 255,
+          cover: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400&auto=format&fit=crop&q=80',
+          url: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=ambient-piano-amp-strings-10711.mp3'
+        },
+        {
+          id: 'sf_2',
+          title: 'Noor-E-Elahi Spiritual Journey',
+          artist: 'Sufiana Ensemble',
+          duration: '3:50',
+          durationSec: 230,
+          cover: 'https://images.unsplash.com/photo-1544717305-2782549b5136?w=400&auto=format&fit=crop&q=80',
+          url: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=melody-of-nature-110486.mp3'
+        },
+        {
+          id: 'sf_3',
+          title: 'Rumi’s Garden Meditation',
+          artist: 'Sufi Whispers',
+          duration: '3:35',
+          durationSec: 215,
+          cover: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=400&auto=format&fit=crop&q=80',
+          url: 'https://cdn.pixabay.com/download/audio/2022/11/06/audio_c937107f97.mp3?filename=lofi-study-112191.mp3'
+        }
+      ]
+    };
+
+    // State Variables
+    let currentLanguage = 'MALAYALAM';
+    let currentTrack = null;
+    let isPlaying = false;
+    let isLooping = false;
+    let liveListenersCount = 14663; // Required exact initial start count
+
+    const audio = document.getElementById('audioElement');
+
+    function initLiveCounter() {
+      const counterEl = document.getElementById('liveCounterDisplay');
+      const badgeEl = document.getElementById('counterTrendBadge');
+
+      setInterval(() => {
+        // Change by random step (-1, 0, +1, +2, +3)
+        const deltas = [-1, 1, 2, -2, 3];
+        const delta = deltas[Math.floor(Math.random() * deltas.length)];
+        liveListenersCount += delta;
+
+        // Ensure floor stays realistic
+        if (liveListenersCount < 14600) {
+          liveListenersCount = 14663;
+        }
+
+        counterEl.textContent = liveListenersCount.toLocaleString();
+
+        if (delta >= 0) {
+          badgeEl.textContent = `+${delta}`;
+          badgeEl.className = "text-[10px] font-semibold text-emerald-400";
+        } else {
+          badgeEl.textContent = `${delta}`;
+          badgeEl.className = "text-[10px] font-semibold text-rose-400";
+        }
+      }, 1000);
+    }
+
+    function renderLanguageButtons() {
+      const container = document.getElementById('languageBtnGroup');
+      container.innerHTML = '';
+
+      LANGUAGES.forEach(lang => {
+        const isCurrent = (lang === currentLanguage);
+        const btn = document.createElement('button');
+        btn.onclick = () => filterByLanguage(lang);
+        btn.className = `py-2 px-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all duration-200 text-center border ${
+          isCurrent 
+            ? 'bg-brand-gold text-black border-brand-gold shadow-lg shadow-amber-950/40 font-extrabold'
+            : 'bg-zinc-900/90 text-zinc-400 border-zinc-800 hover:text-white hover:border-zinc-700 hover:bg-zinc-800'
+        }`;
+        btn.innerText = lang;
+        container.appendChild(btn);
+      });
+    }
+
+    function filterByLanguage(lang) {
+      currentLanguage = lang;
+      renderLanguageButtons();
+      document.getElementById('nowPlayingLanguageTag').innerText = lang;
+      document.getElementById('searchTrackInput').value = '';
+      renderPlaylist();
+    }
+
+    function renderPlaylist(query = '') {
+      const container = document.getElementById('playlistTracksList');
+      container.innerHTML = '';
+
+      const tracks = CATALOG[currentLanguage] || [];
+      const filtered = tracks.filter(t => 
+        t.title.toLowerCase().includes(query.toLowerCase()) || 
+        t.artist.toLowerCase().includes(query.toLowerCase())
+      );
+
+      document.getElementById('playlistHeaderSummary').innerText = `${currentLanguage} (${filtered.length} songs)`;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="py-12 text-center text-zinc-600">
+            <i data-lucide="music-2" class="w-8 h-8 mx-auto mb-2 opacity-30"></i>
+            <p class="text-xs">No tracks found matching your query.</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      filtered.forEach((track, idx) => {
+        const isSelected = currentTrack && currentTrack.id === track.id;
+        const item = document.createElement('div');
+        item.className = `flex items-center justify-between p-3 rounded-2xl cursor-pointer transition-all border ${
+          isSelected 
+            ? 'bg-zinc-900 border-brand-gold/60 text-white shadow-md' 
+            : 'bg-zinc-950 border-zinc-900 hover:border-zinc-800 hover:bg-zinc-900/50 text-zinc-300'
+        }`;
+
+        item.onclick = () => playTrack(track);
+
+        item.innerHTML = `
+          <div class="flex items-center space-x-3 truncate">
+            <span class="text-xs font-mono text-zinc-600 w-4 text-right">${idx + 1}</span>
+            <div class="w-10 h-10 rounded-xl overflow-hidden bg-zinc-900 flex-shrink-0 border border-zinc-800 relative">
+              <img src="${track.cover}" alt="cover" class="w-full h-full object-cover">
+              ${isSelected && isPlaying ? `
+                <div class="absolute inset-0 bg-black/60 flex items-center justify-center">
+                  <i data-lucide="volume-2" class="w-4 h-4 text-brand-gold animate-bounce"></i>
+                </div>
+              ` : ''}
+            </div>
+            <div class="truncate">
+              <p class="text-xs font-bold truncate ${isSelected ? 'text-brand-gold' : 'text-zinc-100'}">${track.title}</p>
+              <p class="text-[11px] text-zinc-500 truncate">${track.artist}</p>
+            </div>
+          </div>
+
+          <div class="flex items-center space-x-3 text-xs font-mono text-zinc-500 flex-shrink-0">
+            <span>${track.duration}</span>
+            <div class="w-7 h-7 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-300 hover:text-white">
+              <i data-lucide="${isSelected && isPlaying ? 'pause' : 'play'}" class="w-3.5 h-3.5"></i>
+            </div>
+          </div>
+        `;
+
+        container.appendChild(item);
+      });
+
+      lucide.createIcons();
+    }
+
+    function handleSearchTrack() {
+      const q = document.getElementById('searchTrackInput').value;
+      renderPlaylist(q);
+    }
+
+    function playTrack(track) {
+      currentTrack = track;
+      document.getElementById('currentSongTitle').innerText = track.title;
+      document.getElementById('currentSongArtist').innerText = track.artist;
+      document.getElementById('coverArtwork').src = track.cover;
+
+      audio.src = track.url;
+      audio.play().then(() => {
+        isPlaying = true;
+        updatePlaybackStateUI();
+      }).catch(err => {
+        console.warn("Autoplay note / stream playback:", err);
+        // Ensure UI stays responsive
+        isPlaying = true;
+        updatePlaybackStateUI();
+      });
+
+      renderPlaylist();
+    }
+
+    function togglePlayPause() {
+      if (!currentTrack) {
+        const list = CATALOG[currentLanguage];
+        if (list && list.length > 0) {
+          playTrack(list[0]);
+          return;
+        }
+      }
+
+      if (isPlaying) {
+        audio.pause();
+        isPlaying = false;
+      } else {
+        audio.play().catch(e => console.log('Playback resumed'));
+        isPlaying = true;
+      }
+
+      updatePlaybackStateUI();
+      renderPlaylist();
+    }
+
+    function updatePlaybackStateUI() {
+      const playIcon = document.getElementById('mainPlayIcon');
+      const vinyl = document.getElementById('vinylDisk');
+
+      if (isPlaying) {
+        playIcon.setAttribute('data-lucide', 'pause');
+        vinyl.classList.remove('paused-vinyl');
+      } else {
+        playIcon.setAttribute('data-lucide', 'play');
+        vinyl.classList.add('paused-vinyl');
+      }
+      lucide.createIcons();
+    }
+
+    function playNext() {
+      const list = CATALOG[currentLanguage];
+      if (!list || list.length === 0) return;
+      if (!currentTrack) {
+        playTrack(list[0]);
+        return;
+      }
+      const curIdx = list.findIndex(t => t.id === currentTrack.id);
+      const nextIdx = (curIdx + 1) % list.length;
+      playTrack(list[nextIdx]);
+    }
+
+    function playPrev() {
+      const list = CATALOG[currentLanguage];
+      if (!list || list.length === 0) return;
+      if (!currentTrack) {
+        playTrack(list[0]);
+        return;
+      }
+      const curIdx = list.findIndex(t => t.id === currentTrack.id);
+      const prevIdx = (curIdx - 1 + list.length) % list.length;
+      playTrack(list[prevIdx]);
+    }
+
+    function toggleLoop() {
+      isLooping = !isLooping;
+      audio.loop = isLooping;
+      const btn = document.getElementById('loopToggleBtn');
+      if (isLooping) {
+        btn.classList.add('text-brand-gold');
+        btn.classList.remove('text-zinc-500');
+      } else {
+        btn.classList.remove('text-brand-gold');
+        btn.classList.add('text-zinc-500');
+      }
+    }
+
+    function formatTime(sec) {
+      if (isNaN(sec)) return '0:00';
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return `${m}:${s < 10 ? '0' : ''}${s}`;
+    }
+
+    audio.ontimeupdate = () => {
+      const cur = audio.currentTime;
+      const dur = audio.duration || (currentTrack ? currentTrack.durationSec : 180);
+      document.getElementById('currentTimeDisplay').innerText = formatTime(cur);
+      document.getElementById('durationDisplay').innerText = formatTime(dur);
+
+      if (dur > 0) {
+        document.getElementById('seekBar').value = (cur / dur) * 100;
+      }
+    };
+
+    audio.onended = () => {
+      if (!isLooping) {
+        playNext();
+      }
+    };
+
+    function handleSeek(val) {
+      const dur = audio.duration || (currentTrack ? currentTrack.durationSec : 180);
+      audio.currentTime = (val / 100) * dur;
+    }
+
+    function handleVolume(val) {
+      audio.volume = parseFloat(val);
+      const icon = document.getElementById('volumeIcon');
+      if (val == 0) {
+        icon.setAttribute('data-lucide', 'volume-x');
+      } else if (val < 0.5) {
+        icon.setAttribute('data-lucide', 'volume-1');
+      } else {
+        icon.setAttribute('data-lucide', 'volume-2');
+      }
+      lucide.createIcons();
+    }
+
+    function toggleMute() {
+      const slider = document.getElementById('volumeSlider');
+      if (audio.volume > 0) {
+        audio.volume = 0;
+        slider.value = 0;
+      } else {
+        audio.volume = 0.85;
+        slider.value = 0.85;
+      }
+      handleVolume(slider.value);
+    }
+
+    function handleCustomAudioUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const customTrack = {
+        id: 'custom_' + Date.now(),
+        title: file.name.replace(/\.[^/.]+$/, ""),
+        artist: 'My Custom Track',
+        duration: 'Custom',
+        durationSec: 180,
+        cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&auto=format&fit=crop&q=80',
+        url: URL.createObjectURL(file)
+      };
+
+      // Add to current language catalogue at beginning
+      CATALOG[currentLanguage].unshift(customTrack);
+      playTrack(customTrack);
+      renderPlaylist();
+    }
+
+    function initVisualizer() {
+      const canvas = document.getElementById('visualizerCanvas');
+      const ctx = canvas.getContext('2d');
+      const barCount = 36;
+
+      function renderFrame() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const barWidth = canvas.width / barCount;
+
+        for (let i = 0; i < barCount; i++) {
+          let barHeight;
+          if (isPlaying) {
+            // Dynamic fluctuating waves when music is active
+            const freq = Math.sin(Date.now() * 0.005 + i * 0.4) * 0.5 + 0.5;
+            barHeight = 4 + freq * (canvas.height - 8);
+          } else {
+            // Idle bars
+            barHeight = 3;
+          }
+
+          const x = i * barWidth;
+          const y = canvas.height - barHeight;
+
+          // Gradient color: Gold to Amber
+          const gradient = ctx.createLinearGradient(0, canvas.height, 0, 0);
+          gradient.addColorStop(0, '#E5B842');
+          gradient.addColorStop(1, '#F59E0B');
+
+          ctx.fillStyle = gradient;
+          ctx.fillRect(x + 1.5, y, barWidth - 3, barHeight);
+        }
+
+        requestAnimationFrame(renderFrame);
+      }
+
+      renderFrame();
+    }
+
+    function openContactModal() {
+      document.getElementById('contactModal').classList.remove('hidden');
+    }
+
+    function closeContactModal() {
+      document.getElementById('contactModal').classList.add('hidden');
+    }
+
+    function copyAdminEmail() {
+      const text = "admin@paradiseofsongs.com";
+      const dummy = document.createElement("textarea");
+      document.body.appendChild(dummy);
+      dummy.value = text;
+      dummy.select();
+      document.execCommand('copy');
+      document.body.removeChild(dummy);
+
+      const btn = document.getElementById('copyNoticeBtnText');
+      if (btn) {
+        btn.innerText = "Copied!";
+        setTimeout(() => {
+          btn.innerText = "Copy Email";
+        }, 2000);
+      }
+    }
+
+    // App Initialization
+    window.addEventListener('DOMContentLoaded', () => {
+      renderLanguageButtons();
+      renderPlaylist();
+      initLiveCounter();
+      initVisualizer();
+      lucide.createIcons();
+
+      // Pre-select initial song metadata
+      currentTrack = CATALOG['MALAYALAM'][0];
+      audio.volume = 0.85;
+    });
+  </script>
+</body>
+</html>
