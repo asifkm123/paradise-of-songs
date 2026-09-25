@@ -1017,6 +1017,46 @@
   img, video, canvas, iframe, #map {
     max-width: 100% !important;
     height: auto !important;
+ 
+  }
+
+  /* Center all cards and eliminate side offset */
+  .player-card,
+  .track-list-card,
+  .curated-tracks-wrap,
+  .brand-group,
+  div[class*="card"],
+  div[class*="panel"],
+  div[class*="container"] {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Clear space above the bottom ad banner */
+  body {
+    padding-bottom: 220px !important;
+  }
+
+  /* Compact the bottom ad panel height */
+  .bottom-ad-panel,
+  div[class*="ad-panel"],
+  div[class*="advertise"] {
+    padding: 8px 12px !important;
+    max-height: 110px !important;
+  }
+
+  /* Keep search bar within mobile bounds */
+  .search-wrapper,
+  .search-bar-wrap,
+  div[class*="search"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 8px auto !important;
   }
 }
  
