@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>Paradise of Songs - Enterprise Luxury Suite</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" /> 
+ <title>Paradise of Songs - Enterprise Luxury Suite</title>
 
   <!-- PWA & Mobile Meta -->
   <meta name="theme-color" content="#020408" />
@@ -984,6 +984,42 @@
       .bottom-ad-panel { height: 160px; padding: 10px 14px; }
       body { padding-bottom: 235px; }
     }
+  /* ========================================================
+   NON-DESTRUCTIVE RESPONSIVE LAYER
+   Desktop (>768px) is completely untouched.
+   ======================================================== */
+
+@media screen and (max-width: 768px) {
+  /* Prevent horizontal screen blowout */
+  html, body {
+    overflow-x: hidden !important;
+    width: 100% !important;
+    position: relative;
+  }
+
+  /* Make main layout wrappers scale down fluidly */
+  main, section, header, footer, .container, .wrapper, .app-container {
+    max-width: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+
+  /* Force side-by-side grids and flex rows to stack vertically on phone screens */
+  .grid, .row, [class*="grid-"], [class*="flex-row"] {
+    display: flex !important;
+    flex-direction: column !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Ensure media and maps don't break viewport width */
+  img, video, canvas, iframe, #map {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+}
+ 
   </style>
 </head>
 <body>
