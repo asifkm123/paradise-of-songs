@@ -3,17 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Paradise of Songs - Ultra Pro Audio & Auto Navigation Suite</title>
+  <title>Paradise of Songs - Ultra Pro Audio & Auto Suite</title>
 
-  <!-- PWA & Car Head Unit Meta -->
-  <meta name="theme-color" content="#05070d" />
+  <!-- PWA & Car Head Unit Manifest -->
+  <meta name="theme-color" content="#04060a" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Paradise Auto" />
   <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=192&h=192&fit=crop" />
-
-  <!-- Automotive & Desktop Web App Manifest -->
-  <link rel="manifest" href='data:application/manifest+json,{"name":"Paradise of Songs & Drive HUD","short_name":"ParadiseAuto","start_url":".","display":"standalone","orientation":"any","background_color":"#05070d","theme_color":"#1ed760","categories":["music","audio","navigation"],"icons":[{"src":"https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=192&h=192&fit=crop","sizes":"192x192","type":"image/png"},{"src":"https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=512&h=512&fit=crop","sizes":"512x512","type":"image/png"}]}' />
+  <link rel="manifest" href='data:application/manifest+json,{"name":"Paradise of Songs","short_name":"ParadiseMusic","start_url":".","display":"standalone","background_color":"#04060a","theme_color":"#1ed760","categories":["music","navigation"],"icons":[{"src":"https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=192&h=192&fit=crop","sizes":"192x192","type":"image/png"}]}' />
 
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,7 +18,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-  <!-- Real Leaflet OpenStreetMap Engine & Leaflet Routing Routing -->
+  <!-- Leaflet Map Engine -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -29,17 +26,16 @@
     :root {
       --spotify-green: #1ed760;
       --spotify-green-hover: #22e668;
-      --spotify-green-glow: rgba(30, 215, 96, 0.4);
-      --bg-dark: #05070d;
-      --panel-glass: rgba(15, 20, 32, 0.75);
+      --spotify-green-glow: rgba(30, 215, 96, 0.35);
+      --bg-base: #04060a;
+      --panel-glass: rgba(14, 18, 28, 0.78);
       --panel-border: rgba(255, 255, 255, 0.08);
-      --panel-hover: rgba(255, 255, 255, 0.06);
+      --panel-hover: rgba(255, 255, 255, 0.05);
       --text-main: #ffffff;
-      --text-muted: #94a3b8;
+      --text-sub: #94a3b8;
       --accent-cyan: #06b6d4;
       --accent-gold: #f59e0b;
       --accent-red: #ef4444;
-      --drive-bg: #03060a;
     }
 
     * {
@@ -52,7 +48,7 @@
     }
 
     body {
-      background-color: var(--bg-dark);
+      background-color: var(--bg-base);
       color: var(--text-main);
       min-height: 100vh;
       display: flex;
@@ -61,7 +57,7 @@
       position: relative;
     }
 
-    /* Ambient dynamic backdrop */
+    /* Ambient dynamic visual wallpaper */
     #ambientBg {
       position: fixed;
       inset: 0;
@@ -69,19 +65,19 @@
       background-size: cover;
       background-position: center;
       transition: background-image 0.8s ease;
-      filter: blur(50px) brightness(0.28);
+      filter: blur(50px) brightness(0.25);
       transform: scale(1.1);
     }
     #ambientOverlay {
       position: fixed;
       inset: 0;
       z-index: -1;
-      background: radial-gradient(circle at 10% 20%, rgba(30, 215, 96, 0.08), transparent 40%),
-                  radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.06), transparent 40%),
-                  rgba(5, 7, 13, 0.9);
+      background: radial-gradient(circle at 10% 20%, rgba(30, 215, 96, 0.08), transparent 45%),
+                  radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.06), transparent 45%),
+                  rgba(4, 6, 10, 0.92);
     }
 
-    /* Header */
+    /* Top Nav */
     header {
       padding: 16px 28px;
       display: flex;
@@ -89,29 +85,16 @@
       justify-content: space-between;
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      background: rgba(8, 11, 20, 0.65);
+      background: rgba(8, 11, 18, 0.7);
       border-bottom: 1px solid var(--panel-border);
       position: sticky;
       top: 0;
       z-index: 40;
     }
-    .brand-section {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-    .brand-title {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 1.25rem;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-    }
-    .brand-title i {
-      color: var(--spotify-green);
-      text-shadow: 0 0 16px var(--spotify-green-glow);
-    }
+    .brand-section { display: flex; align-items: center; gap: 16px; }
+    .brand-title { display: flex; align-items: center; gap: 10px; font-size: 1.25rem; font-weight: 800; }
+    .brand-title i { color: var(--spotify-green); text-shadow: 0 0 16px var(--spotify-green-glow); }
+
     .listeners-badge {
       display: inline-flex;
       align-items: center;
@@ -124,7 +107,7 @@
       font-weight: 700;
       color: var(--spotify-green);
     }
-    .pulsing-dot {
+    .pulse-dot {
       width: 7px;
       height: 7px;
       background: var(--spotify-green);
@@ -132,16 +115,9 @@
       box-shadow: 0 0 8px var(--spotify-green);
       animation: pulse 1.6s infinite ease-in-out;
     }
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.6); opacity: 0.4; }
-    }
+    @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.6); opacity: 0.4; } }
 
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+    .nav-actions { display: flex; align-items: center; gap: 10px; }
     .btn-pill {
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid var(--panel-border);
@@ -157,31 +133,12 @@
       transition: all 0.2s ease;
       text-decoration: none;
     }
-    .btn-pill:hover {
-      background: rgba(255, 255, 255, 0.15);
-      transform: translateY(-1px);
-    }
-    .btn-pill.btn-drive {
-      background: linear-gradient(135deg, #06b6d4, #0284c7);
-      color: #fff;
-      border: none;
-      font-weight: 700;
-      box-shadow: 0 0 16px rgba(6, 182, 212, 0.4);
-    }
-    .btn-pill.btn-pro {
-      background: linear-gradient(135deg, #f59e0b, #d97706);
-      color: #000;
-      border: none;
-      font-weight: 700;
-    }
-    .btn-pill.btn-coffee {
-      background: #ffdd00;
-      color: #000;
-      border: none;
-      font-weight: 700;
-    }
+    .btn-pill:hover { background: rgba(255, 255, 255, 0.15); transform: translateY(-1px); }
+    .btn-pill.btn-drive { background: linear-gradient(135deg, #06b6d4, #0284c7); color: #fff; border: none; font-weight: 700; }
+    .btn-pill.btn-pro { background: linear-gradient(135deg, #f59e0b, #d97706); color: #000; border: none; font-weight: 700; }
+    .btn-pill.btn-coffee { background: #ffdd00; color: #000; border: none; font-weight: 700; }
 
-    /* Main Desktop/Mobile Grid */
+    /* App Layout */
     .app-layout {
       flex: 1;
       display: grid;
@@ -202,80 +159,43 @@
       background: var(--panel-glass);
       border: 1px solid var(--panel-border);
       border-radius: 28px;
-      padding: 36px 30px;
+      padding: 34px 28px;
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
       position: relative;
     }
 
-    /* Player Central UI */
-    .player-deck {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-    .cover-art-container {
-      width: 270px;
-      height: 270px;
+    /* Primary Player */
+    .player-deck { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .cover-art-box {
+      width: 260px;
+      height: 260px;
       border-radius: 24px;
       overflow: hidden;
-      margin-bottom: 24px;
+      margin-bottom: 22px;
       box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6);
       border: 1px solid rgba(255, 255, 255, 0.12);
     }
-    .cover-art-container img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.6s ease;
-    }
-    .playing .cover-art-container img { transform: scale(1.06); }
+    .cover-art-box img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+    .playing .cover-art-box img { transform: scale(1.06); }
 
-    .track-meta { text-align: center; width: 100%; margin-bottom: 20px; }
-    .track-title {
-      font-size: 1.55rem;
-      font-weight: 800;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin-bottom: 6px;
-    }
-    .track-artist { font-size: 0.95rem; font-weight: 500; color: var(--text-muted); }
+    .track-meta { text-align: center; width: 100%; margin-bottom: 16px; }
+    .track-title { font-size: 1.5rem; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
+    .track-artist { font-size: 0.92rem; font-weight: 500; color: var(--text-sub); }
 
-    #audioVisualizer { width: 100%; height: 60px; margin-bottom: 20px; }
+    #audioVisualizer { width: 100%; height: 55px; margin-bottom: 18px; }
 
-    .progress-section { width: 100%; max-width: 620px; margin-bottom: 24px; }
-    .progress-bar-rail {
-      width: 100%;
-      height: 6px;
-      background: rgba(255, 255, 255, 0.12);
-      border-radius: 9999px;
-      cursor: pointer;
-      position: relative;
-    }
-    .progress-bar-fill {
-      width: 0%;
-      height: 100%;
-      background: var(--spotify-green);
-      border-radius: 9999px;
-      box-shadow: 0 0 12px var(--spotify-green-glow);
-    }
-    .time-readout {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin-top: 8px;
-    }
+    .progress-section { width: 100%; max-width: 600px; margin-bottom: 20px; }
+    .progress-rail { width: 100%; height: 6px; background: rgba(255, 255, 255, 0.12); border-radius: 9999px; cursor: pointer; position: relative; }
+    .progress-fill { width: 0%; height: 100%; background: var(--spotify-green); border-radius: 9999px; box-shadow: 0 0 12px var(--spotify-green-glow); }
+    .time-row { display: flex; justify-content: space-between; font-size: 0.78rem; font-weight: 600; color: var(--text-sub); margin-top: 8px; }
 
-    .controls-row { display: flex; align-items: center; gap: 22px; }
+    .controls-row { display: flex; align-items: center; gap: 20px; }
     .btn-circle {
       background: none;
       border: none;
-      color: var(--text-muted);
+      color: var(--text-sub);
       font-size: 1.3rem;
       width: 48px;
       height: 48px;
@@ -287,58 +207,24 @@
       transition: all 0.2s ease;
     }
     .btn-circle:hover { color: #fff; background: var(--panel-hover); transform: scale(1.08); }
-    .btn-circle.btn-hero {
-      width: 66px;
-      height: 66px;
-      background: var(--spotify-green);
-      color: #041008;
-      font-size: 1.6rem;
-      box-shadow: 0 8px 30px var(--spotify-green-glow);
-    }
+    .btn-circle.hero { width: 64px; height: 64px; background: var(--spotify-green); color: #041008; font-size: 1.6rem; box-shadow: 0 8px 30px var(--spotify-green-glow); }
 
     /* Playlist Sidecar */
-    .sidecar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
-    .sidecar-header h3 { font-size: 1.15rem; font-weight: 700; }
-    .track-counter-tag {
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: var(--spotify-green);
-      background: rgba(30, 215, 96, 0.12);
-      padding: 4px 10px;
-      border-radius: 9999px;
-    }
-    .playlist-scroll {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      max-height: 680px;
-      overflow-y: auto;
-      padding-right: 4px;
-    }
+    .sidecar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .playlist-scroll { display: flex; flex-direction: column; gap: 8px; max-height: 640px; overflow-y: auto; padding-right: 4px; }
     .playlist-scroll::-webkit-scrollbar { width: 5px; }
     .playlist-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 9999px; }
 
-    .song-row {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 10px 14px;
-      border-radius: 14px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
+    .song-row { display: flex; align-items: center; gap: 14px; padding: 10px 14px; border-radius: 14px; cursor: pointer; transition: all 0.2s ease; }
     .song-row:hover { background: var(--panel-hover); }
-    .song-row.active {
-      background: rgba(30, 215, 96, 0.14);
-      border: 1px solid rgba(30, 215, 96, 0.3);
-    }
+    .song-row.active { background: rgba(30, 215, 96, 0.14); border: 1px solid rgba(30, 215, 96, 0.3); }
     .song-row.active .song-name { color: var(--spotify-green); }
-    .song-thumb { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; }
+    .song-thumb { width: 42px; height: 42px; border-radius: 8px; object-fit: cover; }
     .song-info { flex: 1; overflow: hidden; }
-    .song-name { font-size: 0.9rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .song-artist { font-size: 0.76rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .song-name { font-size: 0.88rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .song-artist { font-size: 0.74rem; color: var(--text-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-    /* Modals Base */
+    /* Modals */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -353,35 +239,26 @@
     }
     .modal-overlay.open { display: flex; }
     .modal-box {
-      background: #0d121f;
+      background: #0b0f1a;
       border: 1px solid var(--panel-border);
       border-radius: 24px;
       width: 100%;
-      max-width: 500px;
-      padding: 30px;
+      max-width: 540px;
+      padding: 28px;
       box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8);
       position: relative;
     }
-    .modal-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; }
-    .modal-close-btn { background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; }
+    .modal-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; }
+    .modal-close-btn { background: none; border: none; color: var(--text-sub); font-size: 1.2rem; cursor: pointer; }
 
-    /* Equalizer */
-    .eq-sliders-row { display: flex; justify-content: space-between; gap: 12px; margin: 28px 0; height: 200px; align-items: center; }
-    .eq-band { display: flex; flex-direction: column; align-items: center; height: 100%; gap: 12px; }
-    .eq-band input[type=range] { writing-mode: bt-lr; -webkit-appearance: slider-vertical; width: 10px; height: 140px; background: rgba(255, 255, 255, 0.1); border-radius: 9999px; cursor: pointer; }
-    .eq-band span { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); }
-    .preset-selector { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
-    .preset-chip { background: rgba(255, 255, 255, 0.08); border: 1px solid var(--panel-border); padding: 5px 12px; border-radius: 9999px; font-size: 0.78rem; color: var(--text-muted); cursor: pointer; }
-    .preset-chip.active { background: var(--spotify-green); color: #000; font-weight: 700; }
-
-    /* Chat Drawer */
+    /* Social / AI Malayalee Friends Drawer */
     .chat-drawer {
       position: fixed;
       top: 0;
-      right: -400px;
-      width: 380px;
+      right: -420px;
+      width: 400px;
       height: 100vh;
-      background: #0c101c;
+      background: #090d16;
       border-left: 1px solid var(--panel-border);
       z-index: 120;
       display: flex;
@@ -390,346 +267,116 @@
       box-shadow: -10px 0 40px rgba(0, 0, 0, 0.7);
     }
     .chat-drawer.open { right: 0; }
-    .chat-header { padding: 20px; border-bottom: 1px solid var(--panel-border); display: flex; justify-content: space-between; align-items: center; }
+    .ai-contact-switch {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.03);
+      border-bottom: 1px solid var(--panel-border);
+    }
+    .ai-contact-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      cursor: pointer;
+      text-align: left;
+    }
+    .ai-contact-btn.active {
+      border-color: var(--spotify-green);
+      background: rgba(30, 215, 96, 0.12);
+    }
+    .ai-contact-btn img { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; }
     .chat-feed { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
-    .chat-bubble { padding: 10px 14px; border-radius: 14px; font-size: 0.85rem; max-width: 80%; line-height: 1.4; }
-    .chat-bubble.peer { background: rgba(255, 255, 255, 0.08); align-self: flex-start; }
+    .chat-bubble { padding: 10px 14px; border-radius: 14px; font-size: 0.85rem; max-width: 82%; line-height: 1.45; }
+    .chat-bubble.peer { background: rgba(255, 255, 255, 0.07); align-self: flex-start; }
     .chat-bubble.mine { background: var(--spotify-green); color: #000; font-weight: 600; align-self: flex-end; }
-    .chat-input-row { padding: 16px; border-top: 1px solid var(--panel-border); display: flex; gap: 8px; }
+    .chat-input-row { padding: 14px; border-top: 1px solid var(--panel-border); display: flex; gap: 8px; }
     .chat-input-row input { flex: 1; background: rgba(255, 255, 255, 0.08); border: 1px solid var(--panel-border); border-radius: 9999px; padding: 10px 16px; color: #fff; font-size: 0.85rem; outline: none; }
     .chat-input-row button { background: var(--spotify-green); color: #000; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; }
 
-    /* =========================================================================
-       ULTRA DRIVE MODE: DUAL COCKPIT (LEFT: MUSIC & MULTILINGUAL VOICE | RIGHT: REAL GPS MAP)
-       ========================================================================= */
-    .drive-hud {
-      position: fixed;
-      inset: 0;
-      background: var(--drive-bg);
-      z-index: 200;
-      display: none;
-      flex-direction: column;
-      overflow: hidden;
-    }
-    .drive-hud.open { display: flex; }
-
-    .drive-header-bar {
-      padding: 14px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(10, 14, 24, 0.95);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      z-index: 10;
-    }
-
-    .vehicle-metrics {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-    .speedo-dial {
-      display: flex;
-      align-items: baseline;
-      gap: 4px;
-      background: rgba(255, 255, 255, 0.06);
-      padding: 6px 16px;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-    }
-    .speed-number {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 1.8rem;
-      font-weight: 800;
-      color: var(--accent-cyan);
-    }
-    .speed-unit { font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; }
-
-    .camera-alert-pill {
-      display: none;
-      align-items: center;
-      gap: 8px;
-      background: rgba(239, 68, 68, 0.2);
-      border: 1px solid var(--accent-red);
-      color: #fca5a5;
-      padding: 6px 14px;
-      border-radius: 9999px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      animation: pulse 1s infinite;
-    }
-
-    .drive-dual-viewport {
-      flex: 1;
-      display: grid;
-      grid-template-columns: 460px 1fr;
-      height: calc(100vh - 65px);
-      overflow: hidden;
-    }
-    @media (max-width: 1024px) {
-      .drive-dual-viewport { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
-    }
-
-    /* Left Side: Audio Deck & Voice Interface */
-    .drive-audio-deck {
-      background: rgba(10, 15, 26, 0.98);
-      border-right: 1px solid var(--panel-border);
-      padding: 28px 24px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      overflow-y: auto;
-    }
-    .drive-art-box {
-      width: 180px;
-      height: 180px;
-      border-radius: 20px;
-      overflow: hidden;
-      margin: 0 auto 16px auto;
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.7);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-    }
-    .drive-art-box img { width: 100%; height: 100%; object-fit: cover; }
-    .drive-song-details { text-align: center; margin-bottom: 20px; }
-    .drive-song-title { font-size: 1.5rem; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .drive-song-artist { font-size: 0.9rem; color: var(--text-muted); }
-
-    .drive-btn-group {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 24px;
-      margin-bottom: 24px;
-    }
-    .btn-drive-touch {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: #fff;
-      font-size: 1.8rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s ease;
-    }
-    .btn-drive-touch:hover { background: rgba(255, 255, 255, 0.16); transform: scale(1.05); }
-    .btn-drive-touch.hero {
-      width: 90px;
-      height: 90px;
-      background: var(--spotify-green);
-      color: #000;
-      border: none;
-      box-shadow: 0 0 30px var(--spotify-green-glow);
-    }
-
-    /* Multilingual Voice Hub */
-    .drive-voice-hub {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--panel-border);
-      border-radius: 20px;
-      padding: 16px;
-      text-align: center;
-    }
-    .voice-activation-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      background: rgba(6, 182, 212, 0.15);
-      border: 1px solid var(--accent-cyan);
-      color: var(--accent-cyan);
-      padding: 14px 24px;
-      border-radius: 9999px;
-      font-size: 0.95rem;
-      font-weight: 700;
-      cursor: pointer;
-      width: 100%;
-      transition: all 0.2s ease;
-    }
-    .voice-activation-btn.recording {
-      background: var(--accent-red);
-      border-color: var(--accent-red);
-      color: #fff;
-      animation: pulse 1s infinite;
-    }
-    .voice-lang-tags {
-      display: flex;
-      justify-content: center;
-      gap: 6px;
-      margin-top: 10px;
-      font-size: 0.72rem;
-      color: var(--text-muted);
-    }
-    .lang-pill {
-      background: rgba(255, 255, 255, 0.08);
-      padding: 2px 8px;
-      border-radius: 6px;
-    }
-
-    /* Right Side: Real Leaflet Map Viewport */
-    .drive-map-deck {
-      position: relative;
-      height: 100%;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-    }
-    #carLiveMap {
-      width: 100%;
-      height: 100%;
-      background: #090e17;
-      z-index: 1;
-    }
-
-    /* Map Navigation Float Panel */
-    .map-nav-panel {
-      position: absolute;
-      top: 18px;
-      left: 18px;
-      right: 18px;
-      z-index: 10;
-      display: flex;
-      gap: 12px;
-      pointer-events: none;
-    }
-    .map-search-bar {
-      flex: 1;
-      display: flex;
-      gap: 8px;
-      background: rgba(13, 19, 33, 0.92);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      padding: 8px 12px;
-      border-radius: 16px;
-      backdrop-filter: blur(16px);
-      pointer-events: auto;
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
-    }
-    .map-search-bar input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      outline: none;
-      color: #fff;
-      font-size: 0.95rem;
-      padding-left: 8px;
-    }
-    .map-search-bar button {
-      background: var(--accent-cyan);
-      border: none;
-      color: #000;
-      font-weight: 700;
-      padding: 8px 16px;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-
-    /* Real Turn-by-Turn Instruction Card */
-    .turn-instruction-card {
-      position: absolute;
-      bottom: 24px;
-      left: 18px;
-      right: 18px;
-      background: rgba(10, 15, 28, 0.94);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      border-radius: 20px;
-      padding: 16px 20px;
-      backdrop-filter: blur(18px);
-      z-index: 10;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
-    }
-    .turn-details {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-    .turn-icon-wrap {
-      width: 52px;
-      height: 52px;
-      border-radius: 14px;
-      background: rgba(6, 182, 212, 0.15);
-      border: 1px solid var(--accent-cyan);
-      color: var(--accent-cyan);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.6rem;
-    }
-    .route-safety-badge {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(30, 215, 96, 0.14);
-      border: 1px solid var(--spotify-green);
-      color: var(--spotify-green);
-      padding: 6px 14px;
-      border-radius: 9999px;
-      font-size: 0.8rem;
-      font-weight: 700;
-    }
-
-    /* Sound Engineers Pro Suite */
+    /* SOUND ENGINEERS WORKSPACE (ADVANCED SUITE) */
     .pro-workspace {
       position: fixed;
       inset: 0;
-      background: #080c16;
+      background: #060911;
       z-index: 140;
       display: none;
       flex-direction: column;
       overflow-y: auto;
-      padding: 28px;
+      padding: 24px;
     }
     .pro-workspace.open { display: flex; }
     .pro-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-bottom: 20px;
+      padding-bottom: 16px;
       border-bottom: 1px solid var(--panel-border);
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
-    .countdown-pill {
-      background: rgba(239, 68, 68, 0.15);
-      color: #ef4444;
-      border: 1px solid #ef4444;
-      font-weight: 800;
-      padding: 6px 14px;
-      border-radius: 9999px;
+    .acoustic-mode-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+    .btn-acoustic {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--panel-border);
+      color: #fff;
+      padding: 14px;
+      border-radius: 14px;
+      font-weight: 700;
       font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+    .btn-acoustic:hover, .btn-acoustic.active {
+      border-color: var(--spotify-green);
+      background: rgba(30, 215, 96, 0.15);
+      color: var(--spotify-green);
     }
     .studio-racks {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 18px;
+      margin-bottom: 24px;
     }
     .rack-unit {
-      background: rgba(18, 24, 38, 0.7);
+      background: rgba(14, 19, 30, 0.8);
       border: 1px solid var(--panel-border);
       border-radius: 18px;
-      padding: 22px;
+      padding: 20px;
     }
-    .rack-unit h4 {
-      font-size: 1rem;
-      font-weight: 700;
-      margin-bottom: 14px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--accent-cyan);
-    }
-    .knob-row { display: flex; flex-direction: column; gap: 12px; }
-    .knob-control { display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; }
-    .knob-control input[type=range] { width: 140px; }
+    .rack-unit h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; color: var(--accent-cyan); }
+    .slider-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; margin-bottom: 8px; }
+    .slider-row input[type=range] { width: 140px; }
 
+    /* Live Studio Realtime Oscilloscope & Voice Graphs */
+    #studioGraphCanvas {
+      width: 100%;
+      height: 100px;
+      background: #020408;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      margin-top: 8px;
+    }
+
+    /* Paywall Curtain */
     .paywall-curtain {
       position: absolute;
       inset: 0;
-      background: rgba(8, 12, 22, 0.95);
+      background: rgba(6, 9, 17, 0.96);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       z-index: 10;
@@ -737,82 +384,244 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 28px;
+      padding: 24px;
       text-align: center;
     }
     .paywall-curtain.locked { display: flex; }
     .plans-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-      gap: 12px;
+      gap: 10px;
       max-width: 820px;
       width: 100%;
-      margin: 24px 0;
+      margin: 20px 0;
     }
     .plan-card {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--panel-border);
-      border-radius: 16px;
-      padding: 16px;
+      border-radius: 14px;
+      padding: 14px;
       cursor: pointer;
       transition: all 0.2s ease;
     }
-    .plan-card:hover, .plan-card.selected {
-      border-color: var(--accent-gold);
-      background: rgba(245, 158, 11, 0.1);
-    }
-    .plan-card h5 { font-size: 0.9rem; margin-bottom: 6px; }
-    .plan-card .price { font-size: 1.2rem; font-weight: 800; color: var(--accent-gold); }
+    .plan-card:hover, .plan-card.selected { border-color: var(--accent-gold); background: rgba(245, 158, 11, 0.1); }
+    .plan-card h5 { font-size: 0.88rem; margin-bottom: 4px; }
+    .plan-card .price { font-size: 1.15rem; font-weight: 800; color: var(--accent-gold); }
 
-    /* Advertisement Space Footer Banner */
+    /* SINGING / KARAOKE STUDIO */
+    .karaoke-stage {
+      position: fixed;
+      inset: 0;
+      background: #030509;
+      z-index: 160;
+      display: none;
+      flex-direction: column;
+      padding: 24px;
+      overflow-y: auto;
+    }
+    .karaoke-stage.open { display: flex; }
+    .karaoke-viewports {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      flex: 1;
+      margin: 20px 0;
+    }
+    @media (max-width: 860px) { .karaoke-viewports { grid-template-columns: 1fr; } }
+    .video-capture-box {
+      background: #090e17;
+      border: 1px solid var(--panel-border);
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #cameraStreamPreview { width: 100%; height: 100%; object-fit: cover; }
+    .lyrics-teleprompter {
+      background: rgba(14, 19, 32, 0.9);
+      border: 1px solid var(--panel-border);
+      border-radius: 20px;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .lyrics-line-active {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--spotify-green);
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+    .lyrics-line-next { font-size: 1.1rem; color: var(--text-sub); }
+
+    /* ULTRA DRIVE MODE COCKPIT (DUAL PANE) */
+    .drive-hud {
+      position: fixed;
+      inset: 0;
+      background: #020408;
+      z-index: 200;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .drive-hud.open { display: flex; }
+    .drive-topbar {
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(10, 14, 24, 0.96);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 10;
+    }
+    .speedo-unit {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 6px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .speedo-number { font-family: 'JetBrains Mono', monospace; font-size: 1.7rem; font-weight: 800; color: var(--accent-cyan); }
+    .drive-dual-viewport {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 440px 1fr;
+      height: calc(100vh - 60px);
+      overflow: hidden;
+    }
+    @media (max-width: 1024px) {
+      .drive-dual-viewport { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+    }
+    .drive-audio-deck {
+      background: rgba(8, 12, 22, 0.98);
+      border-right: 1px solid var(--panel-border);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow-y: auto;
+    }
+    .btn-drive-touch {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      font-size: 1.6rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-drive-touch.hero {
+      width: 86px;
+      height: 86px;
+      background: var(--spotify-green);
+      color: #000;
+      border: none;
+      box-shadow: 0 0 30px var(--spotify-green-glow);
+    }
+    .voice-hub-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: rgba(6, 182, 212, 0.15);
+      border: 1px solid var(--accent-cyan);
+      color: var(--accent-cyan);
+      padding: 14px;
+      border-radius: 9999px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+    }
+    .voice-hub-btn.recording { background: var(--accent-red); border-color: var(--accent-red); color: #fff; animation: pulse 1s infinite; }
+    .drive-map-deck { position: relative; height: 100%; width: 100%; }
+    #carLiveMap { width: 100%; height: 100%; background: #090e17; }
+    .map-search-bar {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      right: 16px;
+      z-index: 10;
+      display: flex;
+      gap: 8px;
+      background: rgba(12, 17, 30, 0.94);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      padding: 8px 12px;
+      border-radius: 14px;
+      backdrop-filter: blur(16px);
+    }
+    .map-search-bar input { flex: 1; background: transparent; border: none; outline: none; color: #fff; font-size: 0.9rem; }
+    .map-search-bar button { background: var(--accent-cyan); border: none; color: #000; font-weight: 700; padding: 8px 16px; border-radius: 10px; cursor: pointer; }
+    .turn-hud-card {
+      position: absolute;
+      bottom: 20px;
+      left: 16px;
+      right: 16px;
+      background: rgba(10, 14, 26, 0.94);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 18px;
+      padding: 16px;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Floating Request Button */
+    .fab-song-request {
+      position: fixed;
+      bottom: 60px;
+      right: 24px;
+      background: var(--spotify-green);
+      color: #041008;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 10px 30px var(--spotify-green-glow);
+      z-index: 35;
+      transition: all 0.2s ease;
+    }
+    .fab-song-request:hover { transform: scale(1.05); }
+
+    /* Footer Ad Banner */
     .advertisement-strip {
-      background: linear-gradient(90deg, #090e17, #131b2c, #090e17);
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 14px 28px;
+      background: linear-gradient(90deg, #060910, #111726, #060910);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 12px 28px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-top: auto;
       z-index: 30;
     }
-    .ad-tagline {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 0.88rem;
-      letter-spacing: 1px;
-      font-weight: 700;
-      color: #d1d5db;
-    }
-    .ad-badge {
-      background: rgba(255, 255, 255, 0.15);
-      font-size: 0.68rem;
-      padding: 2px 8px;
-      border-radius: 4px;
-      text-transform: uppercase;
-    }
-    .ad-cta {
-      background: #ffffff;
-      color: #000;
-      border: none;
-      padding: 8px 18px;
-      border-radius: 9999px;
-      font-size: 0.82rem;
-      font-weight: 700;
-      cursor: pointer;
-      text-decoration: none;
-      transition: all 0.2s ease;
-    }
-    .ad-cta:hover { background: var(--spotify-green); transform: translateY(-1px); }
+    .ad-tagline { display: flex; align-items: center; gap: 10px; font-size: 0.84rem; font-weight: 700; color: #d1d5db; }
+    .ad-badge { background: rgba(255, 255, 255, 0.15); font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; }
+    .ad-cta { background: #fff; color: #000; border: none; padding: 6px 16px; border-radius: 9999px; font-size: 0.78rem; font-weight: 700; text-decoration: none; }
   </style>
 </head>
 <body>
 
-  <!-- Ambient Backdrop -->
   <div id="ambientBg"></div>
   <div id="ambientOverlay"></div>
 
-  <!-- Primary Top Navbar -->
+  <!-- Primary Header -->
   <header>
     <div class="brand-section">
       <div class="brand-title">
@@ -820,24 +629,23 @@
         <span>Paradise of Songs</span>
       </div>
       <div class="listeners-badge">
-        <div class="pulsing-dot"></div>
-        <span id="listenerCountDisplay">65,841</span> Listeners Live
+        <div class="pulse-dot"></div>
+        <span id="liveListenerDisplay">65,841</span> Listeners Live
       </div>
     </div>
 
     <div class="nav-actions">
-      <button class="btn-pill" id="openEqBtn"><i class="fa-solid fa-sliders"></i> Equalizer</button>
-      <button class="btn-pill btn-drive" id="openDriveBtn"><i class="fa-solid fa-car"></i> Ultra Drive Cockpit</button>
-      <button class="btn-pill btn-pro" id="openProBtn"><i class="fa-solid fa-wand-magic-sparkles"></i> Sound Engineers</button>
-      <button class="btn-pill" id="openChatBtn"><i class="fa-solid fa-user-group"></i> Chat & Friends</button>
-      <button class="btn-pill btn-coffee" id="openCoffeeBtn"><i class="fa-solid fa-mug-hot"></i> Tip Coffee</button>
+      <button class="btn-pill btn-drive" id="openDriveCockpitBtn"><i class="fa-solid fa-car"></i> Drive Cockpit</button>
+      <button class="btn-pill btn-pro" id="openProSuiteBtn"><i class="fa-solid fa-wand-magic-sparkles"></i> Sound Engineers</button>
+      <button class="btn-pill" id="openSocialDrawerBtn"><i class="fa-solid fa-user-group"></i> Chat & Friends</button>
+      <button class="btn-pill btn-coffee" id="openCoffeeTipBtn"><i class="fa-solid fa-mug-hot"></i> Tip Coffee</button>
     </div>
   </header>
 
-  <!-- Main Web App Layout -->
+  <!-- Main Grid -->
   <main class="app-layout">
     <section class="deck-panel player-deck" id="playerDeck">
-      <div class="cover-art-container">
+      <div class="cover-art-box">
         <img id="trackArtwork" src="" alt="Album Art" />
       </div>
 
@@ -849,271 +657,318 @@
       <canvas id="audioVisualizer"></canvas>
 
       <div class="progress-section">
-        <div class="progress-bar-rail" id="progressRail">
-          <div class="progress-bar-fill" id="progressFill"></div>
+        <div class="progress-rail" id="progressRail">
+          <div class="progress-fill" id="progressFill"></div>
         </div>
-        <div class="time-readout">
+        <div class="time-row">
           <span id="timeElapsed">0:00</span>
           <span id="timeDuration">0:00</span>
         </div>
       </div>
 
       <div class="controls-row">
-        <button class="btn-circle" id="prevBtn" title="Previous"><i class="fa-solid fa-backward-step"></i></button>
-        <button class="btn-circle btn-hero" id="playBtn" title="Play"><i class="fa-solid fa-play" id="playIcon"></i></button>
-        <button class="btn-circle" id="nextBtn" title="Next"><i class="fa-solid fa-forward-step"></i></button>
+        <button class="btn-circle" id="prevTrackBtn"><i class="fa-solid fa-backward-step"></i></button>
+        <button class="btn-circle hero" id="playTrackBtn"><i class="fa-solid fa-play" id="playIcon"></i></button>
+        <button class="btn-circle" id="nextTrackBtn"><i class="fa-solid fa-forward-step"></i></button>
       </div>
     </section>
 
     <!-- Playlist Deck -->
     <aside class="deck-panel">
       <div class="sidecar-header">
-        <h3>Master Playlist</h3>
-        <span class="track-counter-tag" id="trackCountTag">18 Tracks</span>
+        <h3>Master Playlist (Always Shuffled)</h3>
+        <span class="listeners-badge" style="font-size: 0.72rem;">18 Tracks</span>
       </div>
-      <div class="playlist-scroll" id="songItemsContainer"></div>
+      <div class="playlist-scroll" id="songPlaylistContainer"></div>
     </aside>
   </main>
 
-  <!-- =========================================================================
-       ULTRA DRIVE MODE COCKPIT (DUAL PANE: MUSIC + REAL LIVE MAPS & ACCURATE GPS)
-       ========================================================================= -->
-  <div class="drive-hud" id="driveHud">
-    <div class="drive-header-bar">
-      <div class="vehicle-metrics">
-        <div class="speedo-dial">
-          <span class="speed-number" id="gpsSpeedometer">0</span>
-          <span class="speed-unit">km/h</span>
-        </div>
-        <div class="camera-alert-pill" id="cameraSpeedAlert">
-          <i class="fa-solid fa-camera"></i> <span id="cameraAlertText">Speed Camera Ahead (Limit 80)</span>
-        </div>
-      </div>
+  <!-- FLOATING SONG REQUEST & FEEDBACK BUTTON -->
+  <button class="fab-song-request" onclick="toggleModal('requestModal', true)">
+    <i class="fa-solid fa-paper-plane"></i> Song Request / Feedback
+  </button>
 
-      <div style="display: flex; align-items: center; gap: 12px;">
-        <span style="font-size: 0.8rem; color: var(--text-muted);"><i class="fa-solid fa-shield-halved" style="color: var(--spotify-green);"></i> Safety Scanner Active</span>
-        <button class="btn-pill" onclick="toggleDriveCockpit(false)" style="background: rgba(239, 68, 68, 0.2); border-color: var(--accent-red); color: #fff;">
-          <i class="fa-solid fa-arrow-right-from-bracket"></i> Exit Drive Mode
-        </button>
-      </div>
-    </div>
-
-    <div class="drive-dual-viewport">
-      <!-- Left: Hands-Free Media Controller & Multilingual Voice AI -->
-      <div class="drive-audio-deck">
-        <div>
-          <div class="drive-art-box">
-            <img id="driveArtwork" src="" alt="Album Art" />
-          </div>
-          <div class="drive-song-details">
-            <div class="drive-song-title" id="driveSongTitle">Select a track</div>
-            <div class="drive-song-artist" id="driveSongArtist">Paradise Audio</div>
-          </div>
-
-          <div class="drive-btn-group">
-            <button class="btn-drive-touch" id="drivePrevBtn"><i class="fa-solid fa-backward"></i></button>
-            <button class="btn-drive-touch hero" id="drivePlayBtn"><i class="fa-solid fa-play" id="drivePlayIcon"></i></button>
-            <button class="btn-drive-touch" id="driveNextBtn"><i class="fa-solid fa-forward"></i></button>
-          </div>
-        </div>
-
-        <!-- Voice Search Hub -->
-        <div class="drive-voice-hub">
-          <div class="voice-activation-btn" id="voiceAssistantBtn" onclick="activateMultilingualVoiceAI()">
-            <i class="fa-solid fa-microphone"></i>
-            <span id="voiceStatusLabel">Tap to Speak (Song / Lyrics / Command)</span>
-          </div>
-          <div class="voice-lang-tags">
-            <span class="lang-pill">Malayalam (മലയാളം)</span>
-            <span class="lang-pill">English</span>
-            <span class="lang-pill">Hindi (हिंदी)</span>
-            <span class="lang-pill">Tamil (தமிழ்)</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Right: Real Leaflet GPS Route Navigation & Safety Alerts -->
-      <div class="drive-map-deck">
-        <div class="map-nav-panel">
-          <div class="map-search-bar">
-            <i class="fa-solid fa-location-dot" style="color: var(--accent-cyan); align-self: center; margin-left: 6px;"></i>
-            <input type="text" id="mapDestInput" placeholder="Enter destination (e.g. Muvattupuzha, Kochi, Bengaluru, NH 66)..." onkeydown="if(event.key==='Enter') searchAndRouteDestination()" />
-            <button onclick="searchAndRouteDestination()"><i class="fa-solid fa-route"></i> Navigate</button>
-          </div>
-        </div>
-
-        <!-- Live OSM / OSRM Map Container -->
-        <div id="carLiveMap"></div>
-
-        <!-- Real Turn-by-Turn Instruction Card -->
-        <div class="turn-instruction-card">
-          <div class="turn-details">
-            <div class="turn-icon-wrap" id="turnDirectionIcon">
-              <i class="fa-solid fa-arrow-up"></i>
-            </div>
-            <div>
-              <div style="font-size: 1.15rem; font-weight: 800;" id="turnMainText">Proceed along the route</div>
-              <div style="font-size: 0.8rem; color: var(--text-muted);" id="turnSubText">GPS Tracking Active • Real-time Safety Check Passed</div>
-            </div>
-          </div>
-          <div class="route-safety-badge" id="routeSafetyTag">
-            <i class="fa-solid fa-road"></i> <span id="routeConditionText">Good Condition • 2 Lanes</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 5-BAND EQUALIZER MODAL -->
-  <div class="modal-overlay" id="eqModal">
+  <!-- SONG REQUEST & ENQUIRY MODAL -->
+  <div class="modal-overlay" id="requestModal">
     <div class="modal-box">
       <div class="modal-title">
-        <span>5-Band Master Equalizer</span>
-        <button class="modal-close-btn" onclick="toggleModal('eqModal', false)"><i class="fa-solid fa-xmark"></i></button>
+        <span>Song Request & Inquiries</span>
+        <button class="modal-close-btn" onclick="toggleModal('requestModal', false)"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px;">Tweak hardware audio response in real-time.</p>
+      <p style="font-size: 0.8rem; color: var(--text-sub); margin-bottom: 14px;">Select your inquiry category and share your thoughts with our team.</p>
 
-      <div class="preset-selector">
-        <button class="preset-chip active" onclick="applyEqPreset('flat')">Flat</button>
-        <button class="preset-chip" onclick="applyEqPreset('bass')">Bass Boost</button>
-        <button class="preset-chip" onclick="applyEqPreset('vocal')">Vocal Clarity</button>
-        <button class="preset-chip" onclick="applyEqPreset('electronic')">Electronic</button>
+      <div style="margin-bottom: 12px;">
+        <label style="font-size: 0.78rem; font-weight: 700; color: var(--text-sub); display: block; margin-bottom: 4px;">Category:</label>
+        <select id="requestCategorySelect" style="width: 100%; background: rgba(255,255,255,0.08); border: 1px solid var(--panel-border); color: #fff; padding: 10px; border-radius: 10px; outline: none;">
+          <option value="Suggestions to improve the feel">1: Suggestions to improve the feel</option>
+          <option value="I want to request a song that is not available in the list">2: I want to request a song that is not available in the list</option>
+          <option value="Getting the ownership and managing rights owned by">3: Getting the ownership and managing rights owned by</option>
+          <option value="Other">4: Other</option>
+        </select>
       </div>
 
-      <div class="eq-sliders-row">
-        <div class="eq-band"><input type="range" id="eq60" min="-12" max="12" step="1" value="0" /><span>60Hz</span></div>
-        <div class="eq-band"><input type="range" id="eq250" min="-12" max="12" step="1" value="0" /><span>250Hz</span></div>
-        <div class="eq-band"><input type="range" id="eq1k" min="-12" max="12" step="1" value="0" /><span>1kHz</span></div>
-        <div class="eq-band"><input type="range" id="eq4k" min="-12" max="12" step="1" value="0" /><span>4kHz</span></div>
-        <div class="eq-band"><input type="range" id="eq16k" min="-12" max="12" step="1" value="0" /><span>16kHz</span></div>
+      <div style="margin-bottom: 16px;">
+        <label style="font-size: 0.78rem; font-weight: 700; color: var(--text-sub); display: block; margin-bottom: 4px;">Your Message / Song Name:</label>
+        <textarea id="requestMessageBody" rows="4" style="width: 100%; background: rgba(255,255,255,0.08); border: 1px solid var(--panel-border); color: #fff; padding: 10px; border-radius: 10px; outline: none; font-size: 0.85rem;" placeholder="Type your song request or suggestion..."></textarea>
       </div>
+
+      <button class="btn-pill" style="width: 100%; justify-content: center; background: var(--spotify-green); color: #000; font-weight: 700;" onclick="submitSongRequestForm()">
+        <i class="fa-solid fa-envelope"></i> Send to Management
+      </button>
     </div>
   </div>
 
-  <!-- BUY ME A COFFEE MODAL -->
+  <!-- BUY ME A COFFEE (ORIGINAL HDFC QR) -->
   <div class="modal-overlay" id="coffeeModal">
     <div class="modal-box" style="text-align: center;">
       <div class="modal-title">
         <span>Support The Music</span>
         <button class="modal-close-btn" onclick="toggleModal('coffeeModal', false)"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">Scan using Google Pay, PhonePe, Paytm or any UPI App</p>
+      <p style="font-size: 0.82rem; color: var(--text-sub); margin-bottom: 16px;">Scan via Google Pay, PhonePe, Paytm or HDFC Mobile App</p>
 
-      <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=asifkm@okaxis&pn=Paradise%20Academy&cu=INR" alt="UPI QR" style="border-radius: 12px; margin-bottom: 16px; border: 4px solid #fff;" />
+      <!-- Exact HDFC QR Display -->
+      <img src="HDFC QR.jpeg" alt="HDFC UPI QR" style="width: 220px; height: 220px; border-radius: 14px; border: 3px solid #fff; margin-bottom: 12px; object-fit: contain; background: #000;" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=upi://pay?pa=7034860189@hdfc&pn=ASIF%20KM&cu=INR'" />
 
-      <div style="background: rgba(255,255,255,0.06); padding: 10px; border-radius: 12px; font-size: 0.9rem; margin-bottom: 16px;">
-        UPI ID: <strong style="color: var(--spotify-green);">asifkm@okaxis</strong>
+      <div style="background: rgba(255,255,255,0.06); padding: 8px; border-radius: 10px; font-size: 0.88rem; margin-bottom: 14px;">
+        UPI ID: <strong style="color: var(--spotify-green);">7034860189@hdfc</strong>
       </div>
 
-      <button class="btn-pill" style="width: 100%; justify-content: center;" onclick="navigator.clipboard.writeText('asifkm@okaxis'); alert('UPI ID copied to clipboard!');">
+      <button class="btn-pill" style="width: 100%; justify-content: center;" onclick="navigator.clipboard.writeText('7034860189@hdfc'); alert('UPI ID copied: 7034860189@hdfc');">
         <i class="fa-regular fa-copy"></i> Copy UPI ID
       </button>
     </div>
   </div>
 
-  <!-- FRIENDS & CHAT DRAWER -->
-  <aside class="chat-drawer" id="chatDrawer">
-    <div class="chat-header">
-      <div style="font-weight: 700; font-size: 1.1rem;"><i class="fa-solid fa-users" style="color: var(--spotify-green); margin-right: 8px;"></i> Friends Live Room</div>
-      <button class="modal-close-btn" id="closeChatBtn"><i class="fa-solid fa-xmark"></i></button>
+  <!-- SOCIAL SECTION: 2 AUTHENTIC MALAYALEE AI FRIENDS -->
+  <aside class="chat-drawer" id="socialDrawer">
+    <div class="ai-contact-switch">
+      <div class="ai-contact-btn active" id="tabRahul" onclick="switchAiFriend('rahul')">
+        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80" alt="Rahul" />
+        <div>
+          <div style="font-weight: 700; font-size: 0.82rem;">Rahul (27)</div>
+          <div style="font-size: 0.68rem; color: var(--spotify-green);">IT @ Paradise</div>
+        </div>
+      </div>
+      <div class="ai-contact-btn" id="tabAnjali" onclick="switchAiFriend('anjali')">
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&q=80" alt="Anjali" />
+        <div>
+          <div style="font-weight: 700; font-size: 0.82rem;">Anjali (20)</div>
+          <div style="font-size: 0.68rem; color: var(--accent-cyan);">Maharajas Kochi</div>
+        </div>
+      </div>
     </div>
-    <div class="chat-feed" id="chatFeed">
-      <div class="chat-bubble peer"><strong>Alex:</strong> This audio streaming from Nextcloud is crisp 🔥</div>
-      <div class="chat-bubble peer"><strong>Sarah:</strong> Play *Delulu Delulu* next please!!</div>
-      <div class="chat-bubble mine">Welcome to Paradise of Songs! Listening in lossless.</div>
-    </div>
+
+    <div class="chat-feed" id="chatFeedBox"></div>
+
     <div class="chat-input-row">
-      <input type="text" id="chatInput" placeholder="Send message..." onkeydown="if(event.key==='Enter') sendChatMessage()" />
-      <button onclick="sendChatMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+      <input type="text" id="chatInputBox" placeholder="Type in Manglish, Malayalam or English..." onkeydown="if(event.key==='Enter') sendSocialMessage()" />
+      <button onclick="sendSocialMessage()"><i class="fa-solid fa-paper-plane"></i></button>
     </div>
   </aside>
 
-  <!-- SOUND ENGINEERS ADVANCED PRO SUITE (59 SEC TRIAL & PAYMENT FLOW) -->
+  <!-- SOUND ENGINEERS ADVANCED PRO SUITE -->
   <div class="pro-workspace" id="proWorkspace">
     <div class="pro-header">
       <div>
-        <h2 style="font-weight: 800; font-size: 1.4rem;"><i class="fa-solid fa-sliders" style="color: var(--accent-gold); margin-right: 8px;"></i> Studio Sound Engineer Workspace</h2>
-        <span style="font-size: 0.82rem; color: var(--text-muted);">Pro Master Rack • Multi-Band Dynamics Processor</span>
+        <h2 style="font-weight: 800; font-size: 1.35rem;"><i class="fa-solid fa-sliders" style="color: var(--accent-gold); margin-right: 8px;"></i> Studio Sound Engineers Master Rack</h2>
+        <span style="font-size: 0.8rem; color: var(--text-sub);">Multi-Stage DSP, IEM Delivery Curve, Realtime Graphing & Karaoke</span>
       </div>
       <div style="display: flex; align-items: center; gap: 12px;">
-        <div class="countdown-pill" id="trialCountdownPill">Trial Ends: 59s</div>
-        <button class="btn-pill" onclick="toggleProWorkspace(false)"><i class="fa-solid fa-xmark"></i> Close</button>
+        <button class="btn-pill" style="background: var(--spotify-green); color: #000; font-weight: 700;" onclick="toggleKaraokeStudio(true)">
+          <i class="fa-solid fa-microphone-lines"></i> Singing & Recording Studio
+        </button>
+        <div class="listeners-badge" style="color: var(--accent-red); border-color: var(--accent-red);" id="proTrialCountdown">Trial: 59s</div>
+        <button class="btn-pill" onclick="toggleProWorkspace(false)"><i class="fa-solid fa-xmark"></i></button>
       </div>
     </div>
 
+    <!-- 4 ACOUSTIC ENVIRONMENT ADJUSTMENT BUTTONS -->
+    <div class="acoustic-mode-buttons">
+      <button class="btn-acoustic active" onclick="setAcousticEnvironment('home')">
+        <i class="fa-solid fa-house"></i>
+        <span>HOME ADJUST</span>
+        <small style="font-size: 0.65rem; color: var(--text-sub);">Neutral Room Compensation</small>
+      </button>
+      <button class="btn-acoustic" onclick="setAcousticEnvironment('hall')">
+        <i class="fa-solid fa-landmark"></i>
+        <span>HALL ADJUST</span>
+        <small style="font-size: 0.65rem; color: var(--text-sub);">Early Reflection Suppression</small>
+      </button>
+      <button class="btn-acoustic" onclick="setAcousticEnvironment('concert')">
+        <i class="fa-solid fa-bolt"></i>
+        <span>CONCERT ADJUST</span>
+        <small style="font-size: 0.65rem; color: var(--text-sub);">Sub-Bass Punch & Wide Soundstage</small>
+      </button>
+      <button class="btn-acoustic" onclick="setAcousticEnvironment('vehicle')">
+        <i class="fa-solid fa-car-side"></i>
+        <span>VEHICLE SOUND BALANCING</span>
+        <small style="font-size: 0.65rem; color: var(--text-sub);">Cabin Resonance & Noise Floor Cut</small>
+      </button>
+    </div>
+
+    <!-- HARDWARE RACKS -->
     <div class="studio-racks">
+      <!-- Amplifier Detection Display -->
       <div class="rack-unit">
-        <h4><i class="fa-solid fa-compress"></i> Master Compressor</h4>
-        <div class="knob-row">
-          <div class="knob-control"><span>Threshold</span><input type="range" min="-60" max="0" value="-24" /></div>
-          <div class="knob-control"><span>Ratio</span><input type="range" min="1" max="20" value="4" /></div>
-          <div class="knob-control"><span>Attack (ms)</span><input type="range" min="0" max="100" value="10" /></div>
-          <div class="knob-control"><span>Release (ms)</span><input type="range" min="50" max="1000" value="250" /></div>
+        <h4><i class="fa-solid fa-microchip"></i> Amplifier Detecting Display</h4>
+        <div style="background: rgba(0,0,0,0.5); padding: 12px; border-radius: 10px; font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; line-height: 1.6;">
+          <div>OUTPUT STAGE: <span style="color: var(--spotify-green);">DETECTED (Class D Hi-Fi DAC)</span></div>
+          <div>EST. IMPEDANCE: <span style="color: var(--accent-cyan);">32 Ohms Load</span></div>
+          <div>SNR RATIO: <span style="color: #fff;">108 dB (Optimal)</span></div>
+          <div>PEAK HEADROOM: <span style="color: var(--accent-gold);">+3.2 dB (Clean)</span></div>
         </div>
       </div>
 
+      <!-- IEM Sound Delivery -->
       <div class="rack-unit">
-        <h4><i class="fa-solid fa-arrows-split-up-and-left"></i> Stereo Panning & Saturation</h4>
-        <div class="knob-row">
-          <div class="knob-control"><span>Stereo Balance</span><input type="range" min="-1" max="1" step="0.1" value="0" /></div>
-          <div class="knob-control"><span>Tape Warmth</span><input type="range" min="0" max="10" value="2" /></div>
-          <div class="knob-control"><span>Sub Harmonic Synth</span><input type="range" min="0" max="10" value="0" /></div>
-        </div>
+        <h4><i class="fa-solid fa-headphones"></i> IEM Sound Delivery Settings</h4>
+        <div class="slider-row"><span>Harman Target Curve</span><input type="range" min="0" max="10" value="8" /></div>
+        <div class="slider-row"><span>Pinna Gain (3kHz)</span><input type="range" min="-6" max="6" value="2" /></div>
+        <div class="slider-row"><span>Nozzle Resonance Cut</span><input type="range" min="-12" max="0" value="-3" /></div>
       </div>
 
+      <!-- Voice Mixing & Level Balancing -->
       <div class="rack-unit">
-        <h4><i class="fa-solid fa-chart-line"></i> Master Gain Stage</h4>
-        <div class="knob-row">
-          <div class="knob-control"><span>Input Gain</span><input type="range" min="-12" max="12" value="0" /></div>
-          <div class="knob-control"><span>Output Ceiling</span><input type="range" min="-6" max="0" value="-0.1" /></div>
-        </div>
+        <h4><i class="fa-solid fa-sliders"></i> Realtime Voice & Stem Mixer</h4>
+        <div class="slider-row"><span>Vocal Stem Isolation</span><input type="range" id="vocalGainSlider" min="-12" max="12" value="0" /></div>
+        <div class="slider-row"><span>Bass & Kick Punch</span><input type="range" id="bassGainSlider" min="-12" max="12" value="2" /></div>
+        <div class="slider-row"><span>Air & Sparkle (12k)</span><input type="range" id="trebleGainSlider" min="-12" max="12" value="1" /></div>
       </div>
     </div>
 
-    <!-- Paywall Curtain -->
-    <div class="paywall-curtain" id="paywallCurtain">
+    <!-- Realtime Sound Graph Canvas -->
+    <div style="background: rgba(14, 19, 30, 0.8); border: 1px solid var(--panel-border); border-radius: 18px; padding: 20px;">
+      <h4 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 8px; color: var(--accent-cyan);">
+        <i class="fa-solid fa-chart-simple"></i> Realtime Multi-Band Noise & Phase Analyzer
+      </h4>
+      <canvas id="studioGraphCanvas"></canvas>
+    </div>
+
+    <!-- Paywall Curtain (59s Lock) -->
+    <div class="paywall-curtain" id="proPaywall">
       <i class="fa-solid fa-lock" style="font-size: 3rem; color: var(--accent-gold); margin-bottom: 12px;"></i>
-      <h2 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 8px;">Sound Engineers Pro Expired</h2>
-      <p style="color: var(--text-muted); max-width: 520px; font-size: 0.9rem;">
-        Your 59-second studio trial is complete. Unlock unlimited sound engineering suite access.
-      </p>
+      <h2 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 6px;">Sound Engineers Pro Suite</h2>
+      <p style="color: var(--text-sub); max-width: 520px; font-size: 0.88rem;">Your 59-second trial has ended. Select a plan to continue using advanced mixing and acoustic calibration.</p>
 
       <div class="plans-grid">
-        <div class="plan-card selected" onclick="selectProPlan(this, '30 Days - ₹500')">
-          <h5>30 Days</h5>
-          <div class="price">₹500</div>
-        </div>
-        <div class="plan-card" onclick="selectProPlan(this, '3 Months - ₹1,450')">
-          <h5>3 Months</h5>
-          <div class="price">₹1,450</div>
-        </div>
-        <div class="plan-card" onclick="selectProPlan(this, '6 Months - ₹2,600')">
-          <h5>6 Months</h5>
-          <div class="price">₹2,600</div>
-        </div>
-        <div class="plan-card" onclick="selectProPlan(this, '1 Year - ₹5,500')">
-          <h5>1 Year</h5>
-          <div class="price">₹5,500</div>
-        </div>
-        <div class="plan-card" onclick="selectProPlan(this, 'Lifetime - ₹28,500')">
-          <h5>Lifetime</h5>
-          <div class="price">₹28,500</div>
+        <div class="plan-card selected" onclick="selectPlanTier(this, '30 Days - ₹500')"><h5>30 Days</h5><div class="price">₹500</div></div>
+        <div class="plan-card" onclick="selectPlanTier(this, '3 Months - ₹1,450')"><h5>3 Months</h5><div class="price">₹1,450</div></div>
+        <div class="plan-card" onclick="selectPlanTier(this, '6 Months - ₹2,600')"><h5>6 Months</h5><div class="price">₹2,600</div></div>
+        <div class="plan-card" onclick="selectPlanTier(this, '1 Year - ₹5,500')"><h5>1 Year</h5><div class="price">₹5,500</div></div>
+        <div class="plan-card" onclick="selectPlanTier(this, 'Lifetime - ₹28,500')"><h5>Lifetime</h5><div class="price">₹28,500</div></div>
+      </div>
+
+      <div style="background: rgba(255,255,255,0.06); padding: 18px; border-radius: 16px; max-width: 460px; width: 100%;">
+        <div style="font-weight: 700; margin-bottom: 10px; font-size: 0.88rem;">Scan via UPI to Unlock:</div>
+        <img src="HDFC QR.jpeg" alt="HDFC QR" style="width: 140px; height: 140px; border-radius: 10px; border: 2px solid #fff; margin-bottom: 8px; object-fit: contain;" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=upi://pay?pa=7034860189@hdfc&pn=ASIF%20KM&cu=INR'" />
+        <div style="font-size: 0.82rem; margin-bottom: 10px;">UPI: <strong style="color: var(--spotify-green);">7034860189@hdfc</strong></div>
+
+        <input type="file" id="proofUploadInput" accept="image/*" style="font-size: 0.78rem; width: 100%; margin-bottom: 10px; color: #fff;" />
+        <button class="btn-pill" style="width: 100%; justify-content: center; background: var(--spotify-green); color: #000; font-weight: 700;" onclick="submitProPaymentReceipt()">
+          <i class="fa-solid fa-check"></i> Submit Verification Receipt
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SINGING / KARAOKE STUDIO SCREEN -->
+  <div class="karaoke-stage" id="karaokeStage">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h2 style="font-weight: 800; font-size: 1.4rem;"><i class="fa-solid fa-microphone-lines" style="color: var(--spotify-green);"></i> Live Karaoke & Video Recording Studio</h2>
+      <button class="btn-pill" onclick="toggleKaraokeStudio(false)"><i class="fa-solid fa-xmark"></i> Exit Studio</button>
+    </div>
+
+    <div class="karaoke-viewports">
+      <!-- Camera Preview -->
+      <div class="video-capture-box">
+        <video id="cameraStreamPreview" autoplay playsinline muted></video>
+        <div style="position: absolute; bottom: 14px; left: 14px; display: flex; gap: 8px;">
+          <button class="btn-pill" id="recordToggleBtn" onclick="toggleVideoRecording()" style="background: var(--accent-red); color: #fff; border: none;">
+            <i class="fa-solid fa-circle"></i> Start Recording
+          </button>
         </div>
       </div>
 
-      <div style="background: rgba(255,255,255,0.06); padding: 20px; border-radius: 18px; max-width: 480px; width: 100%;">
-        <div style="font-weight: 700; margin-bottom: 10px; font-size: 0.9rem;">Scan & Pay via Google Pay / PhonePe / Paytm</div>
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=asifkm@okaxis&pn=Paradise%20Academy&cu=INR" alt="Pay QR" style="border-radius: 10px; border: 3px solid #fff; margin-bottom: 8px;" />
-        <div style="font-size: 0.85rem; margin-bottom: 12px;">UPI: <strong style="color: var(--spotify-green);">asifkm@okaxis</strong></div>
+      <!-- Realtime Lyrics Display -->
+      <div class="lyrics-teleprompter">
+        <div class="lyrics-line-active" id="karaokeCurrentLyric">♪ Playing High Definition Karaoke Stream ♪</div>
+        <div class="lyrics-line-next" id="karaokeNextLyric">Sing along with precision pitch matching</div>
+      </div>
+    </div>
+  </div>
 
-        <div style="text-align: left; margin-bottom: 12px;">
-          <label style="font-size: 0.78rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 6px;">Upload Payment Screenshot Proof:</label>
-          <input type="file" id="paymentProofUpload" accept="image/*" style="font-size: 0.8rem; width: 100%; color: #fff;" />
+  <!-- =========================================================================
+       ULTRA DRIVE MODE COCKPIT (DUAL PANE)
+       ========================================================================= -->
+  <div class="drive-hud" id="driveHud">
+    <div class="drive-topbar">
+      <div style="display: flex; align-items: center; gap: 18px;">
+        <div class="speedo-unit">
+          <span class="speedo-number" id="carGpsSpeed">0</span>
+          <span style="font-size: 0.72rem; color: var(--text-sub); font-weight: 700;">KM/H</span>
+        </div>
+        <div style="font-size: 0.8rem; font-weight: 700; color: var(--spotify-green);">
+          <i class="fa-solid fa-satellite"></i> GPS & Speed Camera Radar Active
+        </div>
+      </div>
+      <button class="btn-pill" onclick="toggleDriveHud(false)" style="background: rgba(239, 68, 68, 0.2); border-color: var(--accent-red); color: #fff;">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i> Exit Drive Mode
+      </button>
+    </div>
+
+    <div class="drive-dual-viewport">
+      <!-- Left: Hands-Free Audio Deck & Multilingual Voice AI -->
+      <div class="drive-audio-deck">
+        <div>
+          <div style="width: 170px; height: 170px; border-radius: 18px; overflow: hidden; margin: 0 auto 16px auto; border: 1px solid rgba(255,255,255,0.15);">
+            <img id="driveArtworkImg" src="" style="width: 100%; height: 100%; object-fit: cover;" alt="Drive Art" />
+          </div>
+          <div style="text-align: center; margin-bottom: 20px;">
+            <div style="font-size: 1.4rem; font-weight: 800;" id="driveTitleText">Select Track</div>
+            <div style="font-size: 0.88rem; color: var(--text-sub);" id="driveArtistText">Paradise Audio</div>
+          </div>
+          <div style="display: flex; justify-content: center; align-items: center; gap: 24px; margin-bottom: 24px;">
+            <button class="btn-drive-touch" id="hudPrevBtn"><i class="fa-solid fa-backward"></i></button>
+            <button class="btn-drive-touch hero" id="hudPlayBtn"><i class="fa-solid fa-play" id="hudPlayIcon"></i></button>
+            <button class="btn-drive-touch" id="hudNextBtn"><i class="fa-solid fa-forward"></i></button>
+          </div>
         </div>
 
-        <button class="btn-pill btn-pro" style="width: 100%; justify-content: center;" onclick="submitPaymentReceipt()">
-          <i class="fa-solid fa-check"></i> Submit Verification Receipt
-        </button>
+        <!-- Voice Search Hub -->
+        <div>
+          <div class="voice-hub-btn" id="voiceMicTrigger" onclick="triggerMultilingualVoiceAI()">
+            <i class="fa-solid fa-microphone"></i>
+            <span id="voiceStatusText">Tap to Speak (Song / Lyrics / Command)</span>
+          </div>
+          <div style="display: flex; justify-content: center; gap: 6px; margin-top: 8px; font-size: 0.7rem; color: var(--text-sub);">
+            <span>Malayalam</span> • <span>English</span> • <span>Hindi</span> • <span>Tamil</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Real Leaflet GPS Navigation -->
+      <div class="drive-map-deck">
+        <div class="map-search-bar">
+          <i class="fa-solid fa-location-dot" style="color: var(--accent-cyan); align-self: center;"></i>
+          <input type="text" id="destinationQueryInput" placeholder="Enter destination (e.g. Muvattupuzha, Kochi, Bengaluru, NH 66)..." onkeydown="if(event.key==='Enter') executeRealRouteSearch()" />
+          <button onclick="executeRealRouteSearch()"><i class="fa-solid fa-route"></i> Route</button>
+        </div>
+
+        <div id="carLiveMap"></div>
+
+        <div class="turn-hud-card">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <i class="fa-solid fa-arrow-up" style="font-size: 1.5rem; color: var(--accent-cyan);"></i>
+            <div>
+              <div style="font-size: 1.1rem; font-weight: 800;" id="turnPrimaryLabel">Continue on Road</div>
+              <div style="font-size: 0.78rem; color: var(--text-sub);" id="turnSubLabel">Speed limit 80 km/h • Verified Safe Surface</div>
+            </div>
+          </div>
+          <div class="listeners-badge" style="color: var(--accent-cyan); border-color: var(--accent-cyan);">
+            OSRM Live GPS
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -1129,190 +984,189 @@
     </a>
   </footer>
 
-  <!-- Lossless Audio Stream Engine -->
   <audio id="audioEngine" crossorigin="anonymous" preload="metadata"></audio>
 
   <script>
     // -------------------------------------------------------------------------
-    // 1. DATA REPOSITORY & STREAMING POINTERS
+    // 1. DATA REPOSITORY & DIRECT NEXTCLOUD STREAM
     // -------------------------------------------------------------------------
     const NC_BASE = "https://cloud.paradiseacademi.com/s/6HegKRmeWapdns9/download?path=%2F&files=";
     function getNcUrl(file) { return NC_BASE + encodeURIComponent(file); }
 
-    const PLAYLIST = [
-      { id: 't1', title: 'ARAYANA', artist: 'Paradise Audio', lyrics: 'arayana arayana', cover: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&q=80', url: getNcUrl('ARAYANA.mp3') },
-      { id: 't2', title: 'Ada Bommale', artist: 'Vaazha 2', lyrics: 'ada bommale vaazha', cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&q=80', url: getNcUrl('Ada Bommale - Vaazha 2.mp3') },
-      { id: 't3', title: 'Aathmavile Anandhame', artist: 'Sajeer Koppam', lyrics: 'aathmavile anandhame sajeer ആത്മാവിലെ ആനന്ദമേ', cover: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&q=80', url: getNcUrl('Aathmavile Anandhame - Sajeer Koppam.mp3') },
-      { id: 't4', title: 'Baby love', artist: 'Zuby Zuby Zuby', lyrics: 'baby love zuby', cover: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=500&q=80', url: getNcUrl('Baby love - Zuby Zuby Zuby.mp3') },
-      { id: 't5', title: 'Chammak Challo', artist: 'Ra One (2011)', lyrics: 'kanna chammak challo akon छम्मक छल्लो', cover: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&q=80', url: getNcUrl('Chammak Challo - Ra One (2011) HD 720p.mp3') },
-      { id: 't6', title: 'Chinnamma Adi', artist: 'Folk Fusion', lyrics: 'chinnamma adi manikyam ചിന്നമ്മ അടി', cover: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=500&q=80', url: getNcUrl('Chinnamma Adi@6EI2NUkxwuZuGKfJ9BB7PJ (1).mp3') },
-      { id: 't7', title: 'Chirapunji', artist: 'Nihal Sadiq Ft Hanan Shaah', lyrics: 'chirapunji mazha peyyana ചിറാപുഞ്ചി', cover: 'https://images.unsplash.com/photo-1520523839898-507127054976?w=500&q=80', url: getNcUrl('Chirapunji - Nihal Sadiq Ft Hanan Shaah.mp3') },
-      { id: 't8', title: 'Delulu Delulu', artist: 'Athi Bheekara Kaamukan', lyrics: 'delulu delulu athi bheekara kaamukan ഡിലുലു', cover: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=500&q=80', url: getNcUrl('Delulu Delulu - Athi Bheekara Kaamukan.mp3') },
-      { id: 't9', title: 'Habibi Drip', artist: 'Best Of Dabzee', lyrics: 'habibi drip dabzee ഹബീബി', cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&q=80', url: getNcUrl('Habibi Drip - Best Of Dabzee.mp3') },
-      { id: 't10', title: 'Manavaalan Thug', artist: 'Best Of Dabzee', lyrics: 'manavalan thug dabzee thallumaala മണവാളൻ', cover: 'https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?w=500&q=80', url: getNcUrl('Manavaalan Thug - Best Of Dabzee.mp3') },
-      { id: 't11', title: 'Onnaam Kunninmel', artist: 'Magic Mushrooms', lyrics: 'onnam kunninmel ഒന്നാം കുന്നിന്മേൽ', cover: 'https://images.unsplash.com/photo-1465847899084-d164df4dedc6?w=500&q=80', url: getNcUrl('Onnaam Kunninmel - Magic Mushrooms.mp3') },
-      { id: 't12', title: 'PL', artist: 'Studio Track', lyrics: 'pl master', cover: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=500&q=80', url: getNcUrl('PL.mp3') },
-      { id: 't13', title: 'Pallathi Meena Pole', artist: 'Pongala', lyrics: 'pallathi meena pole pongala പരൽമീൻ', cover: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=500&q=80', url: getNcUrl('Pallathi Meena Pole - Pongala.mp3') },
-      { id: 't14', title: 'Pathira', artist: 'KoshalWorld', lyrics: 'pathira koshalworld പാതിരാ', cover: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=500&q=80', url: getNcUrl('Pathira(KoshalWorld.Com).mp3') },
-      { id: 't15', title: 'Pattuma', artist: 'Love Insurance Kompany', lyrics: 'pattuma love insurance பட்டுமா', cover: 'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=500&q=80', url: getNcUrl('Pattuma - Love Insurance Kompany.mp3') },
-      { id: 't16', title: 'Pavazha Malli', artist: 'Sai Abhyankkar', lyrics: 'pavazha malli sai abhyankkar பவழ மல்லி', cover: 'https://images.unsplash.com/photo-1506157786151-b8491531f063?w=500&q=80', url: getNcUrl('Pavazha Malli - Sai Abhyankkar, Shruti Haasan.mp3') },
-      { id: 't17', title: 'പ്രായം നമ്മിൽ മോഹം നൽകി', artist: 'Evergreen Classic', lyrics: 'prayam nammil moham nalki പ്രായം നമ്മിൽ', cover: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=500&q=80', url: getNcUrl('പ്രായം നമ്മിൽ മോഹം നൽകി Prayam Nammil Moham Nira...mp3') },
-      { id: 't18', title: 'രാക്കുയിൽ പാടീ', artist: 'Kunchacko Boban Hits', lyrics: 'raakkuyil paadi kunchacko boban രാക്കുയിൽ പാടി', cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&q=80', url: getNcUrl('രാക്കുയിൽ പാടീ HD Raakkuyil Paadi Video Song Kunchacko Bo...mp3') }
+    let MASTER_TRACKS = [
+      { id: 't1', title: 'ARAYANA', artist: 'Paradise Audio', lyrics: 'Arayana arayana gaanam manasil...', cover: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&q=80', url: getNcUrl('ARAYANA.mp3') },
+      { id: 't2', title: 'Ada Bommale', artist: 'Vaazha 2', lyrics: 'Ada bommale vaazha thirike varumo...', cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&q=80', url: getNcUrl('Ada Bommale - Vaazha 2.mp3') },
+      { id: 't3', title: 'Aathmavile Anandhame', artist: 'Sajeer Koppam', lyrics: 'Aathmavile anandhame nin mounam...', cover: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&q=80', url: getNcUrl('Aathmavile Anandhame - Sajeer Koppam.mp3') },
+      { id: 't4', title: 'Baby love', artist: 'Zuby Zuby Zuby', lyrics: 'Baby love zuby zuby...', cover: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=500&q=80', url: getNcUrl('Baby love - Zuby Zuby Zuby.mp3') },
+      { id: 't5', title: 'Chammak Challo', artist: 'Ra One (2011)', lyrics: 'Kanna chammak challo wanna be my chammak challo...', cover: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&q=80', url: getNcUrl('Chammak Challo - Ra One (2011) HD 720p.mp3') },
+      { id: 't6', title: 'Chinnamma Adi', artist: 'Folk Fusion', lyrics: 'Chinnamma adi manikkya veena...', cover: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=500&q=80', url: getNcUrl('Chinnamma Adi@6EI2NUkxwuZuGKfJ9BB7PJ (1).mp3') },
+      { id: 't7', title: 'Chirapunji', artist: 'Nihal Sadiq Ft Hanan Shaah', lyrics: 'Chirapunji mazhayude thaalam...', cover: 'https://images.unsplash.com/photo-1520523839898-507127054976?w=500&q=80', url: getNcUrl('Chirapunji - Nihal Sadiq Ft Hanan Shaah.mp3') },
+      { id: 't8', title: 'Delulu Delulu', artist: 'Athi Bheekara Kaamukan', lyrics: 'Delulu delulu athi bheekara kaamukan...', cover: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=500&q=80', url: getNcUrl('Delulu Delulu - Athi Bheekara Kaamukan.mp3') },
+      { id: 't9', title: 'Habibi Drip', artist: 'Best Of Dabzee', lyrics: 'Habibi drip kandaal mayangi pogum...', cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&q=80', url: getNcUrl('Habibi Drip - Best Of Dabzee.mp3') },
+      { id: 't10', title: 'Manavaalan Thug', artist: 'Best Of Dabzee', lyrics: 'Manavalan thug vibe thallumaala...', cover: 'https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?w=500&q=80', url: getNcUrl('Manavaalan Thug - Best Of Dabzee.mp3') },
+      { id: 't11', title: 'Onnaam Kunninmel', artist: 'Magic Mushrooms', lyrics: 'Onnam kunninmel oru koodu koottiya...', cover: 'https://images.unsplash.com/photo-1465847899084-d164df4dedc6?w=500&q=80', url: getNcUrl('Onnaam Kunninmel - Magic Mushrooms.mp3') },
+      { id: 't12', title: 'PL', artist: 'Studio Track', lyrics: 'PL master sound production...', cover: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=500&q=80', url: getNcUrl('PL.mp3') },
+      { id: 't13', title: 'Pallathi Meena Pole', artist: 'Pongala', lyrics: 'Pallathi meena pole thulli nadakkum...', cover: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=500&q=80', url: getNcUrl('Pallathi Meena Pole - Pongala.mp3') },
+      { id: 't14', title: 'Pathira', artist: 'KoshalWorld', lyrics: 'Pathira pullunarnnu...', cover: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=500&q=80', url: getNcUrl('Pathira(KoshalWorld.Com).mp3') },
+      { id: 't15', title: 'Pattuma', artist: 'Love Insurance Kompany', lyrics: 'Pattuma oru paattu paadu...', cover: 'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=500&q=80', url: getNcUrl('Pattuma - Love Insurance Kompany.mp3') },
+      { id: 't16', title: 'Pavazha Malli', artist: 'Sai Abhyankkar', lyrics: 'Pavazha malli poothu nilkkum...', cover: 'https://images.unsplash.com/photo-1506157786151-b8491531f063?w=500&q=80', url: getNcUrl('Pavazha Malli - Sai Abhyankkar, Shruti Haasan.mp3') },
+      { id: 't17', title: 'പ്രായം നമ്മിൽ മോഹം നൽകി', artist: 'Evergreen Classic', lyrics: 'Prayam nammil moham nalki...', cover: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=500&q=80', url: getNcUrl('പ്രായം നമ്മിൽ മോഹം നൽകി Prayam Nammil Moham Nira...mp3') },
+      { id: 't18', title: 'രാക്കുയിൽ പാടീ', artist: 'Kunchacko Boban Hits', lyrics: 'Raakkuyil paadi raavunarnnu...', cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&q=80', url: getNcUrl('രാക്കുയിൽ പാടീ HD Raakkuyil Paadi Video Song Kunchacko Bo...mp3') }
     ];
 
+    // Always Shuffle Songs on load
+    function shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+    }
+    shuffleArray(MASTER_TRACKS);
+
     // -------------------------------------------------------------------------
-    // 2. STATE REPOSITORY
+    // 2. STATE & AUDIO GRAPH
     // -------------------------------------------------------------------------
-    let currentIdx = 0;
+    let currentTrackIdx = 0;
     let isPlaying = false;
-    let listenersCount = 65841;
+    let liveListenerCount = 65841;
 
     let audioCtx, analyserNode, sourceNode;
-    let eqBands = {};
-    let isWebAudioConfigured = false;
+    let biquadFilters = {};
+    let isGraphBuilt = false;
 
-    // Pro Suite State
-    let proTrialTimeLeft = 59;
-    let proTimerInterval = null;
-    let isProVerified = localStorage.getItem('soundEngineersUnlocked') === 'true';
-
-    // UI DOM Handles
+    // Elements
     const audio = document.getElementById('audioEngine');
     const trackArtwork = document.getElementById('trackArtwork');
     const trackTitleDisplay = document.getElementById('trackTitleDisplay');
     const trackArtistDisplay = document.getElementById('trackArtistDisplay');
-    const playBtn = document.getElementById('playBtn');
+    const playTrackBtn = document.getElementById('playTrackBtn');
     const playIcon = document.getElementById('playIcon');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
+    const prevTrackBtn = document.getElementById('prevTrackBtn');
+    const nextTrackBtn = document.getElementById('nextTrackBtn');
     const progressRail = document.getElementById('progressRail');
     const progressFill = document.getElementById('progressFill');
     const timeElapsed = document.getElementById('timeElapsed');
     const timeDuration = document.getElementById('timeDuration');
-    const songItemsContainer = document.getElementById('songItemsContainer');
+    const songPlaylistContainer = document.getElementById('songPlaylistContainer');
     const ambientBg = document.getElementById('ambientBg');
     const canvas = document.getElementById('audioVisualizer');
     const canvasCtx = canvas.getContext('2d');
 
-    // Drive Mode DOM Handles
+    // Drive UI Elements
     const driveHud = document.getElementById('driveHud');
-    const driveArtwork = document.getElementById('driveArtwork');
-    const driveSongTitle = document.getElementById('driveSongTitle');
-    const driveSongArtist = document.getElementById('driveSongArtist');
-    const drivePlayBtn = document.getElementById('drivePlayBtn');
-    const drivePlayIcon = document.getElementById('drivePlayIcon');
-    const drivePrevBtn = document.getElementById('drivePrevBtn');
-    const driveNextBtn = document.getElementById('driveNextBtn');
-    const gpsSpeedometer = document.getElementById('gpsSpeedometer');
+    const driveArtworkImg = document.getElementById('driveArtworkImg');
+    const driveTitleText = document.getElementById('driveTitleText');
+    const driveArtistText = document.getElementById('driveArtistText');
+    const hudPlayBtn = document.getElementById('hudPlayBtn');
+    const hudPlayIcon = document.getElementById('hudPlayIcon');
 
-    // -------------------------------------------------------------------------
-    // 3. LISTENERS DYNAMIC PULSE
-    // -------------------------------------------------------------------------
+    // Dynamic Live Listeners
     setInterval(() => {
-      const delta = Math.floor(Math.random() * 9) - 4;
-      listenersCount += delta;
-      document.getElementById('listenerCountDisplay').textContent = listenersCount.toLocaleString();
+      const shift = Math.floor(Math.random() * 9) - 4;
+      liveListenerCount += shift;
+      document.getElementById('liveListenerDisplay').textContent = liveListenerCount.toLocaleString();
     }, 2800);
 
     // -------------------------------------------------------------------------
-    // 4. AUDIO GRAPH & PLAYBACK ENGINE
+    // 3. PLAYLIST RENDERING & PLAYBACK
     // -------------------------------------------------------------------------
-    function renderPlaylist() {
-      songItemsContainer.innerHTML = '';
-      PLAYLIST.forEach((song, idx) => {
-        const item = document.createElement('div');
-        item.className = `song-row ${idx === currentIdx ? 'active' : ''}`;
-        item.onclick = () => { loadTrack(idx); startPlay(); };
+    function renderShuffledPlaylist() {
+      songPlaylistContainer.innerHTML = '';
+      MASTER_TRACKS.forEach((track, idx) => {
+        const row = document.createElement('div');
+        row.className = `song-row ${idx === currentTrackIdx ? 'active' : ''}`;
+        row.onclick = () => { selectTrack(idx); };
 
-        item.innerHTML = `
-          <img class="song-thumb" src="${song.cover}" alt="Art" />
+        row.innerHTML = `
+          <img class="song-thumb" src="${track.cover}" alt="Art" />
           <div class="song-info">
-            <div class="song-name">${song.title}</div>
-            <div class="song-artist">${song.artist}</div>
+            <div class="song-name">${track.title}</div>
+            <div class="song-artist">${track.artist}</div>
           </div>
-          <span style="font-size: 0.72rem; color: var(--text-muted);"><i class="fa-solid fa-play"></i></span>
+          <i class="fa-solid fa-play" style="font-size: 0.75rem; color: var(--text-sub);"></i>
         `;
-        songItemsContainer.appendChild(item);
+        songPlaylistContainer.appendChild(row);
       });
     }
 
-    function loadTrack(idx) {
-      currentIdx = idx;
-      const song = PLAYLIST[currentIdx];
-      audio.src = song.url;
-      trackTitleDisplay.textContent = song.title;
-      trackArtistDisplay.textContent = song.artist;
-      trackArtwork.src = song.cover;
-      ambientBg.style.backgroundImage = `url('${song.cover}')`;
+    function selectTrack(idx) {
+      currentTrackIdx = idx;
+      const track = MASTER_TRACKS[currentTrackIdx];
+      audio.src = track.url;
+      trackTitleDisplay.textContent = track.title;
+      trackArtistDisplay.textContent = track.artist;
+      trackArtwork.src = track.cover;
+      ambientBg.style.backgroundImage = `url('${track.cover}')`;
 
-      // Sync Drive Mode UI
-      driveSongTitle.textContent = song.title;
-      driveSongArtist.textContent = song.artist;
-      driveArtwork.src = song.cover;
+      // Sync Drive Mode
+      driveTitleText.textContent = track.title;
+      driveArtistText.textContent = track.artist;
+      driveArtworkImg.src = track.cover;
 
-      document.querySelectorAll('.song-row').forEach((row, i) => {
-        row.classList.toggle('active', i === currentIdx);
-      });
+      // Sync Karaoke Teleprompter
+      document.getElementById('karaokeCurrentLyric').textContent = `♪ ${track.lyrics} ♪`;
+      document.getElementById('karaokeNextLyric').textContent = `Track: ${track.title} - ${track.artist}`;
 
-      // Background Playback / Media Session API for Lock Screen & Automotive Display
+      document.querySelectorAll('.song-row').forEach((r, i) => r.classList.toggle('active', i === currentTrackIdx));
+
+      // Media Session API for mobile lock screen & automotive consoles
       if ('mediaSession' in navigator) {
         navigator.mediaSession.metadata = new MediaMetadata({
-          title: song.title,
-          artist: song.artist,
+          title: track.title,
+          artist: track.artist,
           album: 'Paradise of Songs',
-          artwork: [{ src: song.cover, sizes: '512x512', type: 'image/jpeg' }]
+          artwork: [{ src: track.cover, sizes: '512x512', type: 'image/jpeg' }]
         });
-        navigator.mediaSession.setActionHandler('play', () => startPlay());
-        navigator.mediaSession.setActionHandler('pause', () => pausePlay());
-        navigator.mediaSession.setActionHandler('previoustrack', () => prevBtn.click());
-        navigator.mediaSession.setActionHandler('nexttrack', () => nextBtn.click());
+        navigator.mediaSession.setActionHandler('play', () => startAudio());
+        navigator.mediaSession.setActionHandler('pause', () => pauseAudio());
+        navigator.mediaSession.setActionHandler('previoustrack', () => prevTrackBtn.click());
+        navigator.mediaSession.setActionHandler('nexttrack', () => nextTrackBtn.click());
       }
+      startAudio();
     }
 
-    function startPlay() {
-      initAudioNodes();
+    function startAudio() {
+      setupAudioEngine();
       audio.play().then(() => {
         isPlaying = true;
         playIcon.className = 'fa-solid fa-pause';
-        drivePlayIcon.className = 'fa-solid fa-pause';
+        hudPlayIcon.className = 'fa-solid fa-pause';
         document.getElementById('playerDeck').classList.add('playing');
         if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
       }).catch(err => console.warn('Stream restriction:', err));
     }
 
-    function pausePlay() {
+    function pauseAudio() {
       audio.pause();
       isPlaying = false;
       playIcon.className = 'fa-solid fa-play';
-      drivePlayIcon.className = 'fa-solid fa-play';
+      hudPlayIcon.className = 'fa-solid fa-play';
       document.getElementById('playerDeck').classList.remove('playing');
       if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
     }
 
-    playBtn.onclick = () => isPlaying ? pausePlay() : startPlay();
-    drivePlayBtn.onclick = () => isPlaying ? pausePlay() : startPlay();
+    playTrackBtn.onclick = () => isPlaying ? pauseAudio() : startAudio();
+    hudPlayBtn.onclick = () => isPlaying ? pauseAudio() : startAudio();
 
-    prevBtn.onclick = () => {
-      currentIdx = (currentIdx - 1 + PLAYLIST.length) % PLAYLIST.length;
-      loadTrack(currentIdx);
-      startPlay();
+    prevTrackBtn.onclick = () => {
+      currentTrackIdx = (currentTrackIdx - 1 + MASTER_TRACKS.length) % MASTER_TRACKS.length;
+      selectTrack(currentTrackIdx);
     };
-    drivePrevBtn.onclick = () => prevBtn.click();
+    document.getElementById('hudPrevBtn').onclick = () => prevTrackBtn.click();
 
-    nextBtn.onclick = () => {
-      currentIdx = (currentIdx + 1) % PLAYLIST.length;
-      loadTrack(currentIdx);
-      startPlay();
+    nextTrackBtn.onclick = () => {
+      currentTrackIdx = (currentTrackIdx + 1) % MASTER_TRACKS.length;
+      selectTrack(currentTrackIdx);
     };
-    driveNextBtn.onclick = () => nextBtn.click();
-    audio.onended = () => nextBtn.click();
+    document.getElementById('hudNextBtn').onclick = () => nextTrackBtn.click();
+    audio.onended = () => nextTrackBtn.click();
 
     audio.ontimeupdate = () => {
       if (audio.duration) {
         const pct = (audio.currentTime / audio.duration) * 100;
         progressFill.style.width = `${pct}%`;
-        timeElapsed.textContent = formatClock(audio.currentTime);
-        timeDuration.textContent = formatClock(audio.duration);
+        timeElapsed.textContent = formatDuration(audio.currentTime);
+        timeDuration.textContent = formatDuration(audio.duration);
       }
     };
 
@@ -1322,402 +1176,503 @@
       if (audio.duration) audio.currentTime = (clickX / rect.width) * audio.duration;
     };
 
-    function formatClock(s) {
+    function formatDuration(s) {
       const m = Math.floor(s / 60);
       const sec = Math.floor(s % 60);
       return `${m}:${sec < 10 ? '0' : ''}${sec}`;
     }
 
-    function initAudioNodes() {
-      if (isWebAudioConfigured) return;
+    // -------------------------------------------------------------------------
+    // 4. HARDWARE WEB AUDIO GRAPH & VISUALIZER
+    // -------------------------------------------------------------------------
+    function setupAudioEngine() {
+      if (isGraphBuilt) return;
       try {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         analyserNode = audioCtx.createAnalyser();
         analyserNode.fftSize = 64;
         sourceNode = audioCtx.createMediaElementSource(audio);
 
-        const freqs = [60, 250, 1000, 4000, 16000];
-        let prevNode = sourceNode;
+        // Vocal/Bass/Treble Filters for Sound Engineer Mixer
+        const bassFilter = audioCtx.createBiquadFilter();
+        bassFilter.type = 'lowshelf';
+        bassFilter.frequency.value = 200;
 
-        freqs.forEach(freq => {
-          const filter = audioCtx.createBiquadFilter();
-          filter.type = freq <= 60 ? 'lowshelf' : (freq >= 16000 ? 'highshelf' : 'peaking');
-          filter.frequency.value = freq;
-          filter.gain.value = 0;
-          prevNode.connect(filter);
-          prevNode = filter;
-          eqBands[freq] = filter;
-        });
+        const vocalFilter = audioCtx.createBiquadFilter();
+        vocalFilter.type = 'peaking';
+        vocalFilter.frequency.value = 1800;
 
-        prevNode.connect(analyserNode);
+        const trebleFilter = audioCtx.createBiquadFilter();
+        trebleFilter.type = 'highshelf';
+        trebleFilter.frequency.value = 8000;
+
+        sourceNode.connect(bassFilter);
+        bassFilter.connect(vocalFilter);
+        vocalFilter.connect(trebleFilter);
+        trebleFilter.connect(analyserNode);
         analyserNode.connect(audioCtx.destination);
-        isWebAudioConfigured = true;
-        renderVisualizer();
-      } catch (e) {
-        console.warn('Audio Graph note:', e);
+
+        biquadFilters.bass = bassFilter;
+        biquadFilters.vocal = vocalFilter;
+        biquadFilters.treble = trebleFilter;
+
+        isGraphBuilt = true;
+        drawVisualizers();
+      } catch (err) {
+        console.warn('Web Audio note:', err);
       }
     }
 
-    function renderVisualizer() {
-      requestAnimationFrame(renderVisualizer);
-      if (!isWebAudioConfigured) return;
+    // Dynamic DSP sliders
+    document.getElementById('vocalGainSlider').oninput = (e) => { if (biquadFilters.vocal) biquadFilters.vocal.gain.value = parseFloat(e.target.value); };
+    document.getElementById('bassGainSlider').oninput = (e) => { if (biquadFilters.bass) biquadFilters.bass.gain.value = parseFloat(e.target.value); };
+    document.getElementById('trebleGainSlider').oninput = (e) => { if (biquadFilters.treble) biquadFilters.treble.gain.value = parseFloat(e.target.value); };
 
-      const bufferLength = analyserNode.frequencyBinCount;
-      const dataArray = new Uint8Array(bufferLength);
-      analyserNode.getByteFrequencyData(dataArray);
+    function setAcousticEnvironment(type) {
+      document.querySelectorAll('.btn-acoustic').forEach(b => b.classList.remove('active'));
+      event.currentTarget.classList.add('active');
 
+      if (!biquadFilters.bass) return;
+      if (type === 'home') {
+        biquadFilters.bass.gain.value = 1;
+        biquadFilters.vocal.gain.value = 0;
+        biquadFilters.treble.gain.value = 0;
+      } else if (type === 'hall') {
+        biquadFilters.bass.gain.value = -2;
+        biquadFilters.vocal.gain.value = 3;
+        biquadFilters.treble.gain.value = 2;
+      } else if (type === 'concert') {
+        biquadFilters.bass.gain.value = 6;
+        biquadFilters.vocal.gain.value = -1;
+        biquadFilters.treble.gain.value = 4;
+      } else if (type === 'vehicle') {
+        biquadFilters.bass.gain.value = 4;
+        biquadFilters.vocal.gain.value = 2;
+        biquadFilters.treble.gain.value = -2;
+      }
+    }
+
+    function drawVisualizers() {
+      requestAnimationFrame(drawVisualizers);
+      if (!isGraphBuilt) return;
+
+      const bufferLen = analyserNode.frequencyBinCount;
+      const dataArr = new Uint8Array(bufferLen);
+      analyserNode.getByteFrequencyData(dataArr);
+
+      // 1. Deck Player Visualizer
       canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
-      const barWidth = (canvas.width / bufferLength) * 1.5;
+      const barWidth = (canvas.width / bufferLen) * 1.5;
       let x = 0;
-
-      for (let i = 0; i < bufferLength; i++) {
-        const barHeight = (dataArray[i] / 255) * canvas.height;
+      for (let i = 0; i < bufferLen; i++) {
+        const barHeight = (dataArr[i] / 255) * canvas.height;
         const grad = canvasCtx.createLinearGradient(0, canvas.height, 0, 0);
         grad.addColorStop(0, '#1ed760');
         grad.addColorStop(1, '#06b6d4');
-
         canvasCtx.fillStyle = grad;
         canvasCtx.fillRect(x, canvas.height - barHeight, barWidth - 2, barHeight);
         x += barWidth;
       }
-    }
 
-    // -------------------------------------------------------------------------
-    // 5. EQUALIZER
-    // -------------------------------------------------------------------------
-    ['60', '250', '1k', '4k', '16k'].forEach(key => {
-      const el = document.getElementById(`eq${key}`);
-      const f = key === '1k' ? 1000 : (key === '4k' ? 4000 : (key === '16k' ? 16000 : parseInt(key)));
-      el.oninput = () => { if (eqBands[f]) eqBands[f].gain.value = parseFloat(el.value); };
-    });
-
-    function applyEqPreset(preset) {
-      document.querySelectorAll('.preset-chip').forEach(c => c.classList.remove('active'));
-      event.target.classList.add('active');
-
-      const curves = {
-        flat: [0, 0, 0, 0, 0],
-        bass: [8, 5, -1, -2, -2],
-        vocal: [-3, -1, 5, 4, 1],
-        electronic: [6, 3, -2, 3, 5]
-      };
-      const vals = curves[preset];
-      const keys = [60, 250, 1000, 4000, 16000];
-      const sliderIds = ['eq60', 'eq250', 'eq1k', 'eq4k', 'eq16k'];
-
-      keys.forEach((f, i) => {
-        if (eqBands[f]) eqBands[f].gain.value = vals[i];
-        document.getElementById(sliderIds[i]).value = vals[i];
-      });
-    }
-
-    // -------------------------------------------------------------------------
-    // 6. REAL LEAFLET GPS MAP NAVIGATION & ACCURATE OSRM ROUTING (INDIA / KERALA / BLR)
-    // -------------------------------------------------------------------------
-    let mapInstance = null;
-    let carMarker = null;
-    let routePolyline = null;
-    let currentCarCoords = [9.9816, 76.2999]; // Default Central Kerala / Kochi fallback
-    let watchId = null;
-    let wakeLock = null;
-
-    function toggleDriveCockpit(enable) {
-      driveHud.classList.toggle('open', enable);
-
-      if (enable) {
-        // Prevent Car Dashboard screen sleep
-        if ('wakeLock' in navigator) {
-          navigator.wakeLock.request('screen').then(wl => { wakeLock = wl; }).catch(() => {});
+      // 2. Sound Engineers Realtime Graph Canvas
+      const studioCanvas = document.getElementById('studioGraphCanvas');
+      if (studioCanvas) {
+        const sCtx = studioCanvas.getContext('2d');
+        sCtx.clearRect(0, 0, studioCanvas.width, studioCanvas.height);
+        sCtx.strokeStyle = '#06b6d4';
+        sCtx.lineWidth = 2;
+        sCtx.beginPath();
+        const sliceWidth = studioCanvas.width / bufferLen;
+        let sx = 0;
+        for (let i = 0; i < bufferLen; i++) {
+          const v = dataArr[i] / 255.0;
+          const sy = v * studioCanvas.height;
+          if (i === 0) sCtx.moveTo(sx, studioCanvas.height - sy);
+          else sCtx.lineTo(sx, studioCanvas.height - sy);
+          sx += sliceWidth;
         }
-        setTimeout(initOrRefreshCarMap, 300);
-        startVehicleTelemetry();
-      } else {
-        if (wakeLock) { wakeLock.release(); wakeLock = null; }
-        if (watchId) { navigator.geolocation.clearWatch(watchId); watchId = null; }
+        sCtx.stroke();
       }
     }
-    document.getElementById('openDriveBtn').onclick = () => toggleDriveCockpit(true);
 
-    function initOrRefreshCarMap() {
-      if (!mapInstance) {
-        // High-contrast Car Dashboard Dark Tile Layer
-        mapInstance = L.map('carLiveMap', {
-          zoomControl: false,
-          attributionControl: false
-        }).setView(currentCarCoords, 14);
+    // -------------------------------------------------------------------------
+    // 5. SOCIAL ROOM: 2 AUTHENTIC MALAYALEE AI FRIENDS
+    // -------------------------------------------------------------------------
+    let activeAiFriend = 'rahul';
+    const chatHistories = {
+      rahul: [
+        { sender: 'peer', text: 'Hey bro! Njan Rahul, 27. Paradise Academy-il IT Section-il aanu work cheyyunnath. Track clarity poli aanu ketto! 🔥' }
+      ],
+      anjali: [
+        { sender: 'peer', text: 'Hii! Njan Anjali, 20. Maharajas-il aanu padikkunnath. Ee playlist kidu aayittund! 🎧' }
+      ]
+    };
 
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-          maxZoom: 19
-        }).addTo(mapInstance);
+    function switchAiFriend(who) {
+      activeAiFriend = who;
+      document.getElementById('tabRahul').classList.toggle('active', who === 'rahul');
+      document.getElementById('tabAnjali').classList.toggle('active', who === 'anjali');
+      renderChatMessages();
+    }
 
-        const carIcon = L.divIcon({
+    function renderChatMessages() {
+      const box = document.getElementById('chatFeedBox');
+      box.innerHTML = '';
+      chatHistories[activeAiFriend].forEach(msg => {
+        const b = document.createElement('div');
+        b.className = `chat-bubble ${msg.sender}`;
+        b.textContent = msg.text;
+        box.appendChild(b);
+      });
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function sendSocialMessage() {
+      const input = document.getElementById('chatInputBox');
+      const txt = input.value.trim();
+      if (!txt) return;
+
+      chatHistories[activeAiFriend].push({ sender: 'mine', text: txt });
+      renderChatMessages();
+      input.value = '';
+
+      // Realistic Malayalam / Manglish / Guardrail AI Response
+      setTimeout(() => {
+        const reply = generateMalayaleeReply(txt, activeAiFriend);
+        chatHistories[activeAiFriend].push({ sender: 'peer', text: reply });
+        renderChatMessages();
+      }, 1200);
+    }
+
+    function generateMalayaleeReply(query, friend) {
+      const q = query.toLowerCase();
+
+      // Guardrail: Social ID / Phone Requests
+      const contactKeywords = ['instagram', 'insta', 'number', 'phone', 'whatsapp', 'fb', 'facebook', 'contact', 'call me', 'id tharumo'];
+      if (contactKeywords.some(w => q.includes(w))) {
+        return "Iam not comfort with that, namukk ivide samsaarikkamallo pinnentha ? 😊";
+      }
+
+      if (friend === 'rahul') {
+        if (q.includes('work') || q.includes('paradise') || q.includes('job')) {
+          return "Paradise Academy-il IT infra & consultancy systems manage cheyyukayanu bro. Nalla busy aanu, pakshe music ullathukondu load ariyilla!";
+        }
+        if (q.includes('song') || q.includes('audio') || q.includes('sound')) {
+          return "Nextcloud direct stream cheyyunnath kond audio bit-depth lossless aanu bro. Soundstage nalla wide aayi feel cheyyunund.";
+        }
+        return "Athe bro, parayoo! Work kazhinju ingane songs kettu irikkunnathanu ettavum nalla relaxation.";
+      } else {
+        // Anjali - 20, Maharajas College Student
+        if (q.includes('college') || q.includes('maharajas') || q.includes('study')) {
+          return "Maharajas Kochi campus full vibe aanu! Classes kazhinjal friends-inte koode irunnu ingane paatu kelkkum ✨";
+        }
+        if (q.includes('song') || q.includes('favorite') || q.includes('fav')) {
+          return "Enikku Delulu-um Aathmavile Anandhavum bayankara ishtamaayi! Ninakku etha ettavum ishtapettath?";
+        }
+        return "Sathyam! Ee music feel thanne vereyaanu. Padithathinte edayil nalla oru mind refresh aayi!";
+      }
+    }
+
+    // -------------------------------------------------------------------------
+    // 6. SONG REQUEST & INQUIRY SUBMISSION (TO LUISECLAT@GMAIL.COM)
+    // -------------------------------------------------------------------------
+    function submitSongRequestForm() {
+      const cat = document.getElementById('requestCategorySelect').value;
+      const msg = document.getElementById('requestMessageBody').value.trim();
+
+      if (!msg) {
+        alert("Please enter your message or requested song name.");
+        return;
+      }
+
+      const subject = encodeURIComponent(`Paradise Music Request: ${cat}`);
+      const body = encodeURIComponent(`Category: ${cat}\n\nDetails:\n${msg}\n\nSent from Paradise of Songs Web Application`);
+      
+      window.location.href = `mailto:luiseclat@gmail.com?subject=${subject}&body=${body}`;
+      toggleModal('requestModal', false);
+      alert("Opening mail client to submit your request to management!");
+    }
+
+    // -------------------------------------------------------------------------
+    // 7. SOUND ENGINEERS PRO WORKSPACE & 59S PAYWALL
+    // -------------------------------------------------------------------------
+    let proTimer = null;
+    let proSeconds = 59;
+    let isProUnlocked = localStorage.getItem('proUnlocked') === 'true';
+
+    function toggleProWorkspace(show) {
+      const ws = document.getElementById('proWorkspace');
+      ws.classList.toggle('open', show);
+
+      if (show && !isProUnlocked) {
+        if (proTimer) clearInterval(proTimer);
+        proSeconds = 59;
+        proTimer = setInterval(() => {
+          proSeconds--;
+          document.getElementById('proTrialCountdown').textContent = `Trial: ${proSeconds}s`;
+          if (proSeconds <= 0) {
+            clearInterval(proTimer);
+            document.getElementById('proPaywall').classList.add('locked');
+          }
+        }, 1000);
+      }
+    }
+
+    let selectedPlan = "30 Days - ₹500";
+    function selectPlanTier(card, name) {
+      document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      selectedPlan = name;
+    }
+
+    function submitProPaymentReceipt() {
+      const file = document.getElementById('proofUploadInput').files[0];
+      if (!file) {
+        alert("Please attach your payment screenshot before submitting.");
+        return;
+      }
+
+      const sub = encodeURIComponent(`Sound Engineers Pro Activation: ${selectedPlan}`);
+      const body = encodeURIComponent(`Hi Admin,\n\nI have transferred the amount for ${selectedPlan} via UPI (7034860189@hdfc).\n\nScreenshot attached.\n\nPlease unlock my account.`);
+      window.location.href = `mailto:luiseclat@gmail.com?subject=${sub}&body=${body}`;
+      alert("Receipt submitted to luiseclat@gmail.com. Verification takes within 1 hour.");
+    }
+
+    // -------------------------------------------------------------------------
+    // 8. SINGING / KARAOKE STUDIO WITH CAMERA RECORDING
+    // -------------------------------------------------------------------------
+    let mediaStream = null;
+    let mediaRecorder = null;
+    let recordedChunks = [];
+    let isRecording = false;
+
+    async function toggleKaraokeStudio(open) {
+      const stage = document.getElementById('karaokeStage');
+      stage.classList.toggle('open', open);
+
+      if (open) {
+        try {
+          mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+          document.getElementById('cameraStreamPreview').srcObject = mediaStream;
+        } catch (e) {
+          console.warn("Camera preview restricted:", e);
+        }
+      } else {
+        if (mediaStream) {
+          mediaStream.getTracks().forEach(track => track.stop());
+          mediaStream = null;
+        }
+      }
+    }
+
+    function toggleVideoRecording() {
+      const btn = document.getElementById('recordToggleBtn');
+      if (!isRecording) {
+        if (!mediaStream) return;
+        recordedChunks = [];
+        mediaRecorder = new MediaRecorder(mediaStream);
+        mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) recordedChunks.push(e.data); };
+        mediaRecorder.onstop = () => {
+          const blob = new Blob(recordedChunks, { type: 'video/webm' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `Karaoke_${MASTER_TRACKS[currentTrackIdx].title}.webm`;
+          a.click();
+        };
+        mediaRecorder.start();
+        isRecording = true;
+        btn.innerHTML = `<i class="fa-solid fa-stop"></i> Stop & Save`;
+      } else {
+        mediaRecorder.stop();
+        isRecording = false;
+        btn.innerHTML = `<i class="fa-solid fa-circle"></i> Start Recording`;
+      }
+    }
+
+    // -------------------------------------------------------------------------
+    // 9. REAL GPS LEAFLET NAVIGATION & MULTILINGUAL VOICE AI (DRIVE HUD)
+    // -------------------------------------------------------------------------
+    let carMap = null;
+    let carGpsMarker = null;
+    let activeRoutePolyline = null;
+    let currentCarCoords = [9.9816, 76.2999]; // Default Central Kerala / Kochi fallback
+    let gpsWatchId = null;
+
+    function toggleDriveHud(show) {
+      driveHud.classList.toggle('open', show);
+      if (show) {
+        setTimeout(initOrResizeMap, 300);
+        trackGpsDevice();
+      } else {
+        if (gpsWatchId) { navigator.geolocation.clearWatch(gpsWatchId); gpsWatchId = null; }
+      }
+    }
+
+    function initOrResizeMap() {
+      if (!carMap) {
+        carMap = L.map('carLiveMap', { zoomControl: false, attributionControl: false }).setView(currentCarCoords, 14);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(carMap);
+
+        const icon = L.divIcon({
           html: '<div style="background:#1ed760; width:22px; height:22px; border-radius:50%; border:3px solid #fff; box-shadow:0 0 16px #1ed760;"></div>',
           className: '',
           iconSize: [22, 22]
         });
-        carMarker = L.marker(currentCarCoords, { icon: carIcon }).addTo(mapInstance);
+        carGpsMarker = L.marker(currentCarCoords, { icon }).addTo(carMap);
       } else {
-        mapInstance.invalidateSize();
+        carMap.invalidateSize();
       }
     }
 
-    // Live Geolocation and Speedometer
-    function startVehicleTelemetry() {
+    function trackGpsDevice() {
       if ('geolocation' in navigator) {
-        watchId = navigator.geolocation.watchPosition(
-          (pos) => {
-            const lat = pos.coords.latitude;
-            const lng = pos.coords.longitude;
-            currentCarCoords = [lat, lng];
+        gpsWatchId = navigator.geolocation.watchPosition((pos) => {
+          const lat = pos.coords.latitude;
+          const lng = pos.coords.longitude;
+          currentCarCoords = [lat, lng];
 
-            // Speed in km/h
-            const speedKmh = pos.coords.speed ? Math.round(pos.coords.speed * 3.6) : 0;
-            gpsSpeedometer.textContent = speedKmh;
+          const speed = pos.coords.speed ? Math.round(pos.coords.speed * 3.6) : 0;
+          document.getElementById('carGpsSpeed').textContent = speed;
 
-            if (carMarker && mapInstance) {
-              carMarker.setLatLng(currentCarCoords);
-              mapInstance.panTo(currentCarCoords);
-            }
-
-            // Real-time Speed Camera / Overspeed Rule Engine
-            checkRoadSafetyAndSpeedCameras(speedKmh);
-          },
-          (err) => console.warn('GPS Telemetry warning:', err),
-          { enableHighAccuracy: true, maximumAge: 1000 }
-        );
+          if (carGpsMarker && carMap) {
+            carGpsMarker.setLatLng(currentCarCoords);
+            carMap.panTo(currentCarCoords);
+          }
+        }, err => console.warn(err), { enableHighAccuracy: true });
       }
     }
 
-    // Geocoding & Open Source Routing Machine (OSRM) Real Roads
-    async function searchAndRouteDestination() {
-      const query = document.getElementById('mapDestInput').value.trim();
-      if (!query) return;
+    async function executeRealRouteSearch() {
+      const q = document.getElementById('destinationQueryInput').value.trim();
+      if (!q) return;
 
-      document.getElementById('turnMainText').textContent = "Calculating Optimal Road Route...";
-      document.getElementById('turnSubText').textContent = "Querying live Indian geospatial routing servers...";
+      document.getElementById('turnPrimaryLabel').textContent = "Calculating Optimal Indian Route...";
 
       try {
-        // 1. Resolve location using OpenStreetMap Nominatim
-        const geoRes = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query + ', India')}`);
+        const geoRes = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q + ', India')}`);
         const geoData = await geoRes.json();
-
         if (!geoData || geoData.length === 0) {
-          alert("Location not found. Please specify city, town or landmark.");
+          alert("Location not found. Specify city, town or highway.");
           return;
         }
 
         const destLat = parseFloat(geoData[0].lat);
         const destLng = parseFloat(geoData[0].lon);
 
-        // 2. Fetch driving route polyline from OSRM
-        const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${currentCarCoords[1]},${currentCarCoords[0]};${destLng},${destLat}?overview=full&geometries=geojson&steps=true`;
-        const routeRes = await fetch(osrmUrl);
-        const routeData = await routeRes.json();
+        const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${currentCarCoords[1]},${currentCarCoords[0]};${destLng},${destLat}?overview=full&geometries=geojson`;
+        const rRes = await fetch(osrmUrl);
+        const rData = await rRes.json();
 
-        if (routeData.routes && routeData.routes.length > 0) {
-          const route = routeData.routes[0];
+        if (rData.routes && rData.routes.length > 0) {
+          const route = rData.routes[0];
           const coords = route.geometry.coordinates.map(c => [c[1], c[0]]);
 
-          if (routePolyline) mapInstance.removeLayer(routePolyline);
+          if (activeRoutePolyline) carMap.removeLayer(activeRoutePolyline);
 
-          routePolyline = L.polyline(coords, {
-            color: '#06b6d4',
-            weight: 6,
-            opacity: 0.95
-          }).addTo(mapInstance);
+          activeRoutePolyline = L.polyline(coords, { color: '#06b6d4', weight: 6, opacity: 0.95 }).addTo(carMap);
+          carMap.fitBounds(activeRoutePolyline.getBounds(), { padding: [50, 50] });
 
-          mapInstance.fitBounds(routePolyline.getBounds(), { padding: [50, 50] });
-
-          const km = (route.distance / 1000).toFixed(1);
-          const mins = Math.round(route.duration / 60);
-
-          // Update Turn Instructions & Safety Status
-          document.getElementById('turnMainText').textContent = `In 300m, Proceed towards ${geoData[0].display_name.split(',')[0]}`;
-          document.getElementById('turnSubText').textContent = `Distance: ${km} km • Estimated: ${mins} mins • Real-time traffic calculated`;
-          document.getElementById('routeConditionText').textContent = `Highway / 2-Lane Main Road • Verified Safe`;
+          const distKm = (route.distance / 1000).toFixed(1);
+          document.getElementById('turnPrimaryLabel').textContent = `In 200m, Proceed towards ${geoData[0].display_name.split(',')[0]}`;
+          document.getElementById('turnSubLabel').textContent = `Distance: ${distKm} km • Highway Radar & Condition: Verified`;
         }
       } catch (err) {
-        console.error('Route calculation error:', err);
-        alert("Routing service timed out. Check connection.");
+        alert("Route calculation timed out. Check connection.");
       }
     }
 
-    function checkRoadSafetyAndSpeedCameras(speed) {
-      const alertPill = document.getElementById('cameraSpeedAlert');
-      const alertText = document.getElementById('cameraAlertText');
-
-      // AI/GPS Speed Trap detection trigger
-      if (speed > 80) {
-        alertPill.style.display = 'inline-flex';
-        alertText.textContent = `Caution: High Speed (${speed} km/h) • Speed Camera Zone Limit 80`;
-      } else {
-        alertPill.style.display = 'none';
-      }
-    }
-
-    // -------------------------------------------------------------------------
-    // 7. MULTILINGUAL VOICE CONTROL (MALAYALAM, ENGLISH, HINDI, TAMIL)
-    // -------------------------------------------------------------------------
-    function activateMultilingualVoiceAI() {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechRecognition) {
+    // MULTILINGUAL DRIVING VOICE AI (MALAYALAM / ENGLISH / HINDI / TAMIL)
+    function triggerMultilingualVoiceAI() {
+      const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!Speech) {
         alert("Speech Recognition not supported in this browser. Please use Chrome/Edge.");
         return;
       }
 
-      const rec = new SpeechRecognition();
-      rec.lang = 'ml-IN'; // Primed for Malayalam + handles English, Hindi, and Tamil words naturally
+      const rec = new Speech();
+      rec.lang = 'ml-IN'; // Primed for Malayalam phonetic matching + multi-language words
       rec.interimResults = false;
 
-      const btn = document.getElementById('voiceAssistantBtn');
-      const label = document.getElementById('voiceStatusLabel');
+      const btn = document.getElementById('voiceMicTrigger');
+      const lbl = document.getElementById('voiceStatusText');
 
       btn.classList.add('recording');
-      label.textContent = "Listening... Speak (Malayalam/English/Hindi/Tamil)";
+      lbl.textContent = "Listening... Speak now!";
 
       rec.start();
 
-      rec.onresult = (evt) => {
-        const spoken = evt.results[0][0].transcript.toLowerCase();
-        label.textContent = `Caught: "${spoken}"`;
+      rec.onresult = (e) => {
+        const spoken = e.results[0][0].transcript.toLowerCase();
+        lbl.textContent = `Heard: "${spoken}"`;
 
-        // 1. Command Dictionaries across 4 languages
-        const nextCommands = ['next', 'അടുത്തത്', 'അടുത്ത പാട്ട്', 'മാറ്റൂ', 'agla gana', 'adutha paatu'];
-        const pauseCommands = ['stop', 'pause', 'നിർത്തൂ', 'നിൽക്കൂ', 'roko', 'nillu'];
-        const playCommands = ['play', 'start', 'തുടങ്ങൂ', 'പാട്ട് പാടൂ', 'chalao', 'paadu'];
+        const nextCmds = ['next', 'അടുത്ത പാട്ട്', 'മാറ്റൂ', 'agla gana', 'adutha paatu'];
+        const pauseCmds = ['stop', 'pause', 'നിർത്തൂ', 'നിൽക്കൂ', 'roko', 'nillu'];
+        const playCmds = ['play', 'start', 'തുടങ്ങൂ', 'പാടൂ', 'chalao', 'paadu'];
 
-        if (nextCommands.some(cmd => spoken.includes(cmd))) {
-          nextBtn.click();
-          label.textContent = "Skipped to next song";
-        } else if (pauseCommands.some(cmd => spoken.includes(cmd))) {
-          pausePlay();
-          label.textContent = "Paused playback";
-        } else if (playCommands.some(cmd => spoken.includes(cmd))) {
-          startPlay();
-          label.textContent = "Resumed playback";
+        if (nextCmds.some(c => spoken.includes(c))) {
+          nextTrackBtn.click();
+          lbl.textContent = "Skipped to next song";
+        } else if (pauseCmds.some(c => spoken.includes(c))) {
+          pauseAudio();
+          lbl.textContent = "Paused";
+        } else if (playCmds.some(c => spoken.includes(c))) {
+          startAudio();
+          lbl.textContent = "Resumed";
         } else {
-          // 2. Fuzzy Song Matching by title, artist, or Malayalam/Hindi lyrics
-          const match = PLAYLIST.findIndex(s => 
-            spoken.includes(s.title.toLowerCase()) ||
-            s.title.toLowerCase().includes(spoken) ||
-            spoken.includes(s.artist.toLowerCase()) ||
-            (s.lyrics && (spoken.includes(s.lyrics.toLowerCase()) || s.lyrics.toLowerCase().includes(spoken)))
+          // Song / Lyrics Match
+          const found = MASTER_TRACKS.findIndex(t => 
+            spoken.includes(t.title.toLowerCase()) ||
+            t.title.toLowerCase().includes(spoken) ||
+            spoken.includes(t.artist.toLowerCase()) ||
+            t.lyrics.toLowerCase().includes(spoken)
           );
 
-          if (match !== -1) {
-            loadTrack(match);
-            startPlay();
-            label.textContent = `Playing: ${PLAYLIST[match].title}`;
+          if (found !== -1) {
+            selectTrack(found);
+            lbl.textContent = `Playing: ${MASTER_TRACKS[found].title}`;
           } else {
-            label.textContent = `No match for "${spoken}". Retrying...`;
+            lbl.textContent = `No match for "${spoken}".`;
           }
         }
 
         setTimeout(() => {
           btn.classList.remove('recording');
-          label.textContent = "Tap to Speak (Song / Lyrics / Command)";
+          lbl.textContent = "Tap to Speak (Song / Lyrics / Command)";
         }, 3500);
       };
 
       rec.onerror = () => {
         btn.classList.remove('recording');
-        label.textContent = "Voice error. Tap to try again.";
+        lbl.textContent = "Voice error. Tap to retry.";
       };
     }
 
     // -------------------------------------------------------------------------
-    // 8. SOUND ENGINEERS PRO WORKSPACE & 59S PAYWALL
-    // -------------------------------------------------------------------------
-    function toggleProWorkspace(enable) {
-      const ws = document.getElementById('proWorkspace');
-      ws.classList.toggle('open', enable);
-      if (enable && !isProVerified) startProTrial();
-    }
-    document.getElementById('openProBtn').onclick = () => toggleProWorkspace(true);
-
-    function startProTrial() {
-      if (proTimerInterval) clearInterval(proTimerInterval);
-      proTrialTimeLeft = 59;
-
-      proTimerInterval = setInterval(() => {
-        proTrialTimeLeft--;
-        document.getElementById('trialCountdownPill').textContent = `Trial Ends: ${proTrialTimeLeft}s`;
-
-        if (proTrialTimeLeft <= 0) {
-          clearInterval(proTimerInterval);
-          document.getElementById('paywallCurtain').classList.add('locked');
-        }
-      }, 1000);
-    }
-
-    let currentSelectedPlan = "30 Days - ₹500";
-    function selectProPlan(card, name) {
-      document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
-      card.classList.add('selected');
-      currentSelectedPlan = name;
-    }
-
-    function submitPaymentReceipt() {
-      const fileInput = document.getElementById('paymentProofUpload');
-      if (!fileInput.files || fileInput.files.length === 0) {
-        alert("Please attach your payment screenshot before submitting.");
-        return;
-      }
-
-      const mailSubject = encodeURIComponent(`Sound Engineers Verification: ${currentSelectedPlan}`);
-      const mailBody = encodeURIComponent(`Hello Paradise Audio Team,\n\nI have completed payment for the Sound Engineers Pro plan (${currentSelectedPlan}).\n\nI have attached my transaction receipt.\n\nPlease verify and activate my access.\n\nUPI: asifkm@okaxis`);
-      
-      window.location.href = `mailto:luiseclat@gmail.com?subject=${mailSubject}&body=${mailBody}`;
-      alert("Receipt verification submitted! Access will unlock automatically following our standard 1-hour verification review.");
-    }
-
-    // -------------------------------------------------------------------------
-    // 9. CHAT DRAWER ENGINE
-    // -------------------------------------------------------------------------
-    document.getElementById('openChatBtn').onclick = () => document.getElementById('chatDrawer').classList.add('open');
-    document.getElementById('closeChatBtn').onclick = () => document.getElementById('chatDrawer').classList.remove('open');
-
-    function sendChatMessage() {
-      const input = document.getElementById('chatInput');
-      const text = input.value.trim();
-      if (!text) return;
-
-      const feed = document.getElementById('chatFeed');
-      const myBubble = document.createElement('div');
-      myBubble.className = 'chat-bubble mine';
-      myBubble.textContent = text;
-      feed.appendChild(myBubble);
-      input.value = '';
-      feed.scrollTop = feed.scrollHeight;
-
-      setTimeout(() => {
-        const replyBubble = document.createElement('div');
-        replyBubble.className = 'chat-bubble peer';
-        replyBubble.innerHTML = `<strong>Alex:</strong> Jamming along to this on lossless audio! 🎧`;
-        feed.appendChild(replyBubble);
-        feed.scrollTop = feed.scrollHeight;
-      }, 1400);
-    }
-
-    // -------------------------------------------------------------------------
-    // 10. MODALS & INIT
+    // 10. MODAL UTILITIES & STARTUP
     // -------------------------------------------------------------------------
     function toggleModal(id, show) {
       document.getElementById(id).classList.toggle('open', show);
     }
-    document.getElementById('openEqBtn').onclick = () => toggleModal('eqModal', true);
-    document.getElementById('openCoffeeBtn').onclick = () => toggleModal('coffeeModal', true);
+
+    document.getElementById('openDriveCockpitBtn').onclick = () => toggleDriveHud(true);
+    document.getElementById('openProSuiteBtn').onclick = () => toggleProWorkspace(true);
+    document.getElementById('openSocialDrawerBtn').onclick = () => {
+      document.getElementById('socialDrawer').classList.toggle('open');
+      renderChatMessages();
+    };
+    document.getElementById('openCoffeeTipBtn').onclick = () => toggleModal('coffeeModal', true);
 
     window.addEventListener('resize', () => {
-      canvas.width = canvas.parentElement.clientWidth - 60;
-      canvas.height = 60;
+      canvas.width = canvas.parentElement.clientWidth - 56;
+      canvas.height = 55;
     });
 
     window.addEventListener('DOMContentLoaded', () => {
-      renderPlaylist();
-      loadTrack(0);
-      canvas.width = canvas.parentElement.clientWidth - 60;
-      canvas.height = 60;
+      renderShuffledPlaylist();
+      selectTrack(0);
+      canvas.width = canvas.parentElement.clientWidth - 56;
+      canvas.height = 55;
     });
   </script>
 </body>
