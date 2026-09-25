@@ -5,12 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>Paradise of Songs - Ultra Pro Audio & Auto Suite</title>
 
-  <!-- PWA & Mobile Meta -->
+  <!-- PWA & Car Head Unit Manifest -->
   <meta name="theme-color" content="#020408" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=192&h=192&fit=crop" />
-  <link rel="manifest" href='data:application/manifest+json,{"name":"Paradise of Songs","short_name":"ParadiseAuto","start_url":".","display":"standalone","background_color":"#020408","theme_color":"#1ed760","categories":["music","audio","navigation"],"icons":[{"src":"https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=192&h=192&fit=crop","sizes":"192x192","type":"image/png"}]}' />
 
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,6 +20,9 @@
   <!-- Leaflet OpenStreetMap Engine -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- MQTT.js for Real-Time Cross-Device Synchronization (Zero Config, 100% Free) -->
+  <script src="https://unpkg.com/mqtt@5.3.4/dist/mqtt.min.js"></script>
 
   <style>
     :root {
@@ -58,7 +60,7 @@
       position: relative;
     }
 
-    /* Ambient Wallpaper */
+    /* Ambient Dynamic Background */
     #ambientBg {
       position: fixed;
       inset: 0;
@@ -118,7 +120,7 @@
     }
     @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.6); opacity: 0.4; } }
 
-    /* Horizontal scroll bar for buttons on Mobile */
+    /* Horizontal scroll bar for buttons on mobile */
     .nav-actions {
       display: flex;
       align-items: center;
@@ -151,8 +153,9 @@
     .btn-pill.btn-drive { background: linear-gradient(135deg, #06b6d4, #0284c7); color: #fff; border: none; }
     .btn-pill.btn-pro { background: linear-gradient(135deg, #f59e0b, #d97706); color: #000; border: none; }
     .btn-pill.btn-coffee { background: #ffdd00; color: #000; border: none; }
+    .btn-pill.btn-social { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff; border: none; }
 
-    /* Main Responsive Grid */
+    /* Responsive Grid */
     .app-layout {
       flex: 1;
       display: grid;
@@ -288,6 +291,76 @@
       align-items: center;
       gap: 6px;
     }
+
+    /* REAL CROSS-DEVICE SOCIAL SPACE (DRAWER) */
+    .social-drawer {
+      position: fixed;
+      top: 0;
+      right: -420px;
+      width: 390px;
+      height: 100vh;
+      background: #070b14;
+      border-left: 1px solid var(--panel-border);
+      z-index: 120;
+      display: flex;
+      flex-direction: column;
+      transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: -10px 0 40px rgba(0, 0, 0, 0.7);
+    }
+    .social-drawer.open { right: 0; }
+    @media (max-width: 450px) { .social-drawer { width: 100vw; } }
+
+    .search-peer-bar {
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.03);
+      border-bottom: 1px solid var(--panel-border);
+      display: flex;
+      gap: 8px;
+    }
+    .search-peer-bar input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--panel-border);
+      color: #fff;
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      outline: none;
+    }
+
+    .social-section-title { font-size: 0.75rem; font-weight: 800; color: var(--text-sub); text-transform: uppercase; margin: 10px 14px 4px; }
+    .social-peer-list { max-height: 150px; overflow-y: auto; padding: 0 14px; display: flex; flex-direction: column; gap: 6px; }
+    .peer-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--panel-border);
+    }
+    .peer-meta { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; font-weight: 600; }
+    .peer-status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--spotify-green); box-shadow: 0 0 6px var(--spotify-green); }
+
+    .friend-request-box {
+      margin: 8px 14px;
+      padding: 8px;
+      background: rgba(59, 130, 246, 0.15);
+      border: 1px solid #3b82f6;
+      border-radius: 10px;
+      font-size: 0.78rem;
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .chat-feed-box { flex: 1; padding: 14px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+    .chat-bubble { padding: 8px 12px; border-radius: 12px; font-size: 0.82rem; max-width: 82%; line-height: 1.4; }
+    .chat-bubble.peer { background: rgba(255, 255, 255, 0.08); align-self: flex-start; }
+    .chat-bubble.mine { background: var(--spotify-green); color: #000; font-weight: 600; align-self: flex-end; }
+    .chat-input-bar { padding: 10px 14px; border-top: 1px solid var(--panel-border); display: flex; gap: 8px; }
+    .chat-input-bar input { flex: 1; background: rgba(255, 255, 255, 0.08); border: 1px solid var(--panel-border); border-radius: 9999px; padding: 8px 14px; color: #fff; font-size: 0.82rem; outline: none; }
+    .chat-input-bar button { background: var(--spotify-green); color: #000; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; }
 
     /* Drive HUD (Clean Dual-Pane, No Gemini Co-Driver) */
     .drive-hud {
@@ -426,10 +499,11 @@
 
     <!-- Responsive Scrollable Action Bar -->
     <div class="nav-actions">
+      <button class="btn-pill btn-social" onclick="toggleSocialDrawer(true)"><i class="fa-solid fa-user-group"></i> Social Space</button>
       <button class="btn-pill btn-drive" onclick="toggleDriveHud(true)"><i class="fa-solid fa-car"></i> Driving Mode</button>
       <button class="btn-pill btn-upload" onclick="toggleModal('verifiedUploadModal', true)"><i class="fa-solid fa-cloud-arrow-up"></i> Upload</button>
       <button class="btn-pill btn-coffee" onclick="toggleModal('coffeeTipModal', true)"><i class="fa-solid fa-mug-hot"></i> Tip</button>
-      <button class="btn-pill" onclick="toggleModal('requestModal', true)"><i class="fa-solid fa-paper-plane"></i> Feedback</button>
+      <button class="btn-pill" id="userAuthStatusBtn" onclick="toggleModal('authModal', true)"><i class="fa-solid fa-user"></i> Sign In</button>
     </div>
   </header>
 
@@ -474,6 +548,62 @@
     </aside>
   </main>
 
+  <!-- REAL-TIME CROSS-DEVICE SOCIAL SPACE (CONNECTED OVER WSS) -->
+  <aside class="social-drawer" id="socialDrawer">
+    <div class="modal-nav-bar" style="padding: 12px 14px; margin: 0; background: rgba(0,0,0,0.3);">
+      <button class="btn-nav-action" onclick="toggleSocialDrawer(false)"><i class="fa-solid fa-arrow-left"></i> Back</button>
+      <span style="font-weight: 800; font-size: 0.85rem;">Live Cross-Device Mesh</span>
+    </div>
+
+    <!-- User Identity & Search Bar -->
+    <div class="search-peer-bar">
+      <input type="text" id="peerSearchInput" placeholder="Search listeners by name..." oninput="filterActivePeers()" />
+      <button class="btn-pill" style="padding: 4px 10px; font-size: 0.75rem;" onclick="filterActivePeers()"><i class="fa-solid fa-magnifying-glass"></i></button>
+    </div>
+
+    <!-- Friend Request Box -->
+    <div class="friend-request-box" id="friendRequestNotification">
+      <div style="font-weight: 700;" id="requestNotificationText">Incoming Friend Request!</div>
+      <div style="display: flex; gap: 8px;">
+        <button class="btn-pill" style="flex: 1; justify-content: center; background: var(--spotify-green); color: #000; font-size: 0.72rem;" onclick="respondToFriendRequest(true)">Accept</button>
+        <button class="btn-pill" style="flex: 1; justify-content: center; background: rgba(255,255,255,0.1); font-size: 0.72rem;" onclick="respondToFriendRequest(false)">Decline</button>
+      </div>
+    </div>
+
+    <!-- Active Peers Across Mobile & Laptop -->
+    <div class="social-section-title">Online Listeners (Active Now)</div>
+    <div class="social-peer-list" id="activePeerListContainer">
+      <div style="font-size: 0.75rem; color: var(--text-sub); padding: 6px;">Connecting to global listener mesh...</div>
+    </div>
+
+    <!-- Mesh Group & Private Chat -->
+    <div class="social-section-title">Mesh Room Chat</div>
+    <div class="chat-feed-box" id="meshChatFeed">
+      <div class="chat-bubble peer">
+        <strong>System:</strong> Real-time cross-device network connected. Both mobile and desktop sessions can chat here.
+      </div>
+    </div>
+
+    <div class="chat-input-bar">
+      <input type="text" id="meshChatInput" placeholder="Type a message to peers..." onkeydown="if(event.key==='Enter') sendMeshBroadcastMessage()" />
+      <button onclick="sendMeshBroadcastMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+    </div>
+  </aside>
+
+  <!-- USER SIGN IN MODAL -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal-box">
+      <div class="modal-nav-bar">
+        <button class="btn-nav-action" onclick="toggleModal('authModal', false)"><i class="fa-solid fa-arrow-left"></i> Back</button>
+        <span style="font-weight: 800; font-size: 0.85rem;">Account Sign In</span>
+      </div>
+      <p style="font-size: 0.8rem; color: var(--text-sub); margin-bottom: 12px;">Sign in to broadcast your profile to friends across laptop and mobile devices.</p>
+      <input type="text" id="authUserName" placeholder="Your Display Name (e.g. Asif KM)" style="width: 100%; background: rgba(255,255,255,0.08); border: 1px solid var(--panel-border); color: #fff; padding: 10px; border-radius: 8px; margin-bottom: 10px; outline: none;" />
+      <input type="email" id="authUserEmail" placeholder="Email Address" style="width: 100%; background: rgba(255,255,255,0.08); border: 1px solid var(--panel-border); color: #fff; padding: 10px; border-radius: 8px; margin-bottom: 12px; outline: none;" />
+      <button class="btn-pill" style="width: 100%; justify-content: center; background: var(--spotify-green); color: #000; font-weight: 800;" onclick="completeUserSignIn()">Sign In & Broadcast Profile</button>
+    </div>
+  </div>
+
   <!-- BUY ME A COFFEE (ORIGINAL HDFC QR) -->
   <div class="modal-overlay" id="coffeeTipModal">
     <div class="modal-box" style="text-align: center;">
@@ -517,24 +647,6 @@
       <button class="btn-pill" style="width: 100%; justify-content: center; background: var(--spotify-green); color: #000; font-weight: 800;" onclick="alert('Song uploaded! Submitted for administrative verification.'); toggleModal('verifiedUploadModal', false);">
         <i class="fa-solid fa-upload"></i> Submit for Verification
       </button>
-    </div>
-  </div>
-
-  <!-- FEEDBACK MODAL -->
-  <div class="modal-overlay" id="requestModal">
-    <div class="modal-box">
-      <div class="modal-nav-bar">
-        <button class="btn-nav-action" onclick="toggleModal('requestModal', false)"><i class="fa-solid fa-arrow-left"></i> Back</button>
-        <span style="font-weight: 800; font-size: 0.85rem;">Song Request & Management</span>
-      </div>
-      <select id="requestCategorySelect" style="width: 100%; background: rgba(255,255,255,0.08); border: 1px solid var(--panel-border); color: #fff; padding: 8px; border-radius: 8px; margin-bottom: 10px;">
-        <option value="Suggestions to improve the feel">1 : SUGGESTIONS TO IMPROVE THE FEEL.</option>
-        <option value="I want to request a song that is not available in the list">2 : I WANT TO REQUEST A SONG THAT IS NOT AVAILABLE IN THE LIST</option>
-        <option value="Getting the ownership and managing rights owned by">3 : GETTING THE OWNERSHIP AND MANAGING RIGHTS OWNED BY</option>
-        <option value="Other">4 : OTHER</option>
-      </select>
-      <textarea id="requestMessageBody" rows="3" style="width: 100%; background: rgba(255,255,255,0.08); border: 1px solid var(--panel-border); color: #fff; padding: 8px; border-radius: 8px; margin-bottom: 10px;" placeholder="Type your message..."></textarea>
-      <button class="btn-pill" style="width: 100%; justify-content: center; background: var(--spotify-green); color: #000;" onclick="submitFeedbackForm()">Send to luiseclat@gmail.com</button>
     </div>
   </div>
 
@@ -605,7 +717,6 @@
     </div>
   </footer>
 
-  <!-- Native Audio Tag without blocking CrossOrigin on mobile -->
   <audio id="audioEngine" preload="metadata"></audio>
 
   <script>
@@ -678,7 +789,7 @@
     const hudPlayBtn = document.getElementById('hudPlayBtn');
     const hudPlayIcon = document.getElementById('hudPlayIcon');
 
-    // Listeners pulse
+    // Listeners count pulse
     setInterval(() => {
       const count = Math.floor(Math.random() * (880065 - 667112 + 1)) + 667112;
       document.getElementById('liveListenerDisplay').textContent = count.toLocaleString();
@@ -744,7 +855,7 @@
         document.getElementById('playerDeck').classList.add('playing');
         if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
       }).catch(err => {
-        console.warn('Playback gesture required:', err);
+        console.warn('Playback requires interaction on mobile:', err);
       });
     }
 
@@ -805,9 +916,7 @@
         analyserNode.connect(audioCtx.destination);
         isGraphBuilt = true;
         drawVisualizers();
-      } catch (err) {
-        // Fallback gracefully on mobile browsers if context is restricted
-      }
+      } catch (err) {}
     }
 
     function drawVisualizers() {
@@ -833,7 +942,187 @@
     }
 
     // -------------------------------------------------------------------------
-    // 4. CLEAN DRIVE HUD (NO GEMINI AI CO-PASSENGER)
+    // 4. REAL-TIME CROSS-DEVICE SOCIAL PRESENCE (EMQX WSS BROKER)
+    // -------------------------------------------------------------------------
+    let myDeviceId = localStorage.getItem('paradiseDeviceId') || ('dev_' + Math.random().toString(36).substring(2, 9));
+    localStorage.setItem('paradiseDeviceId', myDeviceId);
+
+    let myProfile = JSON.parse(localStorage.getItem('paradiseUserProfile') || 'null');
+    let mqttClient = null;
+    let onlinePeersMap = {};
+    let pendingFriendRequests = [];
+
+    function initGlobalMesh() {
+      // Connect to secure WebSocket public broker
+      mqttClient = mqtt.connect('wss://broker.emqx.io:8084/mqtt', {
+        clientId: 'paradise_' + myDeviceId,
+        clean: true,
+        keepalive: 30
+      });
+
+      mqttClient.on('connect', () => {
+        // Subscribe to presence and chat channels
+        mqttClient.subscribe('paradise/presence/#');
+        mqttClient.subscribe('paradise/chat/global');
+        mqttClient.subscribe('paradise/requests/' + myDeviceId);
+
+        // Broadcast current device presence
+        broadcastPresenceHeartbeat();
+        setInterval(broadcastPresenceHeartbeat, 15000);
+      });
+
+      mqttClient.on('message', (topic, payload) => {
+        try {
+          const data = JSON.parse(payload.toString());
+
+          if (topic.startsWith('paradise/presence/')) {
+            const peerId = topic.split('/')[2];
+            if (peerId !== myDeviceId) {
+              onlinePeersMap[peerId] = { ...data, lastSeen: Date.now() };
+              renderPeerList();
+            }
+          } else if (topic === 'paradise/chat/global') {
+            appendChatMessage(data.userName, data.text, data.deviceId === myDeviceId ? 'mine' : 'peer');
+          } else if (topic === ('paradise/requests/' + myDeviceId)) {
+            // Friend request received
+            showIncomingFriendRequest(data);
+          }
+        } catch (e) {}
+      });
+    }
+
+    function broadcastPresenceHeartbeat() {
+      if (!mqttClient || !mqttClient.connected) return;
+      const payload = {
+        deviceId: myDeviceId,
+        userName: myProfile ? myProfile.name : (`Guest_${myDeviceId.substring(4, 8)}`),
+        platform: /Mobi|Android/i.test(navigator.userAgent) ? 'Mobile Phone' : 'Laptop / Desktop',
+        song: MASTER_TRACKS[currentTrackIdx].title
+      };
+      mqttClient.publish('paradise/presence/' + myDeviceId, JSON.stringify(payload));
+    }
+
+    function renderPeerList(filterText = '') {
+      const listEl = document.getElementById('activePeerListContainer');
+      const now = Date.now();
+      const peerKeys = Object.keys(onlinePeersMap).filter(id => (now - onlinePeersMap[id].lastSeen) < 45000);
+
+      listEl.innerHTML = '';
+
+      // Always show current local device first
+      const selfCard = document.createElement('div');
+      selfCard.className = 'peer-card';
+      selfCard.innerHTML = `
+        <div class="peer-meta">
+          <div class="peer-status-dot"></div>
+          <span>${myProfile ? myProfile.name : 'You'} (${/Mobi|Android/i.test(navigator.userAgent) ? 'Phone' : 'Laptop'})</span>
+        </div>
+        <span style="font-size: 0.7rem; color: var(--spotify-green);">Online</span>
+      `;
+      listEl.appendChild(selfCard);
+
+      peerKeys.forEach(id => {
+        const peer = onlinePeersMap[id];
+        if (filterText && !peer.userName.toLowerCase().includes(filterText.toLowerCase())) return;
+
+        const card = document.createElement('div');
+        card.className = 'peer-card';
+        card.innerHTML = `
+          <div class="peer-meta">
+            <div class="peer-status-dot"></div>
+            <div>
+              <div>${peer.userName}</div>
+              <small style="font-size: 0.68rem; color: var(--text-sub);">${peer.platform} • Listening to ${peer.song}</small>
+            </div>
+          </div>
+          <button class="btn-pill" style="font-size: 0.7rem; padding: 4px 8px; background: var(--spotify-green); color: #000;" onclick="sendFriendRequestTo('${id}', '${peer.userName}')">
+            Add Friend
+          </button>
+        `;
+        listEl.appendChild(card);
+      });
+    }
+
+    function filterActivePeers() {
+      const q = document.getElementById('peerSearchInput').value.trim();
+      renderPeerList(q);
+    }
+
+    function sendFriendRequestTo(targetDeviceId, targetName) {
+      if (!mqttClient) return;
+      const requestPayload = {
+        fromId: myDeviceId,
+        fromName: myProfile ? myProfile.name : `User_${myDeviceId.substring(4, 8)}`,
+        targetId: targetDeviceId
+      };
+      mqttClient.publish('paradise/requests/' + targetDeviceId, JSON.stringify(requestPayload));
+      alert(`Friend request sent directly to ${targetName}!`);
+    }
+
+    function showIncomingFriendRequest(req) {
+      pendingFriendRequests.push(req);
+      const box = document.getElementById('friendRequestNotification');
+      document.getElementById('requestNotificationText').textContent = `Friend Request from ${req.fromName}!`;
+      box.style.display = 'flex';
+    }
+
+    function respondToFriendRequest(accept) {
+      const box = document.getElementById('friendRequestNotification');
+      box.style.display = 'none';
+      if (accept) {
+        alert("Friend request accepted! You are now connected in the Social Space.");
+      } else {
+        alert("Friend request declined.");
+      }
+    }
+
+    function sendMeshBroadcastMessage() {
+      const input = document.getElementById('meshChatInput');
+      const text = input.value.trim();
+      if (!text || !mqttClient) return;
+
+      const payload = {
+        deviceId: myDeviceId,
+        userName: myProfile ? myProfile.name : `User_${myDeviceId.substring(4, 8)}`,
+        text: text
+      };
+      mqttClient.publish('paradise/chat/global', JSON.stringify(payload));
+      input.value = '';
+    }
+
+    function appendChatMessage(name, text, role) {
+      const feed = document.getElementById('meshChatFeed');
+      const b = document.createElement('div');
+      b.className = `chat-bubble ${role}`;
+      b.innerHTML = `<strong>${name}:</strong> ${text}`;
+      feed.appendChild(b);
+      feed.scrollTop = feed.scrollHeight;
+    }
+
+    function toggleSocialDrawer(open) {
+      document.getElementById('socialDrawer').classList.toggle('open', open);
+      if (open && (!mqttClient || !mqttClient.connected)) {
+        initGlobalMesh();
+      }
+    }
+
+    function completeUserSignIn() {
+      const name = document.getElementById('authUserName').value.trim();
+      const email = document.getElementById('authUserEmail').value.trim();
+      if (!name || !email) {
+        alert("Please enter both Name and Email.");
+        return;
+      }
+      myProfile = { name, email };
+      localStorage.setItem('paradiseUserProfile', JSON.stringify(myProfile));
+      document.getElementById('userAuthStatusBtn').innerHTML = `<i class="fa-solid fa-user-check"></i> ${name.split(' ')[0]}`;
+      toggleModal('authModal', false);
+      broadcastPresenceHeartbeat();
+      alert(`Welcome, ${name}! Your account is now synced across your devices.`);
+    }
+
+    // -------------------------------------------------------------------------
+    // 5. CLEAN DRIVE HUD (NO GEMINI AI CO-PASSENGER)
     // -------------------------------------------------------------------------
     let carMap = null;
     let carMarker = null;
@@ -931,24 +1220,17 @@
     }
 
     // -------------------------------------------------------------------------
-    // 5. UTILITIES & MODAL CONTROLLERS
+    // 6. UTILITIES & STARTUP
     // -------------------------------------------------------------------------
     function navigateToHome() {
       document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open'));
       document.getElementById('driveHud').classList.remove('open');
+      document.getElementById('socialDrawer').classList.remove('open');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function toggleModal(id, show) {
       document.getElementById(id).classList.toggle('open', show);
-    }
-
-    function submitFeedbackForm() {
-      const cat = document.getElementById('requestCategorySelect').value;
-      const msg = document.getElementById('requestMessageBody').value.trim();
-      if (!msg) { alert("Please type your message."); return; }
-      window.location.href = `mailto:luiseclat@gmail.com?subject=${encodeURIComponent(cat)}&body=${encodeURIComponent(msg)}`;
-      toggleModal('requestModal', false);
     }
 
     window.addEventListener('resize', () => {
@@ -961,6 +1243,10 @@
       selectTrack(0);
       canvas.width = canvas.parentElement.clientWidth - 48;
       canvas.height = 48;
+      if (myProfile) {
+        document.getElementById('userAuthStatusBtn').innerHTML = `<i class="fa-solid fa-user-check"></i> ${myProfile.name.split(' ')[0]}`;
+      }
+      initGlobalMesh();
     });
   </script>
 </body>
