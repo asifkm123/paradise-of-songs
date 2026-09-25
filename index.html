@@ -21,7 +21,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-  <!-- MQTT.js for Real-Time Cross-Device Synchronization (Zero Config, 100% Free) -->
+  <!-- MQTT.js for Real-Time Cross-Device Synchronization -->
   <script src="https://unpkg.com/mqtt@5.3.4/dist/mqtt.min.js"></script>
 
   <style>
@@ -54,6 +54,7 @@
       background-color: var(--bg-base);
       color: var(--text-main);
       min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       flex-direction: column;
       overflow-x: hidden;
@@ -151,7 +152,6 @@
     .btn-pill:hover { background: rgba(255, 255, 255, 0.16); }
     .btn-pill.btn-upload { background: linear-gradient(135deg, #10b981, #059669); color: #fff; border: none; }
     .btn-pill.btn-drive { background: linear-gradient(135deg, #06b6d4, #0284c7); color: #fff; border: none; }
-    .btn-pill.btn-pro { background: linear-gradient(135deg, #f59e0b, #d97706); color: #000; border: none; }
     .btn-pill.btn-coffee { background: #ffdd00; color: #000; border: none; }
     .btn-pill.btn-social { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff; border: none; }
 
@@ -198,6 +198,7 @@
       margin-bottom: 18px;
       box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
       border: 1px solid rgba(255, 255, 255, 0.12);
+      background: #111;
     }
     .cover-art-box img { width: 100%; height: 100%; object-fit: cover; }
     .playing .cover-art-box img { transform: scale(1.04); transition: transform 0.6s ease; }
@@ -206,7 +207,7 @@
     .track-title { font-size: 1.4rem; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
     .track-artist { font-size: 0.88rem; font-weight: 500; color: var(--text-sub); }
 
-    #audioVisualizer { width: 100%; height: 48px; margin-bottom: 14px; }
+    #audioVisualizer { width: 100%; height: 48px; margin-bottom: 14px; display: block; }
 
     .progress-section { width: 100%; max-width: 580px; margin-bottom: 18px; }
     .progress-rail { width: 100%; height: 6px; background: rgba(255, 255, 255, 0.12); border-radius: 9999px; cursor: pointer; position: relative; }
@@ -241,12 +242,12 @@
     .song-row:hover { background: var(--panel-hover); }
     .song-row.active { background: rgba(30, 215, 96, 0.14); border: 1px solid rgba(30, 215, 96, 0.3); }
     .song-row.active .song-name { color: var(--spotify-green); }
-    .song-thumb { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
+    .song-thumb { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; background: #111; }
     .song-info { flex: 1; overflow: hidden; }
     .song-name { font-size: 0.85rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .song-artist { font-size: 0.72rem; color: var(--text-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-    /* Modals & Full Viewports */
+    /* Modals */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -292,13 +293,14 @@
       gap: 6px;
     }
 
-    /* REAL CROSS-DEVICE SOCIAL SPACE (DRAWER) */
+    /* Social Drawer */
     .social-drawer {
       position: fixed;
       top: 0;
       right: -420px;
       width: 390px;
       height: 100vh;
+      height: 100dvh;
       background: #070b14;
       border-left: 1px solid var(--panel-border);
       z-index: 120;
@@ -355,14 +357,14 @@
     }
 
     .chat-feed-box { flex: 1; padding: 14px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-    .chat-bubble { padding: 8px 12px; border-radius: 12px; font-size: 0.82rem; max-width: 82%; line-height: 1.4; }
+    .chat-bubble { padding: 8px 12px; border-radius: 12px; font-size: 0.82rem; max-width: 82%; line-height: 1.4; word-break: break-word; }
     .chat-bubble.peer { background: rgba(255, 255, 255, 0.08); align-self: flex-start; }
     .chat-bubble.mine { background: var(--spotify-green); color: #000; font-weight: 600; align-self: flex-end; }
     .chat-input-bar { padding: 10px 14px; border-top: 1px solid var(--panel-border); display: flex; gap: 8px; }
     .chat-input-bar input { flex: 1; background: rgba(255, 255, 255, 0.08); border: 1px solid var(--panel-border); border-radius: 9999px; padding: 8px 14px; color: #fff; font-size: 0.82rem; outline: none; }
     .chat-input-bar button { background: var(--spotify-green); color: #000; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; }
 
-    /* Drive HUD (Clean Dual-Pane, No Gemini Co-Driver) */
+    /* Drive HUD */
     .drive-hud {
       position: fixed;
       inset: 0;
@@ -387,6 +389,7 @@
       display: grid;
       grid-template-columns: 420px 1fr;
       height: calc(100vh - 58px);
+      height: calc(100dvh - 58px);
       overflow: hidden;
     }
     @media (max-width: 1024px) {
@@ -434,11 +437,11 @@
     .map-search-bar input { flex: 1; background: transparent; border: none; outline: none; color: #fff; font-size: 0.88rem; }
     .map-search-bar button { background: var(--accent-cyan); border: none; color: #000; font-weight: 700; padding: 7px 14px; border-radius: 10px; cursor: pointer; }
 
-    /* Enlarged 3cm (~115px) Ad Strip */
+    /* Advertisement Strip */
     .advertisement-strip {
       background: linear-gradient(90deg, #050811, #0f172a, #050811);
       border-top: 1px solid rgba(255, 255, 255, 0.12);
-      height: 115px; /* Exact ~3 cm height */
+      height: 115px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -542,13 +545,13 @@
     <aside class="deck-panel">
       <div class="sidecar-header">
         <h3 style="font-size: 1.05rem;">Master Playlist</h3>
-        <span class="listeners-badge" style="font-size: 0.72rem;">18 Tracks</span>
+        <span class="listeners-badge" id="trackCountBadge" style="font-size: 0.72rem;">Loading...</span>
       </div>
       <div class="playlist-scroll" id="songPlaylistContainer"></div>
     </aside>
   </main>
 
-  <!-- REAL-TIME CROSS-DEVICE SOCIAL SPACE (CONNECTED OVER WSS) -->
+  <!-- REAL-TIME CROSS-DEVICE SOCIAL SPACE -->
   <aside class="social-drawer" id="socialDrawer">
     <div class="modal-nav-bar" style="padding: 12px 14px; margin: 0; background: rgba(0,0,0,0.3);">
       <button class="btn-nav-action" onclick="toggleSocialDrawer(false)"><i class="fa-solid fa-arrow-left"></i> Back</button>
@@ -604,7 +607,7 @@
     </div>
   </div>
 
-  <!-- BUY ME A COFFEE (ORIGINAL HDFC QR) -->
+  <!-- BUY ME A COFFEE MODAL -->
   <div class="modal-overlay" id="coffeeTipModal">
     <div class="modal-box" style="text-align: center;">
       <div class="modal-nav-bar">
@@ -635,7 +638,7 @@
     </div>
   </div>
 
-  <!-- SONG UPLOAD GATE -->
+  <!-- SONG UPLOAD MODAL -->
   <div class="modal-overlay" id="verifiedUploadModal">
     <div class="modal-box">
       <div class="modal-nav-bar">
@@ -650,7 +653,7 @@
     </div>
   </div>
 
-  <!-- DRIVE MODE COCKPIT (DUAL PANE, CLEAN NAVIGATION, NO GEMINI CO-DRIVER) -->
+  <!-- DRIVE MODE COCKPIT -->
   <div class="drive-hud" id="driveHud">
     <div class="drive-topbar">
       <div style="display: flex; align-items: center; gap: 10px;">
@@ -660,14 +663,14 @@
         </div>
       </div>
       <div style="font-size: 0.75rem; font-weight: 700; color: var(--spotify-green);">
-        <i class="fa-solid fa-satellite"></i> GPS & Speed Radar Active
+        <i class="fa-solid fa-satellite"></i> GPS Active
       </div>
     </div>
 
     <div class="drive-dual-viewport">
       <div class="drive-audio-deck">
         <div>
-          <div style="width: 150px; height: 150px; border-radius: 16px; overflow: hidden; margin: 0 auto 12px auto; border: 1px solid rgba(255,255,255,0.15);">
+          <div style="width: 150px; height: 150px; border-radius: 16px; overflow: hidden; margin: 0 auto 12px auto; border: 1px solid rgba(255,255,255,0.15); background:#111;">
             <img id="driveArtworkImg" src="" style="width: 100%; height: 100%; object-fit: cover;" alt="Drive Art" />
           </div>
           <div style="text-align: center; margin-bottom: 14px;">
@@ -698,7 +701,7 @@
     </div>
   </div>
 
-  <!-- ENLARGED 3CM ADVERTISEMENT BANNER -->
+  <!-- ADVERTISEMENT STRIP -->
   <footer class="advertisement-strip">
     <div class="ad-top-row">
       <div class="ad-tagline">
@@ -717,6 +720,7 @@
     </div>
   </footer>
 
+  <!-- Direct Audio Element -->
   <audio id="audioEngine" preload="metadata"></audio>
 
   <script>
@@ -730,7 +734,8 @@
       return NC_BASE + encodeURIComponent(fileName);
     }
 
-    const MASTER_TRACKS = [
+    // Default static playlist used as immediate seed or fallback
+    let MASTER_TRACKS = [
       { id: 't1',  title: 'ARAYANA', artist: 'Paradise Audio', cover: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&q=80', url: buildStreamUrl('ARAYANA.mp3') },
       { id: 't2',  title: 'Ada Bommale', artist: 'Vaazha 2', cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&q=80', url: buildStreamUrl('Ada Bommale - Vaazha 2.mp3') },
       { id: 't3',  title: 'Aathmavile Anandhame', artist: 'Sajeer Koppam', cover: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&q=80', url: buildStreamUrl('Aathmavile Anandhame - Sajeer Koppam.mp3') },
@@ -751,18 +756,80 @@
       { id: 't18', title: 'രാക്കുയിൽ പാടീ', artist: 'Kunchacko Boban Hits', cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&q=80', url: buildStreamUrl('രാക്കുയിൽ പാടീ HD Raakkuyil Paadi Video Song Kunchacko Bo...mp3') }
     ];
 
-    // Always Shuffle
-    for (let i = MASTER_TRACKS.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [MASTER_TRACKS[i], MASTER_TRACKS[j]] = [MASTER_TRACKS[j], MASTER_TRACKS[i]];
+    // Automatic Live Sync from Nextcloud WebDAV
+    async function syncTracksFromNextcloud() {
+      try {
+        const webdavEndpoint = `https://cloud.paradiseacademi.com/public.php/webdav/`;
+        const auth = "Basic " + btoa(NC_TOKEN + ":");
+        const res = await fetch(webdavEndpoint, {
+          method: 'PROPFIND',
+          headers: {
+            'Authorization': auth,
+            'Depth': '1'
+          }
+        });
+
+        if (res.ok) {
+          const text = await res.text();
+          const parser = new DOMParser();
+          const xmlDoc = parser.parseFromString(text, "text/xml");
+          const responses = xmlDoc.getElementsByTagNameNS("*", "response");
+          const freshList = [];
+
+          for (let i = 0; i < responses.length; i++) {
+            const hrefEl = responses[i].getElementsByTagNameNS("*", "href")[0];
+            if (!hrefEl) continue;
+            const fullPath = decodeURIComponent(hrefEl.textContent.trim());
+            const fileName = fullPath.split('/').filter(Boolean).pop();
+
+            if (fileName && /\.(mp3|wav|ogg|flac|m4a)$/i.test(fileName)) {
+              let cleanTitle = fileName.replace(/\.(mp3|wav|ogg|flac|m4a)$/i, '');
+              let artistName = "Paradise Stream";
+              if (cleanTitle.includes('-')) {
+                const parts = cleanTitle.split('-');
+                cleanTitle = parts[0].trim();
+                artistName = parts.slice(1).join('-').trim();
+              }
+
+              freshList.push({
+                id: 'nc_' + i,
+                title: cleanTitle,
+                artist: artistName,
+                cover: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&q=80',
+                url: buildStreamUrl(fileName)
+              });
+            }
+          }
+
+          if (freshList.length > 0) {
+            MASTER_TRACKS = freshList;
+            renderPlaylist();
+            selectTrack(0, false);
+          }
+        }
+      } catch (err) {
+        console.warn("Nextcloud live discovery fallback to defaults:", err);
+      } finally {
+        document.getElementById('trackCountBadge').textContent = `${MASTER_TRACKS.length} Tracks`;
+      }
     }
 
+    // Shuffle Array Helper
+    function shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+    }
+    shuffleArray(MASTER_TRACKS);
+
     // -------------------------------------------------------------------------
-    // 2. STATE & AUDIO CONTROLLER
+    // 2. STATE & AUDIO CONTROLLER (AUDIO FIX INCLUDED)
     // -------------------------------------------------------------------------
     let currentTrackIdx = 0;
     let isPlaying = false;
-    let audioCtx, analyserNode, sourceNode;
+    let audioCtx = null;
+    let analyserNode = null;
     let isGraphBuilt = false;
 
     const audio = document.getElementById('audioEngine');
@@ -796,14 +863,14 @@
     }, 3000);
 
     // -------------------------------------------------------------------------
-    // 3. PLAYLIST RENDERING & PLAYBACK
+    // 3. PLAYLIST RENDERING & NATIVE SAFE AUDIO
     // -------------------------------------------------------------------------
     function renderPlaylist() {
       songPlaylistContainer.innerHTML = '';
       MASTER_TRACKS.forEach((track, idx) => {
         const row = document.createElement('div');
         row.className = `song-row ${idx === currentTrackIdx ? 'active' : ''}`;
-        row.onclick = () => selectTrack(idx);
+        row.onclick = () => selectTrack(idx, true);
         row.innerHTML = `
           <img class="song-thumb" src="${track.cover}" alt="Art" />
           <div class="song-info">
@@ -814,11 +881,14 @@
         `;
         songPlaylistContainer.appendChild(row);
       });
+      document.getElementById('trackCountBadge').textContent = `${MASTER_TRACKS.length} Tracks`;
     }
 
-    function selectTrack(idx) {
+    function selectTrack(idx, autoplay = true) {
       currentTrackIdx = idx;
       const track = MASTER_TRACKS[currentTrackIdx];
+      
+      // Load source directly
       audio.src = track.url;
       trackTitleDisplay.textContent = track.title;
       trackArtistDisplay.textContent = track.artist;
@@ -843,11 +913,20 @@
         navigator.mediaSession.setActionHandler('previoustrack', () => prevTrackBtn.click());
         navigator.mediaSession.setActionHandler('nexttrack', () => nextTrackBtn.click());
       }
-      startAudio();
+
+      if (autoplay) {
+        startAudio();
+      }
     }
 
     function startAudio() {
-      setupVisualizerSafe();
+      // Resume audio context if existing
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      
+      initSimulatedVisualizer();
+
       audio.play().then(() => {
         isPlaying = true;
         playIcon.className = 'fa-solid fa-pause';
@@ -855,7 +934,7 @@
         document.getElementById('playerDeck').classList.add('playing');
         if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
       }).catch(err => {
-        console.warn('Playback requires interaction on mobile:', err);
+        console.warn('Playback requires initial user click or interaction:', err);
       });
     }
 
@@ -873,13 +952,13 @@
 
     prevTrackBtn.onclick = () => {
       currentTrackIdx = (currentTrackIdx - 1 + MASTER_TRACKS.length) % MASTER_TRACKS.length;
-      selectTrack(currentTrackIdx);
+      selectTrack(currentTrackIdx, true);
     };
     document.getElementById('hudPrevBtn').onclick = () => prevTrackBtn.click();
 
     nextTrackBtn.onclick = () => {
       currentTrackIdx = (currentTrackIdx + 1) % MASTER_TRACKS.length;
-      selectTrack(currentTrackIdx);
+      selectTrack(currentTrackIdx, true);
     };
     document.getElementById('hudNextBtn').onclick = () => nextTrackBtn.click();
     audio.onended = () => nextTrackBtn.click();
@@ -900,45 +979,42 @@
     };
 
     function formatDuration(s) {
+      if (isNaN(s)) return '0:00';
       const m = Math.floor(s / 60);
       const sec = Math.floor(s % 60);
       return `${m}:${sec < 10 ? '0' : ''}${sec}`;
     }
 
-    function setupVisualizerSafe() {
+    // Cross-platform safe visualizer (Prevents CORS audio silencing)
+    let animId = null;
+    function initSimulatedVisualizer() {
       if (isGraphBuilt) return;
-      try {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        analyserNode = audioCtx.createAnalyser();
-        analyserNode.fftSize = 64;
-        sourceNode = audioCtx.createMediaElementSource(audio);
-        sourceNode.connect(analyserNode);
-        analyserNode.connect(audioCtx.destination);
-        isGraphBuilt = true;
-        drawVisualizers();
-      } catch (err) {}
-    }
+      isGraphBuilt = true;
 
-    function drawVisualizers() {
-      requestAnimationFrame(drawVisualizers);
-      if (!isGraphBuilt) return;
+      const numBars = 32;
+      const heights = new Array(numBars).fill(4);
 
-      const bufferLen = analyserNode.frequencyBinCount;
-      const dataArr = new Uint8Array(bufferLen);
-      analyserNode.getByteFrequencyData(dataArr);
+      function loop() {
+        animId = requestAnimationFrame(loop);
+        canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
 
-      canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
-      const barWidth = (canvas.width / bufferLen) * 1.5;
-      let x = 0;
-      for (let i = 0; i < bufferLen; i++) {
-        const barHeight = (dataArr[i] / 255) * canvas.height;
-        const grad = canvasCtx.createLinearGradient(0, canvas.height, 0, 0);
-        grad.addColorStop(0, '#1ed760');
-        grad.addColorStop(1, '#06b6d4');
-        canvasCtx.fillStyle = grad;
-        canvasCtx.fillRect(x, canvas.height - barHeight, barWidth - 2, barHeight);
-        x += barWidth;
+        const barWidth = canvas.width / numBars;
+        for (let i = 0; i < numBars; i++) {
+          if (isPlaying) {
+            const target = Math.random() * (canvas.height - 8) + 4;
+            heights[i] += (target - heights[i]) * 0.25;
+          } else {
+            heights[i] += (3 - heights[i]) * 0.15;
+          }
+
+          const grad = canvasCtx.createLinearGradient(0, canvas.height, 0, 0);
+          grad.addColorStop(0, '#1ed760');
+          grad.addColorStop(1, '#06b6d4');
+          canvasCtx.fillStyle = grad;
+          canvasCtx.fillRect(i * barWidth, canvas.height - heights[i], Math.max(barWidth - 2, 2), heights[i]);
+        }
       }
+      loop();
     }
 
     // -------------------------------------------------------------------------
@@ -953,7 +1029,8 @@
     let pendingFriendRequests = [];
 
     function initGlobalMesh() {
-      // Connect to secure WebSocket public broker
+      if (mqttClient && mqttClient.connected) return;
+
       mqttClient = mqtt.connect('wss://broker.emqx.io:8084/mqtt', {
         clientId: 'paradise_' + myDeviceId,
         clean: true,
@@ -961,12 +1038,10 @@
       });
 
       mqttClient.on('connect', () => {
-        // Subscribe to presence and chat channels
         mqttClient.subscribe('paradise/presence/#');
         mqttClient.subscribe('paradise/chat/global');
         mqttClient.subscribe('paradise/requests/' + myDeviceId);
 
-        // Broadcast current device presence
         broadcastPresenceHeartbeat();
         setInterval(broadcastPresenceHeartbeat, 15000);
       });
@@ -984,7 +1059,6 @@
           } else if (topic === 'paradise/chat/global') {
             appendChatMessage(data.userName, data.text, data.deviceId === myDeviceId ? 'mine' : 'peer');
           } else if (topic === ('paradise/requests/' + myDeviceId)) {
-            // Friend request received
             showIncomingFriendRequest(data);
           }
         } catch (e) {}
@@ -993,11 +1067,12 @@
 
     function broadcastPresenceHeartbeat() {
       if (!mqttClient || !mqttClient.connected) return;
+      const currentTrack = MASTER_TRACKS[currentTrackIdx] || { title: "Audio" };
       const payload = {
         deviceId: myDeviceId,
         userName: myProfile ? myProfile.name : (`Guest_${myDeviceId.substring(4, 8)}`),
-        platform: /Mobi|Android/i.test(navigator.userAgent) ? 'Mobile Phone' : 'Laptop / Desktop',
-        song: MASTER_TRACKS[currentTrackIdx].title
+        platform: /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? 'Mobile Phone' : 'Laptop / Desktop',
+        song: currentTrack.title
       };
       mqttClient.publish('paradise/presence/' + myDeviceId, JSON.stringify(payload));
     }
@@ -1009,13 +1084,13 @@
 
       listEl.innerHTML = '';
 
-      // Always show current local device first
+      // Local device first
       const selfCard = document.createElement('div');
       selfCard.className = 'peer-card';
       selfCard.innerHTML = `
         <div class="peer-meta">
           <div class="peer-status-dot"></div>
-          <span>${myProfile ? myProfile.name : 'You'} (${/Mobi|Android/i.test(navigator.userAgent) ? 'Phone' : 'Laptop'})</span>
+          <span>${myProfile ? myProfile.name : 'You'} (${/Mobi|Android|iPhone/i.test(navigator.userAgent) ? 'Phone' : 'Laptop'})</span>
         </div>
         <span style="font-size: 0.7rem; color: var(--spotify-green);">Online</span>
       `;
@@ -1122,7 +1197,7 @@
     }
 
     // -------------------------------------------------------------------------
-    // 5. CLEAN DRIVE HUD (NO GEMINI AI CO-PASSENGER)
+    // 5. DRIVE HUD & NAVIGATION
     // -------------------------------------------------------------------------
     let carMap = null;
     let carMarker = null;
@@ -1233,20 +1308,26 @@
       document.getElementById(id).classList.toggle('open', show);
     }
 
-    window.addEventListener('resize', () => {
-      canvas.width = canvas.parentElement.clientWidth - 48;
-      canvas.height = 48;
-    });
+    function fitVisualizerCanvas() {
+      if (canvas && canvas.parentElement) {
+        canvas.width = canvas.parentElement.clientWidth - 48;
+        canvas.height = 48;
+      }
+    }
+
+    window.addEventListener('resize', fitVisualizerCanvas);
 
     window.addEventListener('DOMContentLoaded', () => {
       renderPlaylist();
-      selectTrack(0);
-      canvas.width = canvas.parentElement.clientWidth - 48;
-      canvas.height = 48;
+      selectTrack(0, false);
+      fitVisualizerCanvas();
+      
       if (myProfile) {
         document.getElementById('userAuthStatusBtn').innerHTML = `<i class="fa-solid fa-user-check"></i> ${myProfile.name.split(' ')[0]}`;
       }
+      
       initGlobalMesh();
+      syncTracksFromNextcloud();
     });
   </script>
 </body>
