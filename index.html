@@ -2,224 +2,109 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>Paradise of Songs - Ultra Pro Audio & Auto Suite</title>
-
-  <!-- PWA & Car Head Unit Manifest -->
-  <meta name="theme-color" content="#020408" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=192&h=192&fit=crop" />
-
-  <!-- Fonts & Icons -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-
-  <!-- Leaflet OpenStreetMap Engine -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-  <!-- MQTT.js for Real-Time Cross-Device Synchronization -->
-  <script src="https://unpkg.com/mqtt@5.3.4/dist/mqtt.min.js"></script>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Paradise of Songs</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
     :root {
-      --spotify-green: #1ed760;
-      --spotify-green-hover: #22e668;
-      --spotify-green-glow: rgba(30, 215, 96, 0.45);
-      --bg-base: #020408;
-      --panel-glass: rgba(14, 19, 32, 0.85);
-      --panel-border: rgba(255, 255, 255, 0.08);
-      --panel-hover: rgba(255, 255, 255, 0.06);
-      --text-main: #ffffff;
+      --primary: #1ed760;
+      --primary-hover: #22e668;
+      --bg-dark: #080c14;
+      --card-bg: rgba(18, 24, 38, 0.7);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-main: #f8fafc;
       --text-sub: #94a3b8;
-      --accent-cyan: #06b6d4;
-      --accent-gold: #f59e0b;
-      --accent-red: #ef4444;
-      --glossy-red: linear-gradient(135deg, rgba(239, 68, 68, 0.95), rgba(185, 28, 28, 0.95));
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
 
     body {
-      background-color: var(--bg-base);
-      color: var(--text-main);
-      min-height: 100vh;
-      min-height: 100dvh;
-      display: flex;
-      flex-direction: column;
-      overflow-x: hidden;
-      position: relative;
-    }
-
-    /* Ambient Dynamic Background */
-    #ambientBg {
-      position: fixed;
-      inset: 0;
-      z-index: -2;
+      background-color: var(--bg-dark);
+      background-image: linear-gradient(rgba(8, 12, 20, 0.88), rgba(8, 12, 20, 0.94)), url('background.jpg');
       background-size: cover;
       background-position: center;
-      transition: background-image 0.8s ease;
-      filter: blur(55px) brightness(0.25);
-      transform: scale(1.1);
-    }
-    #ambientOverlay {
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      background: radial-gradient(circle at 10% 15%, rgba(30, 215, 96, 0.08), transparent 45%),
-                  radial-gradient(circle at 90% 85%, rgba(6, 182, 212, 0.06), transparent 45%),
-                  rgba(2, 4, 8, 0.94);
-    }
-
-    /* Header & Mobile Touch Navigation */
-    header {
-      padding: 12px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      background: rgba(6, 9, 16, 0.82);
-      border-bottom: 1px solid var(--panel-border);
-      position: sticky;
-      top: 0;
-      z-index: 40;
-    }
-    .brand-section { display: flex; align-items: center; gap: 10px; cursor: pointer; }
-    .brand-title { display: flex; align-items: center; gap: 8px; font-size: 1.15rem; font-weight: 800; }
-    .brand-title i { color: var(--spotify-green); text-shadow: 0 0 16px var(--spotify-green-glow); }
-
-    .listeners-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(30, 215, 96, 0.12);
-      border: 1px solid rgba(30, 215, 96, 0.3);
-      padding: 4px 10px;
-      border-radius: 9999px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--spotify-green);
-    }
-    .pulse-dot {
-      width: 6px;
-      height: 6px;
-      background: var(--spotify-green);
-      border-radius: 50%;
-      box-shadow: 0 0 8px var(--spotify-green);
-      animation: pulse 1.6s infinite ease-in-out;
-    }
-    @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.6); opacity: 0.4; } }
-
-    /* Horizontal scroll bar for buttons on mobile */
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      overflow-x: auto;
-      max-width: 65%;
-      padding-bottom: 2px;
-      -webkit-overflow-scrolling: touch;
-    }
-    .nav-actions::-webkit-scrollbar { display: none; }
-
-    .btn-pill {
-      white-space: nowrap;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid var(--panel-border);
+      background-attachment: fixed;
       color: var(--text-main);
-      padding: 7px 13px;
-      border-radius: 9999px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 6px;
-      flex-shrink: 0;
-      transition: all 0.2s ease;
+      padding: 20px 16px 120px 16px;
     }
-    .btn-pill:hover { background: rgba(255, 255, 255, 0.16); }
-    .btn-pill.btn-upload { background: linear-gradient(135deg, #10b981, #059669); color: #fff; border: none; }
-    .btn-pill.btn-drive { background: linear-gradient(135deg, #06b6d4, #0284c7); color: #fff; border: none; }
-    .btn-pill.btn-coffee { background: #ffdd00; color: #000; border: none; }
-    .btn-pill.btn-social { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff; border: none; }
 
-    /* Responsive Grid */
-    .app-layout {
-      flex: 1;
-      display: grid;
-      grid-template-columns: 1fr 380px;
-      gap: 24px;
-      padding: 20px;
-      max-width: 1400px;
-      margin: 0 auto;
+    header {
       width: 100%;
-    }
-    @media (max-width: 900px) {
-      .app-layout {
-        grid-template-columns: 1fr;
-        padding: 12px;
-        gap: 16px;
-      }
-      .brand-title span { font-size: 1rem; }
-      .nav-actions { max-width: 100%; }
-      header { flex-direction: column; align-items: flex-start; gap: 10px; }
+      max-width: 680px;
+      margin-bottom: 20px;
+      text-align: center;
     }
 
-    .deck-panel {
-      background: var(--panel-glass);
-      border: 1px solid var(--panel-border);
-      border-radius: 24px;
-      padding: 24px;
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      box-shadow: 0 16px 45px rgba(0, 0, 0, 0.5);
-      position: relative;
+    header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(90deg, #fff, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
-    /* Player Central UI */
-    .player-deck { display: flex; flex-direction: column; align-items: center; justify-content: center; }
-    .cover-art-box {
-      width: 230px;
-      height: 230px;
-      border-radius: 20px;
-      overflow: hidden;
-      margin-bottom: 18px;
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      background: #111;
-    }
-    .cover-art-box img { width: 100%; height: 100%; object-fit: cover; }
-    .playing .cover-art-box img { transform: scale(1.04); transition: transform 0.6s ease; }
-
-    .track-meta { text-align: center; width: 100%; margin-bottom: 14px; }
-    .track-title { font-size: 1.4rem; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
-    .track-artist { font-size: 0.88rem; font-weight: 500; color: var(--text-sub); }
-
-    #audioVisualizer { width: 100%; height: 48px; margin-bottom: 14px; display: block; }
-
-    .progress-section { width: 100%; max-width: 580px; margin-bottom: 18px; }
-    .progress-rail { width: 100%; height: 6px; background: rgba(255, 255, 255, 0.12); border-radius: 9999px; cursor: pointer; position: relative; }
-    .progress-fill { width: 0%; height: 100%; background: var(--spotify-green); border-radius: 9999px; box-shadow: 0 0 12px var(--spotify-green-glow); }
-    .time-row { display: flex; justify-content: space-between; font-size: 0.76rem; font-weight: 600; color: var(--text-sub); margin-top: 6px; }
-
-    .controls-row { display: flex; align-items: center; gap: 20px; }
-    .btn-circle {
-      background: none;
-      border: none;
+    header p {
       color: var(--text-sub);
-      font-size: 1.25rem;
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+
+    /* SEARCH & VOICE BAR */
+    .search-wrapper {
+      width: 100%;
+      max-width: 680px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .search-box {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid var(--card-border);
+      padding: 10px 16px;
+      border-radius: 28px;
+      backdrop-filter: blur(12px);
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .search-box:focus-within {
+      border-color: var(--primary);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .search-box i {
+      color: var(--text-sub);
+      margin-right: 10px;
+      font-size: 0.95rem;
+    }
+
+    .search-box input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-size: 0.95rem;
+    }
+
+    .voice-btn {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid var(--card-border);
+      color: #fff;
       width: 44px;
       height: 44px;
       border-radius: 50%;
@@ -227,1108 +112,573 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: all 0.2s ease;
+      backdrop-filter: blur(12px);
+      transition: all 0.2s;
+      flex-shrink: 0;
     }
-    .btn-circle:hover { color: #fff; background: var(--panel-hover); transform: scale(1.08); }
-    .btn-circle.hero { width: 62px; height: 62px; background: var(--spotify-green); color: #041008; font-size: 1.5rem; box-shadow: 0 8px 30px var(--spotify-green-glow); }
 
-    /* Playlist Sidecar */
-    .sidecar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-    .playlist-scroll { display: flex; flex-direction: column; gap: 6px; max-height: 580px; overflow-y: auto; padding-right: 4px; }
-    .playlist-scroll::-webkit-scrollbar { width: 4px; }
-    .playlist-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 9999px; }
-
-    .song-row { display: flex; align-items: center; gap: 12px; padding: 9px 12px; border-radius: 12px; cursor: pointer; transition: all 0.2s ease; }
-    .song-row:hover { background: var(--panel-hover); }
-    .song-row.active { background: rgba(30, 215, 96, 0.14); border: 1px solid rgba(30, 215, 96, 0.3); }
-    .song-row.active .song-name { color: var(--spotify-green); }
-    .song-thumb { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; background: #111; }
-    .song-info { flex: 1; overflow: hidden; }
-    .song-name { font-size: 0.85rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .song-artist { font-size: 0.72rem; color: var(--text-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-    /* Modals */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.86);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-      padding: 16px;
+    .voice-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: var(--primary);
     }
-    .modal-overlay.open { display: flex; }
-    .modal-box {
-      background: #090e18;
-      border: 1px solid var(--panel-border);
-      border-radius: 20px;
+
+    .voice-btn.listening {
+      background: #ef4444;
+      color: #fff;
+      animation: pulse 1.2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+      70% { transform: scale(1.08); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+
+    /* FILTER TABS */
+    .filter-tabs {
       width: 100%;
-      max-width: 480px;
-      padding: 20px;
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8);
-      position: relative;
-    }
-    .modal-nav-bar {
+      max-width: 680px;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 14px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--panel-border);
-    }
-    .btn-nav-action {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid var(--panel-border);
-      color: #fff;
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
+      gap: 10px;
+      margin-bottom: 16px;
     }
 
-    /* Social Drawer */
-    .social-drawer {
-      position: fixed;
-      top: 0;
-      right: -420px;
-      width: 390px;
-      height: 100vh;
-      height: 100dvh;
-      background: #070b14;
-      border-left: 1px solid var(--panel-border);
-      z-index: 120;
+    .tab-btn {
+      background: transparent;
+      border: 1px solid var(--card-border);
+      color: var(--text-sub);
+      padding: 6px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active, .tab-btn:hover {
+      background: rgba(30, 215, 96, 0.15);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* PLAYLIST CONTAINER */
+    .playlist {
+      width: 100%;
+      max-width: 680px;
       display: flex;
       flex-direction: column;
-      transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: -10px 0 40px rgba(0, 0, 0, 0.7);
-    }
-    .social-drawer.open { right: 0; }
-    @media (max-width: 450px) { .social-drawer { width: 100vw; } }
-
-    .search-peer-bar {
-      padding: 10px 14px;
-      background: rgba(255, 255, 255, 0.03);
-      border-bottom: 1px solid var(--panel-border);
-      display: flex;
       gap: 8px;
     }
-    .search-peer-bar input {
-      flex: 1;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid var(--panel-border);
-      color: #fff;
-      border-radius: 8px;
-      padding: 6px 10px;
-      font-size: 0.8rem;
-      outline: none;
-    }
 
-    .social-section-title { font-size: 0.75rem; font-weight: 800; color: var(--text-sub); text-transform: uppercase; margin: 10px 14px 4px; }
-    .social-peer-list { max-height: 150px; overflow-y: auto; padding: 0 14px; display: flex; flex-direction: column; gap: 6px; }
-    .peer-card {
+    .track-item {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      background: rgba(255, 255, 255, 0.05);
-      padding: 8px 10px;
-      border-radius: 10px;
-      border: 1px solid var(--panel-border);
-    }
-    .peer-meta { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; font-weight: 600; }
-    .peer-status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--spotify-green); box-shadow: 0 0 6px var(--spotify-green); }
-
-    .friend-request-box {
-      margin: 8px 14px;
-      padding: 8px;
-      background: rgba(59, 130, 246, 0.15);
-      border: 1px solid #3b82f6;
-      border-radius: 10px;
-      font-size: 0.78rem;
-      display: none;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .chat-feed-box { flex: 1; padding: 14px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-    .chat-bubble { padding: 8px 12px; border-radius: 12px; font-size: 0.82rem; max-width: 82%; line-height: 1.4; word-break: break-word; }
-    .chat-bubble.peer { background: rgba(255, 255, 255, 0.08); align-self: flex-start; }
-    .chat-bubble.mine { background: var(--spotify-green); color: #000; font-weight: 600; align-self: flex-end; }
-    .chat-input-bar { padding: 10px 14px; border-top: 1px solid var(--panel-border); display: flex; gap: 8px; }
-    .chat-input-bar input { flex: 1; background: rgba(255, 255, 255, 0.08); border: 1px solid var(--panel-border); border-radius: 9999px; padding: 8px 14px; color: #fff; font-size: 0.82rem; outline: none; }
-    .chat-input-bar button { background: var(--spotify-green); color: #000; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; }
-
-    /* Drive HUD */
-    .drive-hud {
-      position: fixed;
-      inset: 0;
-      background: #020408;
-      z-index: 200;
-      display: none;
-      flex-direction: column;
-      overflow: hidden;
-    }
-    .drive-hud.open { display: flex; }
-    .drive-topbar {
-      padding: 10px 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(8, 12, 20, 0.98);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      z-index: 10;
-    }
-    .drive-dual-viewport {
-      flex: 1;
-      display: grid;
-      grid-template-columns: 420px 1fr;
-      height: calc(100vh - 58px);
-      height: calc(100dvh - 58px);
-      overflow: hidden;
-    }
-    @media (max-width: 1024px) {
-      .drive-dual-viewport { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
-    }
-    .drive-audio-deck {
-      background: rgba(8, 12, 22, 0.98);
-      border-right: 1px solid var(--panel-border);
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      overflow-y: auto;
-    }
-    .btn-drive-touch {
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: #fff;
-      font-size: 1.5rem;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 10px 14px;
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
       cursor: pointer;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+
+    .track-item:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .track-item.active {
+      border-color: var(--primary);
+      background: rgba(30, 215, 96, 0.08);
+    }
+
+    .track-img {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      object-fit: cover;
+      margin-right: 12px;
+    }
+
+    .track-details {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .track-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .track-artist {
+      font-size: 0.8rem;
+      color: var(--text-sub);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .fav-btn {
+      background: none;
+      border: none;
+      color: var(--text-sub);
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 8px;
+      transition: color 0.2s, transform 0.15s;
+    }
+
+    .fav-btn:hover {
+      transform: scale(1.15);
+    }
+
+    .fav-btn.favorited {
+      color: #ef4444;
+    }
+
+    /* FIXED BOTTOM PLAYER */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(14, 19, 32, 0.95);
+      border-top: 1px solid var(--card-border);
+      backdrop-filter: blur(16px);
+      padding: 10px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      z-index: 1000;
+    }
+
+    .progress-container {
+      width: 100%;
+      max-width: 780px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.75rem;
+      color: var(--text-sub);
+    }
+
+    .progress-bar {
+      flex: 1;
+      height: 4px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .progress-bar::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: pointer;
+    }
+
+    .player-controls {
+      width: 100%;
+      max-width: 780px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .current-meta {
+      width: 220px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .current-meta .c-title {
+      font-size: 0.88rem;
+      font-weight: 600;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .current-meta .c-artist {
+      font-size: 0.75rem;
+      color: var(--text-sub);
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .center-buttons {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .ctl-btn {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: color 0.15s;
+    }
+
+    .ctl-btn:hover {
+      color: var(--primary);
+    }
+
+    .play-circle {
+      width: 40px;
+      height: 40px;
+      background: #fff;
+      color: #000;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: transform 0.15s, background 0.15s;
     }
-    .btn-drive-touch.hero { width: 80px; height: 80px; background: var(--spotify-green); color: #000; border: none; box-shadow: 0 0 30px var(--spotify-green-glow); }
-    .drive-map-deck { position: relative; height: 100%; width: 100%; }
-    #carLiveMap { width: 100%; height: 100%; background: #090e17; }
-    .map-search-bar {
-      position: absolute;
-      top: 14px;
-      left: 14px;
-      right: 14px;
-      z-index: 500;
-      display: flex;
-      gap: 8px;
-      background: rgba(12, 17, 30, 0.94);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      padding: 8px 12px;
-      border-radius: 14px;
-      backdrop-filter: blur(16px);
-    }
-    .map-search-bar input { flex: 1; background: transparent; border: none; outline: none; color: #fff; font-size: 0.88rem; }
-    .map-search-bar button { background: var(--accent-cyan); border: none; color: #000; font-weight: 700; padding: 7px 14px; border-radius: 10px; cursor: pointer; }
 
-    /* Advertisement Strip */
-    .advertisement-strip {
-      background: linear-gradient(90deg, #050811, #0f172a, #050811);
-      border-top: 1px solid rgba(255, 255, 255, 0.12);
-      height: 115px;
+    .play-circle:hover {
+      background: var(--primary);
+      transform: scale(1.06);
+    }
+
+    /* VOLUME BAR */
+    .volume-box {
+      width: 200px;
       display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 10px 20px;
-      margin-top: auto;
-      z-index: 30;
-      position: relative;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
     }
-    .ad-top-row { display: flex; align-items: center; justify-content: space-between; width: 100%; }
-    .ad-tagline { display: flex; align-items: center; gap: 8px; font-size: 0.88rem; font-weight: 800; color: #fff; }
-    .ad-badge { background: var(--spotify-green); color: #000; font-size: 0.68rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; }
-    .ad-cta-glossy-red {
-      background: var(--glossy-red);
-      color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      padding: 6px 16px;
-      border-radius: 9999px;
-      font-size: 0.78rem;
-      font-weight: 800;
-      text-decoration: none;
-      box-shadow: 0 4px 18px rgba(239, 68, 68, 0.5);
+
+    .volume-box i {
+      color: var(--text-sub);
+      font-size: 0.95rem;
+      cursor: pointer;
+      width: 18px;
     }
-    .ad-marquee-bar {
-      overflow: hidden;
-      white-space: nowrap;
-      background: rgba(0, 0, 0, 0.45);
-      border-radius: 8px;
-      padding: 5px 10px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
+
+    .volume-slider {
+      width: 80px;
+      height: 4px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+      outline: none;
+      cursor: pointer;
     }
-    .ad-marquee-text {
-      display: inline-block;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: #a7f3d0;
-      animation: marqueeScroll 45s linear infinite;
+
+    .volume-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #fff;
+      cursor: pointer;
     }
-    @keyframes marqueeScroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+
+    @media (max-width: 600px) {
+      .current-meta { width: 130px; }
+      .volume-slider { width: 55px; }
+    }
   </style>
 </head>
 <body>
 
-  <div id="ambientBg"></div>
-  <div id="ambientOverlay"></div>
-
-  <!-- Header -->
   <header>
-    <div class="brand-section" onclick="navigateToHome()">
-      <div class="brand-title">
-        <i class="fa-solid fa-compact-disc fa-spin" style="--fa-animation-duration: 4s;"></i>
-        <span>Paradise of Songs</span>
-      </div>
-      <div class="listeners-badge">
-        <div class="pulse-dot"></div>
-        <span id="liveListenerDisplay">65,841</span> Live
-      </div>
-    </div>
-
-    <!-- Responsive Scrollable Action Bar -->
-    <div class="nav-actions">
-      <button class="btn-pill btn-social" onclick="toggleSocialDrawer(true)"><i class="fa-solid fa-user-group"></i> Social Space</button>
-      <button class="btn-pill btn-drive" onclick="toggleDriveHud(true)"><i class="fa-solid fa-car"></i> Driving Mode</button>
-      <button class="btn-pill btn-upload" onclick="toggleModal('verifiedUploadModal', true)"><i class="fa-solid fa-cloud-arrow-up"></i> Upload</button>
-      <button class="btn-pill btn-coffee" onclick="toggleModal('coffeeTipModal', true)"><i class="fa-solid fa-mug-hot"></i> Tip</button>
-      <button class="btn-pill" id="userAuthStatusBtn" onclick="toggleModal('authModal', true)"><i class="fa-solid fa-user"></i> Sign In</button>
-    </div>
+    <h1>Paradise of Songs</h1>
+    <p id="track-count">Loading library...</p>
   </header>
 
-  <!-- Main View -->
-  <main class="app-layout">
-    <section class="deck-panel player-deck" id="playerDeck">
-      <div class="cover-art-box">
-        <img id="trackArtwork" src="" alt="Album Art" />
-      </div>
-
-      <div class="track-meta">
-        <div class="track-title" id="trackTitleDisplay">Connecting...</div>
-        <div class="track-artist" id="trackArtistDisplay">Nextcloud Direct Stream</div>
-      </div>
-
-      <canvas id="audioVisualizer"></canvas>
-
-      <div class="progress-section">
-        <div class="progress-rail" id="progressRail">
-          <div class="progress-fill" id="progressFill"></div>
-        </div>
-        <div class="time-row">
-          <span id="timeElapsed">0:00</span>
-          <span id="timeDuration">0:00</span>
-        </div>
-      </div>
-
-      <div class="controls-row">
-        <button class="btn-circle" id="prevTrackBtn"><i class="fa-solid fa-backward-step"></i></button>
-        <button class="btn-circle hero" id="playTrackBtn"><i class="fa-solid fa-play" id="playIcon"></i></button>
-        <button class="btn-circle" id="nextTrackBtn"><i class="fa-solid fa-forward-step"></i></button>
-      </div>
-    </section>
-
-    <!-- Playlist Sidecar -->
-    <aside class="deck-panel">
-      <div class="sidecar-header">
-        <h3 style="font-size: 1.05rem;">Master Playlist</h3>
-        <span class="listeners-badge" id="trackCountBadge" style="font-size: 0.72rem;">Loading...</span>
-      </div>
-      <div class="playlist-scroll" id="songPlaylistContainer"></div>
-    </aside>
-  </main>
-
-  <!-- REAL-TIME CROSS-DEVICE SOCIAL SPACE -->
-  <aside class="social-drawer" id="socialDrawer">
-    <div class="modal-nav-bar" style="padding: 12px 14px; margin: 0; background: rgba(0,0,0,0.3);">
-      <button class="btn-nav-action" onclick="toggleSocialDrawer(false)"><i class="fa-solid fa-arrow-left"></i> Back</button>
-      <span style="font-weight: 800; font-size: 0.85rem;">Live Cross-Device Mesh</span>
+  <!-- SEARCH & VOICE BAR -->
+  <div class="search-wrapper">
+    <div class="search-box">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" id="searchInput" placeholder="Search by title, artist, or movie..." />
     </div>
-
-    <!-- User Identity & Search Bar -->
-    <div class="search-peer-bar">
-      <input type="text" id="peerSearchInput" placeholder="Search listeners by name..." oninput="filterActivePeers()" />
-      <button class="btn-pill" style="padding: 4px 10px; font-size: 0.75rem;" onclick="filterActivePeers()"><i class="fa-solid fa-magnifying-glass"></i></button>
-    </div>
-
-    <!-- Friend Request Box -->
-    <div class="friend-request-box" id="friendRequestNotification">
-      <div style="font-weight: 700;" id="requestNotificationText">Incoming Friend Request!</div>
-      <div style="display: flex; gap: 8px;">
-        <button class="btn-pill" style="flex: 1; justify-content: center; background: var(--spotify-green); color: #000; font-size: 0.72rem;" onclick="respondToFriendRequest(true)">Accept</button>
-        <button class="btn-pill" style="flex: 1; justify-content: center; background: rgba(255,255,255,0.1); font-size: 0.72rem;" onclick="respondToFriendRequest(false)">Decline</button>
-      </div>
-    </div>
-
-    <!-- Active Peers Across Mobile & Laptop -->
-    <div class="social-section-title">Online Listeners (Active Now)</div>
-    <div class="social-peer-list" id="activePeerListContainer">
-      <div style="font-size: 0.75rem; color: var(--text-sub); padding: 6px;">Connecting to global listener mesh...</div>
-    </div>
-
-    <!-- Mesh Group & Private Chat -->
-    <div class="social-section-title">Mesh Room Chat</div>
-    <div class="chat-feed-box" id="meshChatFeed">
-      <div class="chat-bubble peer">
-        <strong>System:</strong> Real-time cross-device network connected. Both mobile and desktop sessions can chat here.
-      </div>
-    </div>
-
-    <div class="chat-input-bar">
-      <input type="text" id="meshChatInput" placeholder="Type a message to peers..." onkeydown="if(event.key==='Enter') sendMeshBroadcastMessage()" />
-      <button onclick="sendMeshBroadcastMessage()"><i class="fa-solid fa-paper-plane"></i></button>
-    </div>
-  </aside>
-
-  <!-- USER SIGN IN MODAL -->
-  <div class="modal-overlay" id="authModal">
-    <div class="modal-box">
-      <div class="modal-nav-bar">
-        <button class="btn-nav-action" onclick="toggleModal('authModal', false)"><i class="fa-solid fa-arrow-left"></i> Back</button>
-        <span style="font-weight: 800; font-size: 0.85rem;">Account Sign In</span>
-      </div>
-      <p style="font-size: 0.8rem; color: var(--text-sub); margin-bottom: 12px;">Sign in to broadcast your profile to friends across laptop and mobile devices.</p>
-      <input type="text" id="authUserName" placeholder="Your Display Name (e.g. Asif KM)" style="width: 100%; background: rgba(255,255,255,0.08); border: 1px solid var(--panel-border); color: #fff; padding: 10px; border-radius: 8px; margin-bottom: 10px; outline: none;" />
-      <input type="email" id="authUserEmail" placeholder="Email Address" style="width: 100%; background: rgba(255,255,255,0.08); border: 1px solid var(--panel-border); color: #fff; padding: 10px; border-radius: 8px; margin-bottom: 12px; outline: none;" />
-      <button class="btn-pill" style="width: 100%; justify-content: center; background: var(--spotify-green); color: #000; font-weight: 800;" onclick="completeUserSignIn()">Sign In & Broadcast Profile</button>
-    </div>
+    <button class="voice-btn" id="voiceBtn" title="Search by Voice">
+      <i class="fa-solid fa-microphone"></i>
+    </button>
   </div>
 
-  <!-- BUY ME A COFFEE MODAL -->
-  <div class="modal-overlay" id="coffeeTipModal">
-    <div class="modal-box" style="text-align: center;">
-      <div class="modal-nav-bar">
-        <button class="btn-nav-action" onclick="toggleModal('coffeeTipModal', false)"><i class="fa-solid fa-arrow-left"></i> Back</button>
-        <span style="font-weight: 800; font-size: 0.85rem;">Support the Stream</span>
+  <!-- FILTER TABS -->
+  <div class="filter-tabs">
+    <button class="tab-btn active" id="tabAll">All Songs</button>
+    <button class="tab-btn" id="tabFavs"><i class="fa-solid fa-heart" style="margin-right: 4px; color: #ef4444;"></i> Favorites</button>
+  </div>
+
+  <!-- PLAYLIST CONTAINER -->
+  <div class="playlist" id="playlist"></div>
+
+  <!-- BOTTOM MUSIC PLAYER -->
+  <div class="bottom-bar">
+    <div class="progress-container">
+      <span id="currentTime">0:00</span>
+      <input type="range" class="progress-bar" id="progressBar" value="0" min="0" max="100" />
+      <span id="totalDuration">0:00</span>
+    </div>
+    <div class="player-controls">
+      <div class="current-meta">
+        <div class="c-title" id="nowTitle">No Track Selected</div>
+        <div class="c-artist" id="nowArtist">Tap a song to play</div>
       </div>
-
-      <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 14px;">
-        <button class="btn-pill" onclick="alert('Amount ₹100 selected')">₹100</button>
-        <button class="btn-pill" onclick="alert('Amount ₹500 selected')">₹500</button>
-        <button class="btn-pill" onclick="alert('Amount ₹1001 selected')">₹1001</button>
+      <div class="center-buttons">
+        <button class="ctl-btn" id="prevBtn"><i class="fa-solid fa-backward-step"></i></button>
+        <div class="play-circle" id="playBtn"><i class="fa-solid fa-play"></i></div>
+        <button class="ctl-btn" id="nextBtn"><i class="fa-solid fa-forward-step"></i></button>
       </div>
-
-      <img src="HDFC QR.jpeg" alt="HDFC UPI QR" style="width: 190px; height: 190px; border-radius: 12px; border: 2px solid #fff; margin-bottom: 12px; object-fit: contain; background: #000;" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=190x190&data=upi://pay?pa=7034860189@hdfc&pn=ASIF%20KM&cu=INR'" />
-
-      <div style="background: rgba(255,255,255,0.06); padding: 8px; border-radius: 10px; font-size: 0.85rem; margin-bottom: 12px;">
-        UPI ID: <strong style="color: var(--spotify-green);">7034860189@hdfc</strong>
-      </div>
-
-      <div style="display: flex; gap: 8px;">
-        <button class="btn-pill" style="flex: 1; justify-content: center;" onclick="navigator.clipboard.writeText('7034860189@hdfc'); alert('UPI ID copied: 7034860189@hdfc');">
-          <i class="fa-regular fa-copy"></i> Copy UPI
-        </button>
-        <button class="btn-pill" style="flex: 1; justify-content: center; background: var(--spotify-green); color: #000;" onclick="alert('Thank you for fueling Paradise of Songs!'); toggleModal('coffeeTipModal', false);">
-          <i class="fa-solid fa-check"></i> I Did It
-        </button>
+      <div class="volume-box">
+        <i class="fa-solid fa-volume-high" id="volIcon"></i>
+        <input type="range" class="volume-slider" id="volSlider" min="0" max="1" step="0.01" value="0.8" />
       </div>
     </div>
   </div>
 
-  <!-- SONG UPLOAD MODAL -->
-  <div class="modal-overlay" id="verifiedUploadModal">
-    <div class="modal-box">
-      <div class="modal-nav-bar">
-        <button class="btn-nav-action" onclick="toggleModal('verifiedUploadModal', false)"><i class="fa-solid fa-arrow-left"></i> Back</button>
-        <span style="font-weight: 800; font-size: 0.85rem;">Upload Musical Track</span>
-      </div>
-      <p style="font-size: 0.78rem; color: var(--text-sub); margin-bottom: 12px;">Select an MP3, FLAC, or WAV file from your device. You receive ₹1 per verified track.</p>
-      <input type="file" id="songFileInput" accept="audio/*" style="font-size: 0.82rem; margin-bottom: 12px; color: #fff; width: 100%;" />
-      <button class="btn-pill" style="width: 100%; justify-content: center; background: var(--spotify-green); color: #000; font-weight: 800;" onclick="alert('Song uploaded! Submitted for administrative verification.'); toggleModal('verifiedUploadModal', false);">
-        <i class="fa-solid fa-upload"></i> Submit for Verification
-      </button>
-    </div>
-  </div>
-
-  <!-- DRIVE MODE COCKPIT -->
-  <div class="drive-hud" id="driveHud">
-    <div class="drive-topbar">
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <button class="btn-nav-action" onclick="toggleDriveHud(false)"><i class="fa-solid fa-arrow-left"></i> Exit Cockpit</button>
-        <div style="background: rgba(255,255,255,0.06); padding: 4px 10px; border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; color: var(--accent-cyan);">
-          <span id="driveVehicleSpeed">0</span> <small style="font-size: 0.65rem;">KM/H</small>
-        </div>
-      </div>
-      <div style="font-size: 0.75rem; font-weight: 700; color: var(--spotify-green);">
-        <i class="fa-solid fa-satellite"></i> GPS Active
-      </div>
-    </div>
-
-    <div class="drive-dual-viewport">
-      <div class="drive-audio-deck">
-        <div>
-          <div style="width: 150px; height: 150px; border-radius: 16px; overflow: hidden; margin: 0 auto 12px auto; border: 1px solid rgba(255,255,255,0.15); background:#111;">
-            <img id="driveArtworkImg" src="" style="width: 100%; height: 100%; object-fit: cover;" alt="Drive Art" />
-          </div>
-          <div style="text-align: center; margin-bottom: 14px;">
-            <div style="font-size: 1.25rem; font-weight: 800;" id="driveTitleText">Select Track</div>
-            <div style="font-size: 0.82rem; color: var(--text-sub);" id="driveArtistText">Paradise Audio</div>
-          </div>
-          <div style="display: flex; justify-content: center; align-items: center; gap: 20px; margin-bottom: 16px;">
-            <button class="btn-drive-touch" id="hudPrevBtn"><i class="fa-solid fa-backward"></i></button>
-            <button class="btn-drive-touch hero" id="hudPlayBtn"><i class="fa-solid fa-play" id="hudPlayIcon"></i></button>
-            <button class="btn-drive-touch" id="hudNextBtn"><i class="fa-solid fa-forward"></i></button>
-          </div>
-        </div>
-
-        <div>
-          <div class="btn-pill" id="voiceMicTrigger" style="width: 100%; justify-content: center; background: rgba(6, 182, 212, 0.15); border-color: var(--accent-cyan); color: var(--accent-cyan);" onclick="triggerVoiceAssistant()">
-            <i class="fa-solid fa-microphone"></i> <span id="voiceStatusText">Voice Commands Active</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="drive-map-deck">
-        <div class="map-search-bar">
-          <input type="text" id="destinationQueryInput" placeholder="Enter destination (e.g. Muvattupuzha, Kochi, NH 66)..." onkeydown="if(event.key==='Enter') executeRealRouteSearch()" />
-          <button onclick="executeRealRouteSearch()"><i class="fa-solid fa-route"></i> Route</button>
-        </div>
-        <div id="carLiveMap"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ADVERTISEMENT STRIP -->
-  <footer class="advertisement-strip">
-    <div class="ad-top-row">
-      <div class="ad-tagline">
-        <span class="ad-badge">Promoted</span>
-        <span>ADVERTISE YOUR BRAND HERE</span>
-      </div>
-      <a href="mailto:luiseclat@gmail.com?subject=Advertise%20My%20Brand%20on%20Paradise%20of%20Songs" class="ad-cta-glossy-red">
-        Contact Us <i class="fa-solid fa-arrow-right"></i>
-      </a>
-    </div>
-
-    <div class="ad-marquee-bar">
-      <span class="ad-marquee-text">
-        Hey entrepreneurs this is not just a screen this is the magic screen, within seconds your brand will be familiar to everyone, currently 63k peoples are listening music in paradise of songs, and they all are watching your brand with a positive state, 1000+ happy clients, 250+ Companies using our platform, 24/7 Rapid response and assistance, and affordable price plans. Dont miss the oppertunity to become a most familiar brand in india.....
-      </span>
-    </div>
-  </footer>
-
-  <!-- Direct Audio Element -->
-  <audio id="audioEngine" preload="metadata"></audio>
+  <audio id="audioPlayer"></audio>
 
   <script>
-    // -------------------------------------------------------------------------
-    // 1. DATA REPOSITORY & HIGH-PERFORMANCE NEXTCLOUD ENDPOINTS
-    // -------------------------------------------------------------------------
-    const NC_TOKEN = "6HegKRmeWapdns9";
-    const NC_BASE = `https://cloud.paradiseacademi.com/s/${NC_TOKEN}/download?path=%2F&files=`;
+    const WORKER_API = "https://proud-recipe-96deparadise-music-sync.paradiseacademy-kl.workers.dev/";
+    const audio = document.getElementById("audioPlayer");
+    const playlistEl = document.getElementById("playlist");
+    const trackCountEl = document.getElementById("track-count");
+    const searchInput = document.getElementById("searchInput");
+    const voiceBtn = document.getElementById("voiceBtn");
+    const tabAll = document.getElementById("tabAll");
+    const tabFavs = document.getElementById("tabFavs");
 
-    function buildStreamUrl(fileName) {
-      return NC_BASE + encodeURIComponent(fileName);
-    }
+    const playBtn = document.getElementById("playBtn");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const progressBar = document.getElementById("progressBar");
+    const currentTimeEl = document.getElementById("currentTime");
+    const totalDurationEl = document.getElementById("totalDuration");
+    const nowTitle = document.getElementById("nowTitle");
+    const nowArtist = document.getElementById("nowArtist");
+    const volSlider = document.getElementById("volSlider");
+    const volIcon = document.getElementById("volIcon");
 
-    // Default static playlist used as immediate seed or fallback
-    let MASTER_TRACKS = [
-      { id: 't1',  title: 'ARAYANA', artist: 'Paradise Audio', cover: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&q=80', url: buildStreamUrl('ARAYANA.mp3') },
-      { id: 't2',  title: 'Ada Bommale', artist: 'Vaazha 2', cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&q=80', url: buildStreamUrl('Ada Bommale - Vaazha 2.mp3') },
-      { id: 't3',  title: 'Aathmavile Anandhame', artist: 'Sajeer Koppam', cover: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&q=80', url: buildStreamUrl('Aathmavile Anandhame - Sajeer Koppam.mp3') },
-      { id: 't4',  title: 'Baby love', artist: 'Zuby Zuby Zuby', cover: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=500&q=80', url: buildStreamUrl('Baby love - Zuby Zuby Zuby.mp3') },
-      { id: 't5',  title: 'Chammak Challo', artist: 'Ra One (2011)', cover: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&q=80', url: buildStreamUrl('Chammak Challo - Ra One (2011) HD 720p.mp3') },
-      { id: 't6',  title: 'Chinnamma Adi', artist: 'Folk Fusion', cover: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=500&q=80', url: buildStreamUrl('Chinnamma Adi@6EI2NUkxwuZuGKfJ9BB7PJ (1).mp3') },
-      { id: 't7',  title: 'Chirapunji', artist: 'Nihal Sadiq Ft Hanan Shaah', cover: 'https://images.unsplash.com/photo-1520523839898-507127054976?w=500&q=80', url: buildStreamUrl('Chirapunji - Nihal Sadiq Ft Hanan Shaah.mp3') },
-      { id: 't8',  title: 'Delulu Delulu', artist: 'Athi Bheekara Kaamukan', cover: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=500&q=80', url: buildStreamUrl('Delulu Delulu - Athi Bheekara Kaamukan.mp3') },
-      { id: 't9',  title: 'Habibi Drip', artist: 'Best Of Dabzee', cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&q=80', url: buildStreamUrl('Habibi Drip - Best Of Dabzee.mp3') },
-      { id: 't10', title: 'Manavaalan Thug', artist: 'Best Of Dabzee', cover: 'https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?w=500&q=80', url: buildStreamUrl('Manavaalan Thug - Best Of Dabzee.mp3') },
-      { id: 't11', title: 'Onnaam Kunninmel', artist: 'Magic Mushrooms', cover: 'https://images.unsplash.com/photo-1465847899084-d164df4dedc6?w=500&q=80', url: buildStreamUrl('Onnaam Kunninmel - Magic Mushrooms.mp3') },
-      { id: 't12', title: 'PL', artist: 'Studio Track', cover: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=500&q=80', url: buildStreamUrl('PL.mp3') },
-      { id: 't13', title: 'Pallathi Meena Pole', artist: 'Pongala', cover: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=500&q=80', url: buildStreamUrl('Pallathi Meena Pole - Pongala.mp3') },
-      { id: 't14', title: 'Pathira', artist: 'KoshalWorld', cover: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=500&q=80', url: buildStreamUrl('Pathira(KoshalWorld.Com).mp3') },
-      { id: 't15', title: 'Pattuma', artist: 'Love Insurance Kompany', cover: 'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=500&q=80', url: buildStreamUrl('Pattuma - Love Insurance Kompany.mp3') },
-      { id: 't16', title: 'Pavazha Malli', artist: 'Sai Abhyankkar', cover: 'https://images.unsplash.com/photo-1506157786151-b8491531f063?w=500&q=80', url: buildStreamUrl('Pavazha Malli - Sai Abhyankkar, Shruti Haasan.mp3') },
-      { id: 't17', title: 'പ്രായം നമ്മിൽ മോഹം നൽകി', artist: 'Evergreen Classic', cover: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=500&q=80', url: buildStreamUrl('പ്രായം നമ്മിൽ മോഹം നൽകി Prayam Nammil Moham Nira...mp3') },
-      { id: 't18', title: 'രാക്കുയിൽ പാടീ', artist: 'Kunchacko Boban Hits', cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&q=80', url: buildStreamUrl('രാക്കുയിൽ പാടീ HD Raakkuyil Paadi Video Song Kunchacko Bo...mp3') }
-    ];
+    let allTracks = [];
+    let currentIdx = -1;
+    let isFavoriteOnly = false;
+    let favorites = JSON.parse(localStorage.getItem("paradise_favs") || "[]");
 
-    // Automatic Live Sync from Nextcloud WebDAV
-    async function syncTracksFromNextcloud() {
+    // 1. LOAD MUSIC REPOSITORY
+    async function loadTracks() {
       try {
-        const webdavEndpoint = `https://cloud.paradiseacademi.com/public.php/webdav/`;
-        const auth = "Basic " + btoa(NC_TOKEN + ":");
-        const res = await fetch(webdavEndpoint, {
-          method: 'PROPFIND',
-          headers: {
-            'Authorization': auth,
-            'Depth': '1'
-          }
-        });
-
-        if (res.ok) {
-          const text = await res.text();
-          const parser = new DOMParser();
-          const xmlDoc = parser.parseFromString(text, "text/xml");
-          const responses = xmlDoc.getElementsByTagNameNS("*", "response");
-          const freshList = [];
-
-          for (let i = 0; i < responses.length; i++) {
-            const hrefEl = responses[i].getElementsByTagNameNS("*", "href")[0];
-            if (!hrefEl) continue;
-            const fullPath = decodeURIComponent(hrefEl.textContent.trim());
-            const fileName = fullPath.split('/').filter(Boolean).pop();
-
-            if (fileName && /\.(mp3|wav|ogg|flac|m4a)$/i.test(fileName)) {
-              let cleanTitle = fileName.replace(/\.(mp3|wav|ogg|flac|m4a)$/i, '');
-              let artistName = "Paradise Stream";
-              if (cleanTitle.includes('-')) {
-                const parts = cleanTitle.split('-');
-                cleanTitle = parts[0].trim();
-                artistName = parts.slice(1).join('-').trim();
-              }
-
-              freshList.push({
-                id: 'nc_' + i,
-                title: cleanTitle,
-                artist: artistName,
-                cover: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&q=80',
-                url: buildStreamUrl(fileName)
-              });
-            }
-          }
-
-          if (freshList.length > 0) {
-            MASTER_TRACKS = freshList;
-            renderPlaylist();
-            selectTrack(0, false);
-          }
-        }
+        const res = await fetch(WORKER_API);
+        allTracks = await res.json();
+        trackCountEl.textContent = `${allTracks.length} Songs in Library`;
+        renderPlaylist();
       } catch (err) {
-        console.warn("Nextcloud live discovery fallback to defaults:", err);
-      } finally {
-        document.getElementById('trackCountBadge').textContent = `${MASTER_TRACKS.length} Tracks`;
+        trackCountEl.textContent = "Unable to connect to song stream";
       }
     }
 
-    // Shuffle Array Helper
-    function shuffleArray(arr) {
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-    }
-    shuffleArray(MASTER_TRACKS);
-
-    // -------------------------------------------------------------------------
-    // 2. STATE & AUDIO CONTROLLER (AUDIO FIX INCLUDED)
-    // -------------------------------------------------------------------------
-    let currentTrackIdx = 0;
-    let isPlaying = false;
-    let audioCtx = null;
-    let analyserNode = null;
-    let isGraphBuilt = false;
-
-    const audio = document.getElementById('audioEngine');
-    const trackArtwork = document.getElementById('trackArtwork');
-    const trackTitleDisplay = document.getElementById('trackTitleDisplay');
-    const trackArtistDisplay = document.getElementById('trackArtistDisplay');
-    const playTrackBtn = document.getElementById('playTrackBtn');
-    const playIcon = document.getElementById('playIcon');
-    const prevTrackBtn = document.getElementById('prevTrackBtn');
-    const nextTrackBtn = document.getElementById('nextTrackBtn');
-    const progressRail = document.getElementById('progressRail');
-    const progressFill = document.getElementById('progressFill');
-    const timeElapsed = document.getElementById('timeElapsed');
-    const timeDuration = document.getElementById('timeDuration');
-    const songPlaylistContainer = document.getElementById('songPlaylistContainer');
-    const ambientBg = document.getElementById('ambientBg');
-    const canvas = document.getElementById('audioVisualizer');
-    const canvasCtx = canvas.getContext('2d');
-
-    // Drive UI Elements
-    const driveArtworkImg = document.getElementById('driveArtworkImg');
-    const driveTitleText = document.getElementById('driveTitleText');
-    const driveArtistText = document.getElementById('driveArtistText');
-    const hudPlayBtn = document.getElementById('hudPlayBtn');
-    const hudPlayIcon = document.getElementById('hudPlayIcon');
-
-    // Listeners count pulse
-    setInterval(() => {
-      const count = Math.floor(Math.random() * (880065 - 667112 + 1)) + 667112;
-      document.getElementById('liveListenerDisplay').textContent = count.toLocaleString();
-    }, 3000);
-
-    // -------------------------------------------------------------------------
-    // 3. PLAYLIST RENDERING & NATIVE SAFE AUDIO
-    // -------------------------------------------------------------------------
+    // 2. RENDER PLAYLIST (With Search & Favorites filtering)
     function renderPlaylist() {
-      songPlaylistContainer.innerHTML = '';
-      MASTER_TRACKS.forEach((track, idx) => {
-        const row = document.createElement('div');
-        row.className = `song-row ${idx === currentTrackIdx ? 'active' : ''}`;
-        row.onclick = () => selectTrack(idx, true);
-        row.innerHTML = `
-          <img class="song-thumb" src="${track.cover}" alt="Art" />
-          <div class="song-info">
-            <div class="song-name">${track.title}</div>
-            <div class="song-artist">${track.artist}</div>
+      const query = searchInput.value.toLowerCase().trim();
+      playlistEl.innerHTML = "";
+
+      const filtered = allTracks.filter(track => {
+        const matchesSearch = track.title.toLowerCase().includes(query) || track.artist.toLowerCase().includes(query);
+        const matchesFav = isFavoriteOnly ? favorites.includes(track.id) : true;
+        return matchesSearch && matchesFav;
+      });
+
+      if (filtered.length === 0) {
+        playlistEl.innerHTML = `<div style="text-align: center; color: var(--text-sub); margin-top: 30px; font-size: 0.9rem;">No matching songs found</div>`;
+        return;
+      }
+
+      filtered.forEach((track) => {
+        const originalIndex = allTracks.findIndex(t => t.id === track.id);
+        const isFav = favorites.includes(track.id);
+
+        const item = document.createElement("div");
+        item.className = `track-item ${originalIndex === currentIdx ? 'active' : ''}`;
+        item.innerHTML = `
+          <img src="${track.cover}" class="track-img" alt="Cover" />
+          <div class="track-details">
+            <div class="track-title">${track.title}</div>
+            <div class="track-artist">${track.artist}</div>
           </div>
-          <i class="fa-solid fa-play" style="font-size: 0.72rem; color: var(--text-sub);"></i>
-        `;
-        songPlaylistContainer.appendChild(row);
-      });
-      document.getElementById('trackCountBadge').textContent = `${MASTER_TRACKS.length} Tracks`;
-    }
-
-    function selectTrack(idx, autoplay = true) {
-      currentTrackIdx = idx;
-      const track = MASTER_TRACKS[currentTrackIdx];
-      
-      // Load source directly
-      audio.src = track.url;
-      trackTitleDisplay.textContent = track.title;
-      trackArtistDisplay.textContent = track.artist;
-      trackArtwork.src = track.cover;
-      ambientBg.style.backgroundImage = `url('${track.cover}')`;
-
-      driveTitleText.textContent = track.title;
-      driveArtistText.textContent = track.artist;
-      driveArtworkImg.src = track.cover;
-
-      document.querySelectorAll('.song-row').forEach((r, i) => r.classList.toggle('active', i === currentTrackIdx));
-
-      if ('mediaSession' in navigator) {
-        navigator.mediaSession.metadata = new MediaMetadata({
-          title: track.title,
-          artist: track.artist,
-          album: 'Paradise of Songs',
-          artwork: [{ src: track.cover, sizes: '512x512', type: 'image/jpeg' }]
-        });
-        navigator.mediaSession.setActionHandler('play', () => startAudio());
-        navigator.mediaSession.setActionHandler('pause', () => pauseAudio());
-        navigator.mediaSession.setActionHandler('previoustrack', () => prevTrackBtn.click());
-        navigator.mediaSession.setActionHandler('nexttrack', () => nextTrackBtn.click());
-      }
-
-      if (autoplay) {
-        startAudio();
-      }
-    }
-
-    function startAudio() {
-      // Resume audio context if existing
-      if (audioCtx && audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-      
-      initSimulatedVisualizer();
-
-      audio.play().then(() => {
-        isPlaying = true;
-        playIcon.className = 'fa-solid fa-pause';
-        hudPlayIcon.className = 'fa-solid fa-pause';
-        document.getElementById('playerDeck').classList.add('playing');
-        if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
-      }).catch(err => {
-        console.warn('Playback requires initial user click or interaction:', err);
-      });
-    }
-
-    function pauseAudio() {
-      audio.pause();
-      isPlaying = false;
-      playIcon.className = 'fa-solid fa-play';
-      hudPlayIcon.className = 'fa-solid fa-play';
-      document.getElementById('playerDeck').classList.remove('playing');
-      if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
-    }
-
-    playTrackBtn.onclick = () => isPlaying ? pauseAudio() : startAudio();
-    hudPlayBtn.onclick = () => isPlaying ? pauseAudio() : startAudio();
-
-    prevTrackBtn.onclick = () => {
-      currentTrackIdx = (currentTrackIdx - 1 + MASTER_TRACKS.length) % MASTER_TRACKS.length;
-      selectTrack(currentTrackIdx, true);
-    };
-    document.getElementById('hudPrevBtn').onclick = () => prevTrackBtn.click();
-
-    nextTrackBtn.onclick = () => {
-      currentTrackIdx = (currentTrackIdx + 1) % MASTER_TRACKS.length;
-      selectTrack(currentTrackIdx, true);
-    };
-    document.getElementById('hudNextBtn').onclick = () => nextTrackBtn.click();
-    audio.onended = () => nextTrackBtn.click();
-
-    audio.ontimeupdate = () => {
-      if (audio.duration) {
-        const pct = (audio.currentTime / audio.duration) * 100;
-        progressFill.style.width = `${pct}%`;
-        timeElapsed.textContent = formatDuration(audio.currentTime);
-        timeDuration.textContent = formatDuration(audio.duration);
-      }
-    };
-
-    progressRail.onclick = (e) => {
-      const rect = progressRail.getBoundingClientRect();
-      const clickX = e.clientX - rect.left;
-      if (audio.duration) audio.currentTime = (clickX / rect.width) * audio.duration;
-    };
-
-    function formatDuration(s) {
-      if (isNaN(s)) return '0:00';
-      const m = Math.floor(s / 60);
-      const sec = Math.floor(s % 60);
-      return `${m}:${sec < 10 ? '0' : ''}${sec}`;
-    }
-
-    // Cross-platform safe visualizer (Prevents CORS audio silencing)
-    let animId = null;
-    function initSimulatedVisualizer() {
-      if (isGraphBuilt) return;
-      isGraphBuilt = true;
-
-      const numBars = 32;
-      const heights = new Array(numBars).fill(4);
-
-      function loop() {
-        animId = requestAnimationFrame(loop);
-        canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
-
-        const barWidth = canvas.width / numBars;
-        for (let i = 0; i < numBars; i++) {
-          if (isPlaying) {
-            const target = Math.random() * (canvas.height - 8) + 4;
-            heights[i] += (target - heights[i]) * 0.25;
-          } else {
-            heights[i] += (3 - heights[i]) * 0.15;
-          }
-
-          const grad = canvasCtx.createLinearGradient(0, canvas.height, 0, 0);
-          grad.addColorStop(0, '#1ed760');
-          grad.addColorStop(1, '#06b6d4');
-          canvasCtx.fillStyle = grad;
-          canvasCtx.fillRect(i * barWidth, canvas.height - heights[i], Math.max(barWidth - 2, 2), heights[i]);
-        }
-      }
-      loop();
-    }
-
-    // -------------------------------------------------------------------------
-    // 4. REAL-TIME CROSS-DEVICE SOCIAL PRESENCE (EMQX WSS BROKER)
-    // -------------------------------------------------------------------------
-    let myDeviceId = localStorage.getItem('paradiseDeviceId') || ('dev_' + Math.random().toString(36).substring(2, 9));
-    localStorage.setItem('paradiseDeviceId', myDeviceId);
-
-    let myProfile = JSON.parse(localStorage.getItem('paradiseUserProfile') || 'null');
-    let mqttClient = null;
-    let onlinePeersMap = {};
-    let pendingFriendRequests = [];
-
-    function initGlobalMesh() {
-      if (mqttClient && mqttClient.connected) return;
-
-      mqttClient = mqtt.connect('wss://broker.emqx.io:8084/mqtt', {
-        clientId: 'paradise_' + myDeviceId,
-        clean: true,
-        keepalive: 30
-      });
-
-      mqttClient.on('connect', () => {
-        mqttClient.subscribe('paradise/presence/#');
-        mqttClient.subscribe('paradise/chat/global');
-        mqttClient.subscribe('paradise/requests/' + myDeviceId);
-
-        broadcastPresenceHeartbeat();
-        setInterval(broadcastPresenceHeartbeat, 15000);
-      });
-
-      mqttClient.on('message', (topic, payload) => {
-        try {
-          const data = JSON.parse(payload.toString());
-
-          if (topic.startsWith('paradise/presence/')) {
-            const peerId = topic.split('/')[2];
-            if (peerId !== myDeviceId) {
-              onlinePeersMap[peerId] = { ...data, lastSeen: Date.now() };
-              renderPeerList();
-            }
-          } else if (topic === 'paradise/chat/global') {
-            appendChatMessage(data.userName, data.text, data.deviceId === myDeviceId ? 'mine' : 'peer');
-          } else if (topic === ('paradise/requests/' + myDeviceId)) {
-            showIncomingFriendRequest(data);
-          }
-        } catch (e) {}
-      });
-    }
-
-    function broadcastPresenceHeartbeat() {
-      if (!mqttClient || !mqttClient.connected) return;
-      const currentTrack = MASTER_TRACKS[currentTrackIdx] || { title: "Audio" };
-      const payload = {
-        deviceId: myDeviceId,
-        userName: myProfile ? myProfile.name : (`Guest_${myDeviceId.substring(4, 8)}`),
-        platform: /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? 'Mobile Phone' : 'Laptop / Desktop',
-        song: currentTrack.title
-      };
-      mqttClient.publish('paradise/presence/' + myDeviceId, JSON.stringify(payload));
-    }
-
-    function renderPeerList(filterText = '') {
-      const listEl = document.getElementById('activePeerListContainer');
-      const now = Date.now();
-      const peerKeys = Object.keys(onlinePeersMap).filter(id => (now - onlinePeersMap[id].lastSeen) < 45000);
-
-      listEl.innerHTML = '';
-
-      // Local device first
-      const selfCard = document.createElement('div');
-      selfCard.className = 'peer-card';
-      selfCard.innerHTML = `
-        <div class="peer-meta">
-          <div class="peer-status-dot"></div>
-          <span>${myProfile ? myProfile.name : 'You'} (${/Mobi|Android|iPhone/i.test(navigator.userAgent) ? 'Phone' : 'Laptop'})</span>
-        </div>
-        <span style="font-size: 0.7rem; color: var(--spotify-green);">Online</span>
-      `;
-      listEl.appendChild(selfCard);
-
-      peerKeys.forEach(id => {
-        const peer = onlinePeersMap[id];
-        if (filterText && !peer.userName.toLowerCase().includes(filterText.toLowerCase())) return;
-
-        const card = document.createElement('div');
-        card.className = 'peer-card';
-        card.innerHTML = `
-          <div class="peer-meta">
-            <div class="peer-status-dot"></div>
-            <div>
-              <div>${peer.userName}</div>
-              <small style="font-size: 0.68rem; color: var(--text-sub);">${peer.platform} • Listening to ${peer.song}</small>
-            </div>
-          </div>
-          <button class="btn-pill" style="font-size: 0.7rem; padding: 4px 8px; background: var(--spotify-green); color: #000;" onclick="sendFriendRequestTo('${id}', '${peer.userName}')">
-            Add Friend
+          <button class="fav-btn ${isFav ? 'favorited' : ''}" data-id="${track.id}">
+            <i class="fa-${isFav ? 'solid' : 'regular'} fa-heart"></i>
           </button>
         `;
-        listEl.appendChild(card);
+
+        item.querySelector(".track-details").addEventListener("click", () => playSong(originalIndex));
+        item.querySelector(".track-img").addEventListener("click", () => playSong(originalIndex));
+
+        // Favorite Toggle
+        const favBtn = item.querySelector(".fav-btn");
+        favBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          toggleFavorite(track.id);
+        });
+
+        playlistEl.appendChild(item);
       });
     }
 
-    function filterActivePeers() {
-      const q = document.getElementById('peerSearchInput').value.trim();
-      renderPeerList(q);
-    }
+    // 3. PLAY SONG
+    function playSong(index) {
+      if (index < 0 || index >= allTracks.length) return;
+      currentIdx = index;
+      const track = allTracks[currentIdx];
+      audio.src = track.url;
+      audio.play();
 
-    function sendFriendRequestTo(targetDeviceId, targetName) {
-      if (!mqttClient) return;
-      const requestPayload = {
-        fromId: myDeviceId,
-        fromName: myProfile ? myProfile.name : `User_${myDeviceId.substring(4, 8)}`,
-        targetId: targetDeviceId
-      };
-      mqttClient.publish('paradise/requests/' + targetDeviceId, JSON.stringify(requestPayload));
-      alert(`Friend request sent directly to ${targetName}!`);
-    }
-
-    function showIncomingFriendRequest(req) {
-      pendingFriendRequests.push(req);
-      const box = document.getElementById('friendRequestNotification');
-      document.getElementById('requestNotificationText').textContent = `Friend Request from ${req.fromName}!`;
-      box.style.display = 'flex';
-    }
-
-    function respondToFriendRequest(accept) {
-      const box = document.getElementById('friendRequestNotification');
-      box.style.display = 'none';
-      if (accept) {
-        alert("Friend request accepted! You are now connected in the Social Space.");
-      } else {
-        alert("Friend request declined.");
-      }
-    }
-
-    function sendMeshBroadcastMessage() {
-      const input = document.getElementById('meshChatInput');
-      const text = input.value.trim();
-      if (!text || !mqttClient) return;
-
-      const payload = {
-        deviceId: myDeviceId,
-        userName: myProfile ? myProfile.name : `User_${myDeviceId.substring(4, 8)}`,
-        text: text
-      };
-      mqttClient.publish('paradise/chat/global', JSON.stringify(payload));
-      input.value = '';
-    }
-
-    function appendChatMessage(name, text, role) {
-      const feed = document.getElementById('meshChatFeed');
-      const b = document.createElement('div');
-      b.className = `chat-bubble ${role}`;
-      b.innerHTML = `<strong>${name}:</strong> ${text}`;
-      feed.appendChild(b);
-      feed.scrollTop = feed.scrollHeight;
-    }
-
-    function toggleSocialDrawer(open) {
-      document.getElementById('socialDrawer').classList.toggle('open', open);
-      if (open && (!mqttClient || !mqttClient.connected)) {
-        initGlobalMesh();
-      }
-    }
-
-    function completeUserSignIn() {
-      const name = document.getElementById('authUserName').value.trim();
-      const email = document.getElementById('authUserEmail').value.trim();
-      if (!name || !email) {
-        alert("Please enter both Name and Email.");
-        return;
-      }
-      myProfile = { name, email };
-      localStorage.setItem('paradiseUserProfile', JSON.stringify(myProfile));
-      document.getElementById('userAuthStatusBtn').innerHTML = `<i class="fa-solid fa-user-check"></i> ${name.split(' ')[0]}`;
-      toggleModal('authModal', false);
-      broadcastPresenceHeartbeat();
-      alert(`Welcome, ${name}! Your account is now synced across your devices.`);
-    }
-
-    // -------------------------------------------------------------------------
-    // 5. DRIVE HUD & NAVIGATION
-    // -------------------------------------------------------------------------
-    let carMap = null;
-    let carMarker = null;
-    let activeRouteLine = null;
-    let currentCarCoords = [9.9816, 76.2999]; // Central Kerala fallback
-    let gpsWatchId = null;
-
-    function toggleDriveHud(show) {
-      document.getElementById('driveHud').classList.toggle('open', show);
-      if (show) {
-        setTimeout(initMapSafe, 300);
-        trackGpsSafe();
-      } else {
-        if (gpsWatchId) navigator.geolocation.clearWatch(gpsWatchId);
-      }
-    }
-
-    function initMapSafe() {
-      if (!carMap) {
-        carMap = L.map('carLiveMap', { zoomControl: false, attributionControl: false }).setView(currentCarCoords, 14);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(carMap);
-
-        const icon = L.divIcon({
-          html: '<div style="background:#1ed760; width:18px; height:18px; border-radius:50%; border:3px solid #fff; box-shadow:0 0 14px #1ed760;"></div>',
-          className: '',
-          iconSize: [18, 18]
-        });
-        carMarker = L.marker(currentCarCoords, { icon }).addTo(carMap);
-      } else {
-        carMap.invalidateSize();
-      }
-    }
-
-    function trackGpsSafe() {
-      if ('geolocation' in navigator) {
-        gpsWatchId = navigator.geolocation.watchPosition((pos) => {
-          const lat = pos.coords.latitude;
-          const lng = pos.coords.longitude;
-          currentCarCoords = [lat, lng];
-          const speed = pos.coords.speed ? Math.round(pos.coords.speed * 3.6) : 0;
-          document.getElementById('driveVehicleSpeed').textContent = speed;
-          if (carMarker && carMap) {
-            carMarker.setLatLng(currentCarCoords);
-            carMap.panTo(currentCarCoords);
-          }
-        }, () => {}, { enableHighAccuracy: true });
-      }
-    }
-
-    async function executeRealRouteSearch() {
-      const q = document.getElementById('destinationQueryInput').value.trim();
-      if (!q) return;
-
-      try {
-        const geoRes = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q + ', India')}`);
-        const geoData = await geoRes.json();
-        if (!geoData || geoData.length === 0) {
-          alert("Location not found.");
-          return;
-        }
-
-        const destLat = parseFloat(geoData[0].lat);
-        const destLng = parseFloat(geoData[0].lon);
-
-        const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${currentCarCoords[1]},${currentCarCoords[0]};${destLng},${destLat}?overview=full&geometries=geojson`;
-        const rRes = await fetch(osrmUrl);
-        const rData = await rRes.json();
-
-        if (rData.routes && rData.routes.length > 0) {
-          const coords = rData.routes[0].geometry.coordinates.map(c => [c[1], c[0]]);
-          if (activeRouteLine) carMap.removeLayer(activeRouteLine);
-          activeRouteLine = L.polyline(coords, { color: '#06b6d4', weight: 6 }).addTo(carMap);
-          carMap.fitBounds(activeRouteLine.getBounds(), { padding: [40, 40] });
-        }
-      } catch (e) {
-        alert("Routing timed out. Check connection.");
-      }
-    }
-
-    function triggerVoiceAssistant() {
-      const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!Speech) {
-        alert("Voice recognition not supported on this browser.");
-        return;
-      }
-      const rec = new Speech();
-      rec.lang = 'en-US';
-      rec.start();
-      rec.onresult = (e) => {
-        const spoken = e.results[0][0].transcript.toLowerCase();
-        if (spoken.includes('next') || spoken.includes('skip')) nextTrackBtn.click();
-        else if (spoken.includes('stop') || spoken.includes('pause')) pauseAudio();
-        else if (spoken.includes('play')) startAudio();
-      };
-    }
-
-    // -------------------------------------------------------------------------
-    // 6. UTILITIES & STARTUP
-    // -------------------------------------------------------------------------
-    function navigateToHome() {
-      document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open'));
-      document.getElementById('driveHud').classList.remove('open');
-      document.getElementById('socialDrawer').classList.remove('open');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function toggleModal(id, show) {
-      document.getElementById(id).classList.toggle('open', show);
-    }
-
-    function fitVisualizerCanvas() {
-      if (canvas && canvas.parentElement) {
-        canvas.width = canvas.parentElement.clientWidth - 48;
-        canvas.height = 48;
-      }
-    }
-
-    window.addEventListener('resize', fitVisualizerCanvas);
-
-    window.addEventListener('DOMContentLoaded', () => {
+      nowTitle.textContent = track.title;
+      nowArtist.textContent = track.artist;
+      playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
       renderPlaylist();
-      selectTrack(0, false);
-      fitVisualizerCanvas();
-      
-      if (myProfile) {
-        document.getElementById('userAuthStatusBtn').innerHTML = `<i class="fa-solid fa-user-check"></i> ${myProfile.name.split(' ')[0]}`;
+    }
+
+    // 4. FAVORITE SYSTEM
+    function toggleFavorite(id) {
+      if (favorites.includes(id)) {
+        favorites = favorites.filter(favId => favId !== id);
+      } else {
+        favorites.push(id);
       }
-      
-      initGlobalMesh();
-      syncTracksFromNextcloud();
+      localStorage.setItem("paradise_favs", JSON.stringify(favorites));
+      renderPlaylist();
+    }
+
+    // 5. SEARCH & VOICE RECOGNITION
+    searchInput.addEventListener("input", renderPlaylist);
+
+    tabAll.addEventListener("click", () => {
+      isFavoriteOnly = false;
+      tabAll.classList.add("active");
+      tabFavs.classList.remove("active");
+      renderPlaylist();
     });
+
+    tabFavs.addEventListener("click", () => {
+      isFavoriteOnly = true;
+      tabFavs.classList.add("active");
+      tabAll.classList.remove("active");
+      renderPlaylist();
+    });
+
+    // Web Speech API Voice Search
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      const recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.lang = 'en-US';
+
+      voiceBtn.addEventListener("click", () => {
+        try {
+          recognition.start();
+          voiceBtn.classList.add("listening");
+        } catch (e) {
+          recognition.stop();
+          voiceBtn.classList.remove("listening");
+        }
+      });
+
+      recognition.onresult = (e) => {
+        const transcript = e.results[0][0].transcript;
+        searchInput.value = transcript.replace(/\./g, '');
+        renderPlaylist();
+        voiceBtn.classList.remove("listening");
+      };
+
+      recognition.onerror = () => voiceBtn.classList.remove("listening");
+      recognition.onend = () => voiceBtn.classList.remove("listening");
+    } else {
+      voiceBtn.style.display = "none";
+    }
+
+    // 6. AUDIO CONTROLS & VOLUME
+    playBtn.addEventListener("click", () => {
+      if (!audio.src) {
+        if (allTracks.length > 0) playSong(0);
+        return;
+      }
+      if (audio.paused) {
+        audio.play();
+        playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+      } else {
+        audio.pause();
+        playBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
+      }
+    });
+
+    prevBtn.addEventListener("click", () => {
+      if (currentIdx > 0) playSong(currentIdx - 1);
+    });
+
+    nextBtn.addEventListener("click", () => {
+      if (currentIdx < allTracks.length - 1) playSong(currentIdx + 1);
+    });
+
+    audio.addEventListener("ended", () => {
+      if (currentIdx < allTracks.length - 1) playSong(currentIdx + 1);
+    });
+
+    // Volume Slider & Mute
+    audio.volume = 0.8;
+    volSlider.addEventListener("input", (e) => {
+      audio.volume = e.target.value;
+      updateVolIcon(audio.volume);
+    });
+
+    volIcon.addEventListener("click", () => {
+      if (audio.volume > 0) {
+        audio.dataset.prevVol = audio.volume;
+        audio.volume = 0;
+        volSlider.value = 0;
+      } else {
+        audio.volume = audio.dataset.prevVol || 0.8;
+        volSlider.value = audio.volume;
+      }
+      updateVolIcon(audio.volume);
+    });
+
+    function updateVolIcon(vol) {
+      if (vol == 0) volIcon.className = "fa-solid fa-volume-xmark";
+      else if (vol < 0.5) volIcon.className = "fa-solid fa-volume-low";
+      else volIcon.className = "fa-solid fa-volume-high";
+    }
+
+    // Progress Bar
+    audio.addEventListener("timeupdate", () => {
+      if (!isNaN(audio.duration)) {
+        progressBar.value = (audio.currentTime / audio.duration) * 100;
+        currentTimeEl.textContent = formatTime(audio.currentTime);
+        totalDurationEl.textContent = formatTime(audio.duration);
+      }
+    });
+
+    progressBar.addEventListener("input", (e) => {
+      if (!isNaN(audio.duration)) {
+        audio.currentTime = (e.target.value / 100) * audio.duration;
+      }
+    });
+
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return `${m}:${s < 10 ? '0' : ''}${s}`;
+    }
+
+    loadTracks();
   </script>
 </body>
 </html>
