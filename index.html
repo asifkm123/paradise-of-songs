@@ -756,61 +756,26 @@
       { id: 't18', title: 'രാക്കുയിൽ പാടീ', artist: 'Kunchacko Boban Hits', cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&q=80', url: buildStreamUrl('രാക്കുയിൽ പാടീ HD Raakkuyil Paadi Video Song Kunchacko Bo...mp3') }
     ];
 
-    // Automatic Live Sync from Nextcloud WebDAV
+    // Automatic Live Sync from Cloudflare Worker Bridge
     async function syncTracksFromNextcloud() {
       try {
-        const webdavEndpoint = `https://cloud.paradiseacademi.com/public.php/webdav/`;
-        const auth = "Basic " + btoa(NC_TOKEN + ":");
-        const res = await fetch(webdavEndpoint, {
-          method: 'PROPFIND',
-          headers: {
-            'Authorization': auth,
-            'Depth': '1'
-          }
-        });
+        const workerUrl = 'https://proud-recipe-96deparadise-music-sync.paradiseacademy-kl.workers.dev/';
+        const res = await fetch(workerUrl + '?t=' + Date.now());
+        if (!res.ok) throw new Error("Sync worker unreachable");
 
-        if (res.ok) {
-          const text = await res.text();
-          const parser = new DOMParser();
-          const xmlDoc = parser.parseFromString(text, "text/xml");
-          const responses = xmlDoc.getElementsByTagNameNS("*", "response");
-          const freshList = [];
-
-          for (let i = 0; i < responses.length; i++) {
-            const hrefEl = responses[i].getElementsByTagNameNS("*", "href")[0];
-            if (!hrefEl) continue;
-            const fullPath = decodeURIComponent(hrefEl.textContent.trim());
-            const fileName = fullPath.split('/').filter(Boolean).pop();
-
-            if (fileName && /\.(mp3|wav|ogg|flac|m4a)$/i.test(fileName)) {
-              let cleanTitle = fileName.replace(/\.(mp3|wav|ogg|flac|m4a)$/i, '');
-              let artistName = "Paradise Stream";
-              if (cleanTitle.includes('-')) {
-                const parts = cleanTitle.split('-');
-                cleanTitle = parts[0].trim();
-                artistName = parts.slice(1).join('-').trim();
-              }
-
-              freshList.push({
-                id: 'nc_' + i,
-                title: cleanTitle,
-                artist: artistName,
-                cover: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&q=80',
-                url: buildStreamUrl(fileName)
-              });
-            }
-          }
-
-          if (freshList.length > 0) {
-            MASTER_TRACKS = freshList;
-            renderPlaylist();
-            selectTrack(0, false);
-          }
+        const dynamicTracks = await res.json();
+        if (Array.isArray(dynamicTracks) && dynamicTracks.length > 0) {
+          MASTER_TRACKS = dynamicTracks;
+          renderPlaylist();
+          selectTrack(0, false);
+          const badge = document.getElementById('trackCountBadge');
+          if (badge) badge.textContent = `${MASTER_TRACKS.length} Tracks`;
         }
       } catch (err) {
-        console.warn("Nextcloud live discovery fallback to defaults:", err);
+        console.warn("Using offline master tracklist fallback:", err);
       } finally {
-        document.getElementById('trackCountBadge').textContent = `${MASTER_TRACKS.length} Tracks`;
+        const badge = document.getElementById('trackCountBadge');
+        if (badge) badge.textContent = `${MASTER_TRACKS.length} Tracks`;
       }
     }
 
@@ -881,7 +846,8 @@
         `;
         songPlaylistContainer.appendChild(row);
       });
-      document.getElementById('trackCountBadge').textContent = `${MASTER_TRACKS.length} Tracks`;
+      const badge = document.getElementById('trackCountBadge');
+      if (badge) badge.textContent = `${MASTER_TRACKS.length} Tracks`;
     }
 
     function selectTrack(idx, autoplay = true) {
@@ -920,7 +886,6 @@
     }
 
     function startAudio() {
-      // Resume audio context if existing
       if (audioCtx && audioCtx.state === 'suspended') {
         audioCtx.resume();
       }
