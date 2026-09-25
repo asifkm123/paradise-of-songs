@@ -34,7 +34,60 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px 16px 120px 16px;
+      padding: 20px 16px 175px 16px; /* Room for player + ad banner */
+    }
+
+    /* TOP ACTION BAR: DRIVE, SOCIAL CHAT, BUY ME A COFFEE */
+    .top-actions {
+      width: 100%;
+      max-width: 680px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .action-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      color: #fff;
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-decoration: none;
+      backdrop-filter: blur(10px);
+      transition: all 0.2s;
+    }
+
+    .action-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-1px);
+    }
+
+    .action-btn.coffee {
+      background: #ffdd00;
+      color: #000;
+      border-color: #ffdd00;
+    }
+    .action-btn.coffee:hover {
+      background: #ffea47;
+      color: #000;
+    }
+
+    .action-btn.chat {
+      background: rgba(37, 211, 102, 0.15);
+      border-color: rgba(37, 211, 102, 0.4);
+      color: #25d366;
+    }
+    .action-btn.chat:hover {
+      background: #25d366;
+      color: #000;
     }
 
     header {
@@ -160,7 +213,7 @@
       color: var(--primary);
     }
 
-    /* PLAYLIST CONTAINER */
+    /* PLAYLIST */
     .playlist {
       width: 100%;
       max-width: 680px;
@@ -239,16 +292,16 @@
       color: #ef4444;
     }
 
-    /* FIXED BOTTOM PLAYER */
+    /* FIXED BOTTOM MUSIC PLAYER */
     .bottom-bar {
       position: fixed;
-      bottom: 0;
+      bottom: 34px; /* Sits directly on top of the ad banner */
       left: 0;
       right: 0;
-      background: rgba(14, 19, 32, 0.95);
+      background: rgba(14, 19, 32, 0.96);
       border-top: 1px solid var(--card-border);
       backdrop-filter: blur(16px);
-      padding: 10px 20px;
+      padding: 8px 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -335,15 +388,15 @@
     }
 
     .play-circle {
-      width: 40px;
-      height: 40px;
+      width: 38px;
+      height: 38px;
       background: #fff;
       color: #000;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.1rem;
+      font-size: 1rem;
       cursor: pointer;
       transition: transform 0.15s, background 0.15s;
     }
@@ -353,7 +406,7 @@
       transform: scale(1.06);
     }
 
-    /* VOLUME BAR */
+    /* VOLUME CONTROLLER */
     .volume-box {
       width: 200px;
       display: flex;
@@ -389,6 +442,56 @@
       cursor: pointer;
     }
 
+    /* BOTTOM FLOATING ADVERTISEMENT PANEL */
+    .bottom-ad-panel {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 34px;
+      background: #020408;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      white-space: nowrap;
+      z-index: 1001;
+    }
+
+    .ad-badge {
+      background: var(--primary);
+      color: #000;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 2px 10px;
+      margin-left: 10px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+      z-index: 2;
+    }
+
+    .marquee-wrapper {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .floating-text {
+      display: inline-block;
+      padding-left: 100%;
+      animation: marquee 26s linear infinite;
+      font-size: 0.8rem;
+      color: #cbd5e1;
+    }
+
+    .floating-text b {
+      color: var(--primary);
+    }
+
+    @keyframes marquee {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(-100%, 0); }
+    }
+
     @media (max-width: 600px) {
       .current-meta { width: 130px; }
       .volume-slider { width: 55px; }
@@ -396,6 +499,19 @@
   </style>
 </head>
 <body>
+
+  <!-- TOP ACTION BUTTONS: DRIVE, SOCIAL CHAT, BUY ME A COFFEE -->
+  <div class="top-actions">
+    <a href="https://cloud.paradiseacademi.com/s/6HegKRmeWapdns9" target="_blank" class="action-btn" title="Open Nextcloud Folder">
+      <i class="fa-solid fa-hard-drive"></i> Drive
+    </a>
+    <a href="https://wa.me/?text=Listen%20to%20Paradise%20of%20Songs%20live%3A%20https%3A%2F%2Fmusic.paradiseacademi.com%2F" target="_blank" class="action-btn chat" title="Social Chat">
+      <i class="fa-brands fa-whatsapp"></i> Chat / Share
+    </a>
+    <a href="gpay-qr.jpg" target="_blank" class="action-btn coffee" title="Support via UPI / Buy Me a Coffee">
+      <i class="fa-solid fa-mug-hot"></i> Buy Me a Coffee
+    </a>
+  </div>
 
   <header>
     <h1>Paradise of Songs</h1>
@@ -406,9 +522,9 @@
   <div class="search-wrapper">
     <div class="search-box">
       <i class="fa-solid fa-magnifying-glass"></i>
-      <input type="text" id="searchInput" placeholder="Search by title, artist, or movie..." />
+      <input type="text" id="searchInput" placeholder="Search by song name, artist, or tag..." />
     </div>
-    <button class="voice-btn" id="voiceBtn" title="Search by Voice">
+    <button class="voice-btn" id="voiceBtn" title="Search with Microphone">
       <i class="fa-solid fa-microphone"></i>
     </button>
   </div>
@@ -422,7 +538,7 @@
   <!-- PLAYLIST CONTAINER -->
   <div class="playlist" id="playlist"></div>
 
-  <!-- BOTTOM MUSIC PLAYER -->
+  <!-- FIXED BOTTOM MUSIC PLAYER -->
   <div class="bottom-bar">
     <div class="progress-container">
       <span id="currentTime">0:00</span>
@@ -432,7 +548,7 @@
     <div class="player-controls">
       <div class="current-meta">
         <div class="c-title" id="nowTitle">No Track Selected</div>
-        <div class="c-artist" id="nowArtist">Tap a song to play</div>
+        <div class="c-artist" id="nowArtist">Select any track to start</div>
       </div>
       <div class="center-buttons">
         <button class="ctl-btn" id="prevBtn"><i class="fa-solid fa-backward-step"></i></button>
@@ -443,6 +559,16 @@
         <i class="fa-solid fa-volume-high" id="volIcon"></i>
         <input type="range" class="volume-slider" id="volSlider" min="0" max="1" step="0.01" value="0.8" />
       </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM ADVERTISEMENT PANEL WITH FLOATING TEXT -->
+  <div class="bottom-ad-panel">
+    <span class="ad-badge">PARADISE</span>
+    <div class="marquee-wrapper">
+      <span class="floating-text">
+        ✨ Welcome to <b>Paradise of Songs</b> • Stream lossless high-quality Malayalam, Hindi & English tracks direct from the cloud • Tap <b>Drive</b> to view library files • Support the stream with <b>Buy Me a Coffee</b> • Enjoy uninterrupted sound! ✨
+      </span>
     </div>
   </div>
 
@@ -474,19 +600,19 @@
     let isFavoriteOnly = false;
     let favorites = JSON.parse(localStorage.getItem("paradise_favs") || "[]");
 
-    // 1. LOAD MUSIC REPOSITORY
+    // 1. FETCH PLAYLIST
     async function loadTracks() {
       try {
         const res = await fetch(WORKER_API);
         allTracks = await res.json();
-        trackCountEl.textContent = `${allTracks.length} Songs in Library`;
+        trackCountEl.textContent = `${allTracks.length} Tracks in Library`;
         renderPlaylist();
       } catch (err) {
         trackCountEl.textContent = "Unable to connect to song stream";
       }
     }
 
-    // 2. RENDER PLAYLIST (With Search & Favorites filtering)
+    // 2. RENDER PLAYLIST WITH SEARCH & FAVORITES
     function renderPlaylist() {
       const query = searchInput.value.toLowerCase().trim();
       playlistEl.innerHTML = "";
@@ -498,7 +624,7 @@
       });
 
       if (filtered.length === 0) {
-        playlistEl.innerHTML = `<div style="text-align: center; color: var(--text-sub); margin-top: 30px; font-size: 0.9rem;">No matching songs found</div>`;
+        playlistEl.innerHTML = `<div style="text-align: center; color: var(--text-sub); margin-top: 30px; font-size: 0.9rem;">No matching tracks found</div>`;
         return;
       }
 
@@ -522,7 +648,6 @@
         item.querySelector(".track-details").addEventListener("click", () => playSong(originalIndex));
         item.querySelector(".track-img").addEventListener("click", () => playSong(originalIndex));
 
-        // Favorite Toggle
         const favBtn = item.querySelector(".fav-btn");
         favBtn.addEventListener("click", (e) => {
           e.stopPropagation();
@@ -558,7 +683,7 @@
       renderPlaylist();
     }
 
-    // 5. SEARCH & VOICE RECOGNITION
+    // 5. SEARCH & VOICE
     searchInput.addEventListener("input", renderPlaylist);
 
     tabAll.addEventListener("click", () => {
@@ -575,7 +700,6 @@
       renderPlaylist();
     });
 
-    // Web Speech API Voice Search
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (SpeechRecognition) {
       const recognition = new SpeechRecognition();
@@ -605,7 +729,7 @@
       voiceBtn.style.display = "none";
     }
 
-    // 6. AUDIO CONTROLS & VOLUME
+    // 6. AUDIO & VOLUME CONTROLS
     playBtn.addEventListener("click", () => {
       if (!audio.src) {
         if (allTracks.length > 0) playSong(0);
@@ -632,7 +756,6 @@
       if (currentIdx < allTracks.length - 1) playSong(currentIdx + 1);
     });
 
-    // Volume Slider & Mute
     audio.volume = 0.8;
     volSlider.addEventListener("input", (e) => {
       audio.volume = e.target.value;
@@ -657,7 +780,6 @@
       else volIcon.className = "fa-solid fa-volume-high";
     }
 
-    // Progress Bar
     audio.addEventListener("timeupdate", () => {
       if (!isNaN(audio.duration)) {
         progressBar.value = (audio.currentTime / audio.duration) * 100;
